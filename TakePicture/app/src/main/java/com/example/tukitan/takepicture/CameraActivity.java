@@ -132,7 +132,13 @@ public class CameraActivity extends Activity {
             e.printStackTrace();
         }
     }
-    protected void takePicture(){ return; }
+    protected void takePicture(){
+        //Toast.makeText(CameraActivity.this,"それは無理＾＾；",Toast.LENGTH_LONG).show();
+        if(mCameraDevice == null) return;
+        CameraManager manager = (CameraManager)getSystemService(Context.CAMERA_SERVICE);
+
+        return;
+    }
     protected void createCameraPreviewSettion(){
         if(mCameraDevice == null || !mTextureView.isAvailable() || mPreviewSize == null){
             return;
