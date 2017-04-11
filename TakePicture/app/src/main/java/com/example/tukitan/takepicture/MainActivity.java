@@ -3,6 +3,7 @@ package com.example.tukitan.takepicture;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent intentMain_Camera = new Intent(MainActivity.this,CameraActivity.class);
+            Log.v("Intent","startActivity");
             startActivity(intentMain_Camera);
         }
     };

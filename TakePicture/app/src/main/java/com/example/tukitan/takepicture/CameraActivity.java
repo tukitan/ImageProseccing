@@ -4,9 +4,11 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.*;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.media.ImageReader;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -23,8 +25,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class CameraActivity extends Activity {
 
@@ -88,6 +91,7 @@ public class CameraActivity extends Activity {
                 if (charactor.get(CameraCharacteristics.LENS_FACING) == CameraCharacteristics.LENS_FACING_FRONT) {
                     continue;
                 }
+                System.err.println("BackCamera");
 
                 StreamConfigurationMap map = charactor.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
                 mPreviewSize = map.getOutputSizes(SurfaceTexture.class)[0];
@@ -133,11 +137,41 @@ public class CameraActivity extends Activity {
         }
     }
     protected void takePicture(){
-        //Toast.makeText(CameraActivity.this,"それは無理＾＾；",Toast.LENGTH_LONG).show();
+        Toast.makeText(CameraActivity.this,"それは無理＾＾；",Toast.LENGTH_LONG).show();
+        //return;
         if(mCameraDevice == null) return;
         CameraManager manager = (CameraManager)getSystemService(Context.CAMERA_SERVICE);
 
-        return;
+        try{
+            CameraCharacteristics character = manager.getCameraCharacteristics(mCameraDevice.getId());
+
+            Size[] jpgSizes = null;
+            int width =640;
+            int height = 480;
+            if(character != null){
+                jpgSizes = character.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP).getOutputSizes(ImageFormat.JPEG);
+                if(jpgSizes != null && 0 < jpgSizes.length){
+                    width = jpgSizes[0].getWidth();
+                    height = jpgSizes[0].getHeight();
+                }
+            }
+            ImageReader reader = ImageReader.newInstance(width,height,ImageFormat.JPEG,1);
+            List outputSurfaces = new ArrayList(2);
+            outputSurfaces.add(reader.getSurface());
+            outputSurfaces.add(new Surface(mTextureView.getSurfaceTexture()));
+
+            final CaptureRequest.Builder captureBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+            captureBuilder.addTarget(reader.getSurface());
+            captureBuilder.set(CaptureRequest.CONTROL_MODE,CameraMetadata.CONTROL_MODE_AUTO);
+
+
+
+
+
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+
     }
     protected void createCameraPreviewSettion(){
         if(mCameraDevice == null || !mTextureView.isAvailable() || mPreviewSize == null){
@@ -173,6 +207,7 @@ public class CameraActivity extends Activity {
             e.printStackTrace();
         }
     }
+
     protected void updatePreview(){
         if(mCameraDevice == null) return;
         mPreviewBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
@@ -191,7 +226,7 @@ public class CameraActivity extends Activity {
     @Override
     protected void onResume(){
         super.onResume();
-        createCameraPreviewSettion();
+        //createCameraPreviewSettion();
     }
 }
 
