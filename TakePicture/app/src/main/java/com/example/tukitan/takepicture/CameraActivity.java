@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
-import android.graphics.Paint;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.*;
 import android.hardware.camera2.params.StreamConfigurationMap;
@@ -14,22 +13,17 @@ import android.media.ImageReader;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Size;
 import android.view.Surface;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class CameraActivity extends Activity {
 
@@ -171,7 +165,8 @@ public class CameraActivity extends Activity {
                     try{
                         image = reader.acquireLatestImage();
 
-                        DrewPicture obj = new DrewPicture(getApplication(),image);
+                        Recognition obj = new Recognition(getApplication(),image);
+                        obj.recognize();
                     }catch (Exception e){
                         e.printStackTrace();
                     }finally {

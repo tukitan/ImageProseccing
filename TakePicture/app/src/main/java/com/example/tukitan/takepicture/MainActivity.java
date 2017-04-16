@@ -2,6 +2,7 @@ package com.example.tukitan.takepicture;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,8 +34,10 @@ public class MainActivity extends AppCompatActivity {
     }
     private void initTraineddata(){
         try {
+            String filePath = Environment.getExternalStorageDirectory() + "/tessdata/eng.traineddata";
+            (new File(filePath)).getParentFile().mkdir();
             InputStream input = getResources().getAssets().open("eng.traineddata");
-            FileOutputStream output = openFileOutput("eng.traineddata", Context.MODE_PRIVATE);
+            FileOutputStream output = new FileOutputStream(filePath,true);
             byte[] buffer = new byte[1024];
             int length;
             while((length = input.read(buffer)) > 0) {
