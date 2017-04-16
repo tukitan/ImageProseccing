@@ -1,5 +1,6 @@
 package com.example.tukitan.takepicture;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +9,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,7 +26,25 @@ public class MainActivity extends AppCompatActivity {
         startButton = (Button)findViewById(R.id.start);
         startButton.setOnClickListener(startMethod);
         myText.setText("Helloooooooo");
+        initTraineddata();
 
+
+    }
+    private void initTraineddata(){
+        try {
+            InputStream input = getResources().getAssets().open("eng.traineddata");
+            FileOutputStream output = openFileOutput("eng.traineddata", Context.MODE_PRIVATE);
+            byte[] buffer = new byte[1024];
+            int length;
+            while((length = input.read(buffer)) > 0) {
+                output.write(buffer,0,length);
+            }
+
+            input.close();
+            output.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     private final View.OnClickListener startMethod = new View.OnClickListener(){
 

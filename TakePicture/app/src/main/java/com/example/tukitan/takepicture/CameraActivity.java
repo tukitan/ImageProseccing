@@ -5,9 +5,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
+import android.graphics.Paint;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.*;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.media.Image;
 import android.media.ImageReader;
 import android.os.Bundle;
 import android.os.Handler;
@@ -137,13 +139,14 @@ public class CameraActivity extends Activity {
         }
     }
     protected void takePicture(){
-        Toast.makeText(CameraActivity.this,"それは無理＾＾；",Toast.LENGTH_LONG).show();
+        //Toast.makeText(CameraActivity.this,"それは無理＾＾；",Toast.LENGTH_LONG).show();
         //return;
         if(mCameraDevice == null) return;
         CameraManager manager = (CameraManager)getSystemService(Context.CAMERA_SERVICE);
 
         try{
             CameraCharacteristics character = manager.getCameraCharacteristics(mCameraDevice.getId());
+            Toast.makeText(CameraActivity.this,"Take",Toast.LENGTH_SHORT).show();
 
             Size[] jpgSizes = null;
             int width =640;
@@ -156,18 +159,30 @@ public class CameraActivity extends Activity {
                 }
             }
             ImageReader reader = ImageReader.newInstance(width,height,ImageFormat.JPEG,1);
-            List outputSurfaces = new ArrayList(2);
-            outputSurfaces.add(reader.getSurface());
-            outputSurfaces.add(new Surface(mTextureView.getSurfaceTexture()));
-
             final CaptureRequest.Builder captureBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             captureBuilder.addTarget(reader.getSurface());
             captureBuilder.set(CaptureRequest.CONTROL_MODE,CameraMetadata.CONTROL_MODE_AUTO);
 
+            ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener(){
 
+                @Override
+                public void onImageAvailable(ImageReader reader) {
+                    Image image = null;
+                    try{
+                        image = reader.acquireLatestImage();
 
-
-
+                        DrewPicture obj = new DrewPicture(getApplication(),image);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }finally {
+                        image.close();
+                    }
+                }
+            };
+            HandlerThread thread = new HandlerThread("Camera");
+            thread.start();
+            final Handler backGround = new Handler(thread.getLooper());
+            reader.setOnImageAvailableListener(readerListener,backGround);
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }

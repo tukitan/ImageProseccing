@@ -1,0 +1,10 @@
+#Last build type
+#Sat, 15 Apr 2017 22:57:21 +0900
+
+build.last.target=release
+
+build.last.is.instrumented=false
+
+build.last.is.packaging.debug=false
+
+build.last.is.signing.debug=false
