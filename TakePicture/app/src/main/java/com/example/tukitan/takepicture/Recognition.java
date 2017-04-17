@@ -36,12 +36,14 @@ public class Recognition extends View{
             output = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
         }
         //canvas.drawBitmap(output,0,0,mPaint);
+        System.out.println("Recognition");
         output = output.copy(Bitmap.Config.ARGB_8888,true);
         TessBaseAPI tessBaseAPI = new TessBaseAPI();
         tessBaseAPI.init(String.valueOf(Environment.getExternalStorageDirectory()),"eng");
 
         tessBaseAPI.setImage(output);
         String recognized = tessBaseAPI.getUTF8Text();
-        Toast.makeText(getContext(),recognized,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(),recognized,Toast.LENGTH_SHORT).show();
+        System.out.println(recognized);
     }
 }

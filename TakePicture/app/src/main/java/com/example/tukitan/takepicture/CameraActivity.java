@@ -23,7 +23,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class CameraActivity extends Activity {
 
@@ -140,7 +142,6 @@ public class CameraActivity extends Activity {
 
         try{
             CameraCharacteristics character = manager.getCameraCharacteristics(mCameraDevice.getId());
-            Toast.makeText(CameraActivity.this,"Take",Toast.LENGTH_SHORT).show();
 
             Size[] jpgSizes = null;
             int width =640;
@@ -153,9 +154,14 @@ public class CameraActivity extends Activity {
                 }
             }
             ImageReader reader = ImageReader.newInstance(width,height,ImageFormat.JPEG,1);
+
+            List outputSurface = new ArrayList(2);
+            outputSurface.add(reader.getSurface());
+            outputSurface.add(new Surface(mTextureView.getSurfaceTexture()));
             final CaptureRequest.Builder captureBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             captureBuilder.addTarget(reader.getSurface());
-            captureBuilder.set(CaptureRequest.CONTROL_MODE,CameraMetadata.CONTROL_MODE_AUTO);
+            captureBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+            captureBuilder.set(CaptureRequest.CONTROL_AE_MODE,CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
 
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener(){
 
@@ -165,6 +171,7 @@ public class CameraActivity extends Activity {
                     try{
                         image = reader.acquireLatestImage();
 
+                        System.out.println("KOKO");
                         Recognition obj = new Recognition(getApplication(),image);
                         obj.recognize();
                     }catch (Exception e){
@@ -178,6 +185,37 @@ public class CameraActivity extends Activity {
             thread.start();
             final Handler backGround = new Handler(thread.getLooper());
             reader.setOnImageAvailableListener(readerListener,backGround);
+            mPreviewSession.stopRepeating();
+            mPreviewSession.capture(captureBuilder.build(),null,backGround);
+
+            final CameraCaptureSession.CaptureCallback mCaptureCallback = new CameraCaptureSession.CaptureCallback(){
+                @Override
+                public void onCaptureCompleted(CameraCaptureSession session,CaptureRequest request,TotalCaptureResult result){
+                    super.onCaptureCompleted(session,request,result);
+                    System.out.println("Taking picture is completed");
+
+
+                }
+
+            };
+            mCameraDevice.createCaptureSession(outputSurface,new CameraCaptureSession.StateCallback(){
+
+                @Override
+                public void onConfigured(CameraCaptureSession session) {
+                    try{
+                        session.capture(captureBuilder.build(),mCaptureCallback,backGround);
+                    } catch (CameraAccessException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onConfigureFailed(CameraCaptureSession session) {
+
+                }
+            },backGround);
+
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
