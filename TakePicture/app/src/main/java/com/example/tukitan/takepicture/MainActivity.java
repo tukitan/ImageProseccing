@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,15 +35,16 @@ public class MainActivity extends AppCompatActivity {
     }
     private void initTraineddata(){
         try {
-            String filePath = Environment.getExternalStorageDirectory() + "/tessdata/eng.traineddata";
+            String filePath = Environment.getExternalStorageDirectory().getPath() + "/tessdata/eng.traineddata";
             (new File(filePath)).getParentFile().mkdir();
             InputStream input = getResources().getAssets().open("eng.traineddata");
-            FileOutputStream output = new FileOutputStream(filePath,true);
+            FileOutputStream output = new FileOutputStream(filePath,false);
             byte[] buffer = new byte[1024];
             int length;
             while((length = input.read(buffer)) > 0) {
                 output.write(buffer,0,length);
             }
+            Toast.makeText(MainActivity.this,"traineddata.",Toast.LENGTH_SHORT);
 
             input.close();
             output.close();

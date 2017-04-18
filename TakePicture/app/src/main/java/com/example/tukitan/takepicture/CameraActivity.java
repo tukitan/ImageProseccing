@@ -153,7 +153,7 @@ public class CameraActivity extends Activity {
                     height = jpgSizes[0].getHeight();
                 }
             }
-            ImageReader reader = ImageReader.newInstance(width,height,ImageFormat.JPEG,1);
+            ImageReader reader = ImageReader.newInstance(width,height,ImageFormat.JPEG,2);
 
             List outputSurface = new ArrayList(2);
             outputSurface.add(reader.getSurface());
@@ -171,13 +171,12 @@ public class CameraActivity extends Activity {
                     try{
                         image = reader.acquireLatestImage();
 
-                        System.out.println("KOKO");
+                        //System.out.println("KOKO");
                         Recognition obj = new Recognition(getApplication(),image);
-                        obj.recognize();
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }finally {
                         image.close();
+                        obj.recognize();
+                    }catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             };
@@ -186,7 +185,7 @@ public class CameraActivity extends Activity {
             final Handler backGround = new Handler(thread.getLooper());
             reader.setOnImageAvailableListener(readerListener,backGround);
             mPreviewSession.stopRepeating();
-            mPreviewSession.capture(captureBuilder.build(),null,backGround);
+            //mPreviewSession.capture(captureBuilder.build(),null,backGround);
 
             final CameraCaptureSession.CaptureCallback mCaptureCallback = new CameraCaptureSession.CaptureCallback(){
                 @Override

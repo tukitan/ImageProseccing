@@ -11,6 +11,9 @@ import android.widget.Toast;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
 import static java.security.AccessController.getContext;
@@ -34,16 +37,35 @@ public class Recognition extends View{
         Bitmap output = null;
         if(bytes != null){
             output = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+            saveImage(bytes);
         }
         //canvas.drawBitmap(output,0,0,mPaint);
         System.out.println("Recognition");
+
         output = output.copy(Bitmap.Config.ARGB_8888,true);
         TessBaseAPI tessBaseAPI = new TessBaseAPI();
-        tessBaseAPI.init(String.valueOf(Environment.getExternalStorageDirectory()),"eng");
+        tessBaseAPI.init(Environment.getExternalStorageDirectory().getPath(),"eng");
 
         tessBaseAPI.setImage(output);
         String recognized = tessBaseAPI.getUTF8Text();
+        System.out.println("END Recognition");
         //Toast.makeText(getContext(),recognized,Toast.LENGTH_SHORT).show();
+
         System.out.println(recognized);
+        tessBaseAPI.end();
+
+    }
+
+    private void saveImage(byte[] data){
+        OutputStream output = null;
+        try{
+            output = new FileOutputStream(Environment.getExternalStorageDirectory().getPath()+"/RecognitionImage.jpg");
+            output.write(data);
+            output.close();
+            System.out.println("Finished Save image");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
