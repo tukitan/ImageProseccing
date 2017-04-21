@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.googlecode.tesseract.android.TessBaseAPI;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -80,11 +81,20 @@ public class MainActivity extends AppCompatActivity {
             BufferedInputStream bis = null;
             try{
                 bis = new BufferedInputStream(new FileInputStream("/"+Environment.getExternalStorageDirectory()+"/ScreenShots/RecognitionImage.png"));
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
                 bmp = BitmapFactory.decodeStream(bis);
 
+                bmp.compress(Bitmap.CompressFormat.JPEG,100,baos);
+                byte[] bytes = baos.toByteArray();
+
+                /*
                 RecognizeThread thread = new RecognizeThread(bmp);
                 thread.start();
+                */
+                Intent intent = new Intent(MainActivity.this,CVrecognition.class);
+                intent.putExtra("BYTEARRAY",bytes);
+                startActivity(intent);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
