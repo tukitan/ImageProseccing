@@ -46,9 +46,9 @@ public class MainActivity extends AppCompatActivity {
     }
     private void initTraineddata(){
         try {
-            String filePath = Environment.getExternalStorageDirectory().getPath() + "/tessdata/eng.traineddata";
+            String filePath = Environment.getExternalStorageDirectory().getPath() + "/tessdata/led.traineddata";
             (new File(filePath)).getParentFile().mkdir();
-            InputStream input = getResources().getAssets().open("eng.traineddata");
+            InputStream input = getResources().getAssets().open("led.traineddata");
             FileOutputStream output = new FileOutputStream(filePath,false);
             byte[] buffer = new byte[1024];
             int length;
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             BufferedInputStream bis = null;
             try{
-                bis = new BufferedInputStream(new FileInputStream("/"+Environment.getExternalStorageDirectory()+"/ScreenShots/RecognitionImage.png"));
+                bis = new BufferedInputStream(new FileInputStream("/"+Environment.getExternalStorageDirectory()+"/Pictures/led.png"));
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
                 bmp = BitmapFactory.decodeStream(bis);
@@ -88,13 +88,16 @@ public class MainActivity extends AppCompatActivity {
                 bmp.compress(Bitmap.CompressFormat.JPEG,100,baos);
                 byte[] bytes = baos.toByteArray();
 
-                /*
+
                 RecognizeThread thread = new RecognizeThread(bmp);
                 thread.start();
-                */
+
+
+                /*
                 Intent intent = new Intent(MainActivity.this,CVrecognition.class);
                 intent.putExtra("BYTEARRAY",bytes);
                 startActivity(intent);
+                */
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

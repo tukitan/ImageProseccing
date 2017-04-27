@@ -44,7 +44,7 @@ public class Recognition extends View{
 
         output = output.copy(Bitmap.Config.ARGB_8888,true);
         TessBaseAPI tessBaseAPI = new TessBaseAPI();
-        tessBaseAPI.init(Environment.getExternalStorageDirectory().getPath(),"eng");
+        tessBaseAPI.init(Environment.getExternalStorageDirectory().getPath(),"led");
 
         tessBaseAPI.setImage(output);
         String recognized = tessBaseAPI.getUTF8Text();
