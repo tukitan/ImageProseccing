@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
+
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -28,22 +33,27 @@ import java.io.InputStream;
 public class MainActivity extends AppCompatActivity {
 
     Button startButton,recognizeButton;
+    static TextView result;
+    static Handler handler;
+    static boolean initFlag = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         TextView myText = (TextView)findViewById(R.id.text);
+
+    }
+    private void mainMethod(){
         startButton = (Button)findViewById(R.id.start);
         startButton.setOnClickListener(startMethod);
         recognizeButton = (Button)findViewById(R.id.recognizePic);
         recognizeButton.setOnClickListener(recognizeFunc);
+        result = (TextView)findViewById(R.id.result);
 
-        myText.setText("Helloooooooo");
         initTraineddata();
-
-
     }
+
     private void initTraineddata(){
         try {
             String filePath = Environment.getExternalStorageDirectory().getPath() + "/tessdata/led.traineddata";
@@ -88,8 +98,8 @@ public class MainActivity extends AppCompatActivity {
                 bmp.compress(Bitmap.CompressFormat.JPEG,100,baos);
                 byte[] bytes = baos.toByteArray();
 
-
-                RecognizeThread thread = new RecognizeThread(bmp);
+                handler = new Handler();
+                RecognizeThread thread = new RecognizeThread(bmp,handler,getApplicationContext());
                 thread.start();
 
 
@@ -101,18 +111,35 @@ public class MainActivity extends AppCompatActivity {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-
-
         }
     };
 
     @Override
     protected void onResume(){
+        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_2_0,this,mLoaderCallback);
         super.onResume();
+
+
     }
+
 
     @Override
     protected void onPause(){
         super.onPause();
     }
+
+    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status){
+                case LoaderCallbackInterface.SUCCESS:
+                    initFlag = true;
+                    mainMethod();
+                    break;
+                default:
+                    super.onManagerConnected(status);
+                    break;
+            }
+        }
+    };
 }
