@@ -12,6 +12,7 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -37,6 +38,23 @@ public class CVprocessing {
         bitmapToMat(bitmap,mat);
         Imgproc.cvtColor(mat,grayed,Imgproc.COLOR_RGB2GRAY);
         matToBitmap(grayed,bitmap);
+
+        return bitmap;
+    }
+
+    Bitmap binaly(Bitmap bitmap){
+        if(!MainActivity.initFlag){
+            return null;
+        }
+        Mat mat = new Mat();
+        Mat binal = new Mat();
+        bitmapToMat(bitmap,mat);
+        Imgproc.threshold(mat,binal,0.0,255.0,Imgproc.THRESH_BINARY_INV|Imgproc.THRESH_OTSU);
+        matToBitmap(binal,bitmap);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100,baos);
+        saveImage(baos.toByteArray());
 
         return bitmap;
     }

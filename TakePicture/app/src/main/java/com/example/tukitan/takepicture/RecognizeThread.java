@@ -30,6 +30,7 @@ public class RecognizeThread extends Thread{
         String whiteList = ".0123456789";
         CVprocessing mCVprocessing = new CVprocessing(context);
         output = mCVprocessing.grayScale(output);
+        output = mCVprocessing.binaly(output);
 
         TessBaseAPI tessBaseAPI = new TessBaseAPI();
         tessBaseAPI.init(Environment.getExternalStorageDirectory().getPath(),"eng");

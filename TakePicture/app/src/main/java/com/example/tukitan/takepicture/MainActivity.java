@@ -116,7 +116,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume(){
-        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_2_0,this,mLoaderCallback);
+        //OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_2_0,this,mLoaderCallback);
+        mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         super.onResume();
 
 
