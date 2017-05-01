@@ -2,10 +2,13 @@ package com.example.tukitan.takepicture;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,6 +32,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.jar.Manifest;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,12 +40,22 @@ public class MainActivity extends AppCompatActivity {
     static TextView result;
     static Handler handler;
     static boolean initFlag = false;
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         TextView myText = (TextView)findViewById(R.id.text);
+
+        if(checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            if(shouldShowRequestPermissionRationale(android.Manifest.permission.READ_EXTERNAL_STORAGE)){
+
+            }
+
+            requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},0);
+
+        }
 
     }
     private void mainMethod(){
@@ -116,8 +130,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume(){
-        //OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_2_0,this,mLoaderCallback);
-        mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_2_0,this,mLoaderCallback);
+        //mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         super.onResume();
 
 
