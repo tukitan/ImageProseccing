@@ -9,6 +9,7 @@ import android.widget.Toast;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
@@ -49,9 +50,8 @@ public class CVprocessing {
         Mat mat = new Mat();
         Mat binal = new Mat();
         bitmapToMat(bitmap,mat);
-        Imgproc.threshold(mat,binal,0.0,255.0,Imgproc.THRESH_BINARY_INV|Imgproc.THRESH_OTSU);
+        Imgproc.threshold(mat, binal, 50.0, 255.0, Imgproc.THRESH_BINARY);
         matToBitmap(binal,bitmap);
-
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG,100,baos);
         saveImage(baos.toByteArray());

@@ -110,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
                 bmp = BitmapFactory.decodeStream(bis);
 
                 bmp.compress(Bitmap.CompressFormat.JPEG,100,baos);
-                byte[] bytes = baos.toByteArray();
 
                 handler = new Handler();
                 RecognizeThread thread = new RecognizeThread(bmp,handler,getApplicationContext());

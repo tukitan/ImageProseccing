@@ -134,6 +134,62 @@ public class CameraActivity extends Activity {
             e.printStackTrace();
         }
     }
+
+    protected void createCameraPreviewSettion(){
+        if(mCameraDevice == null || !mTextureView.isAvailable() || mPreviewSize == null){
+            return;
+        }
+        SurfaceTexture surfaceTexture = mTextureView.getSurfaceTexture();
+        if(surfaceTexture == null) return;
+        surfaceTexture.setDefaultBufferSize(mPreviewSize.getWidth(),mPreviewSize.getHeight());
+        Surface surface = new Surface(surfaceTexture);
+        try{
+            mPreviewBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+
+        mPreviewBuilder.addTarget(surface);
+
+        try{
+            mCameraDevice.createCaptureSession(Arrays.asList(surface),new CameraCaptureSession.StateCallback(){
+
+                @Override
+                public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
+                    mPreviewSession = cameraCaptureSession;
+                    updatePreview();
+                }
+
+                @Override
+                public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
+                    Toast.makeText(CameraActivity.this,"FAILED", Toast.LENGTH_SHORT).show();
+                }
+            },null);
+        } catch (CameraAccessException e){
+            e.printStackTrace();
+        }
+    }
+
+    protected void updatePreview(){
+        if(mCameraDevice == null) return;
+        mPreviewBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+
+        HandlerThread thread = new HandlerThread("CameraPreview");
+        thread.start();
+        Handler backgroundHandler = new Handler(thread.getLooper());
+        try{
+            //getCameraPreviews
+            mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(),null,backgroundHandler);
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        //createCameraPreviewSettion();
+    }
     protected void takePicture(){
         //Toast.makeText(CameraActivity.this,"それは無理＾＾；",Toast.LENGTH_LONG).show();
         //return;
@@ -219,61 +275,6 @@ public class CameraActivity extends Activity {
             e.printStackTrace();
         }
 
-    }
-    protected void createCameraPreviewSettion(){
-        if(mCameraDevice == null || !mTextureView.isAvailable() || mPreviewSize == null){
-            return;
-        }
-        SurfaceTexture surfaceTexture = mTextureView.getSurfaceTexture();
-        if(surfaceTexture == null) return;
-        surfaceTexture.setDefaultBufferSize(mPreviewSize.getWidth(),mPreviewSize.getHeight());
-        Surface surface = new Surface(surfaceTexture);
-        try{
-            mPreviewBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
-        }
-
-        mPreviewBuilder.addTarget(surface);
-
-        try{
-            mCameraDevice.createCaptureSession(Arrays.asList(surface),new CameraCaptureSession.StateCallback(){
-
-                @Override
-                public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    mPreviewSession = cameraCaptureSession;
-                    updatePreview();
-                }
-
-                @Override
-                public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    Toast.makeText(CameraActivity.this,"FAILED", Toast.LENGTH_SHORT).show();
-                }
-            },null);
-        } catch (CameraAccessException e){
-            e.printStackTrace();
-        }
-    }
-
-    protected void updatePreview(){
-        if(mCameraDevice == null) return;
-        mPreviewBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
-
-        HandlerThread thread = new HandlerThread("CameraPreview");
-        thread.start();
-        Handler backgroundHandler = new Handler(thread.getLooper());
-        try{
-            //getCameraPreviews
-            mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(),null,backgroundHandler);
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-        //createCameraPreviewSettion();
     }
 }
 
