@@ -56,6 +56,22 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},0);
 
         }
+        if(checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            if(shouldShowRequestPermissionRationale(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+
+            }
+
+            requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+        }
+        if(checkSelfPermission(android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+            if(shouldShowRequestPermissionRationale(android.Manifest.permission.CAMERA)){
+
+            }
+
+            requestPermissions(new String[]{android.Manifest.permission.CAMERA},2);
+        }
+
+
 
     }
     private void mainMethod(){
@@ -70,16 +86,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void initTraineddata(){
         try {
-            String filePath = Environment.getExternalStorageDirectory().getPath() + "/tessdata/led.traineddata";
+            String filePath = Environment.getExternalStorageDirectory().getPath() + "/tessdata/letsgodigital.traineddata";
             (new File(filePath)).getParentFile().mkdir();
-            InputStream input = getResources().getAssets().open("led.traineddata");
+            InputStream input = getResources().getAssets().open("letsgodigital.traineddata");
             FileOutputStream output = new FileOutputStream(filePath,false);
             byte[] buffer = new byte[1024];
             int length;
             while((length = input.read(buffer)) > 0) {
                 output.write(buffer,0,length);
             }
-            Toast.makeText(MainActivity.this,"traineddata.",Toast.LENGTH_SHORT);
 
             input.close();
             output.close();

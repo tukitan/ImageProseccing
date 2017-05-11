@@ -41,13 +41,13 @@ public class RecognizeThread extends Thread{
         output = mCVprocessing.grayScale(output);
 
 
-        output = mCVprocessing.binaly(output);
+        //output = mCVprocessing.binaly(output);
         output.compress(Bitmap.CompressFormat.JPEG,100,baos);
         bytes = baos.toByteArray();
         saveImage(bytes);
 
         TessBaseAPI tessBaseAPI = new TessBaseAPI();
-        tessBaseAPI.init(Environment.getExternalStorageDirectory().getPath(),"eng");
+        tessBaseAPI.init(Environment.getExternalStorageDirectory().getPath(),"letsgodigital");
         tessBaseAPI.setVariable(TessBaseAPI.VAR_CHAR_WHITELIST,whiteList);
 
         tessBaseAPI.setImage(output);

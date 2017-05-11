@@ -4,7 +4,12 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
+import android.graphics.Matrix;
+import android.graphics.Point;
+import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.*;
 import android.hardware.camera2.params.StreamConfigurationMap;
@@ -16,12 +21,16 @@ import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Size;
+import android.view.Display;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
+
+import org.opencv.core.Mat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +44,8 @@ public class CameraActivity extends Activity {
     private CameraDevice mCameraDevice;
     private CaptureRequest.Builder mPreviewBuilder;
     private CameraCaptureSession mPreviewSession;
+    private double X,Y;
+    boolean flag = false;
 
     @Override
     protected void onCreate(Bundle SavedInstance) {
@@ -47,8 +58,6 @@ public class CameraActivity extends Activity {
         mTextureView = (TextureView) findViewById(R.id.textureView);
         mTextureView.setSurfaceTextureListener(mCameraViewStatusChanged);
 
-        mButton = (Button) findViewById(R.id.button);
-        mButton.setOnClickListener(mOnCilckListener);
     }
 
     private final TextureView.SurfaceTextureListener mCameraViewStatusChanged = new TextureView.SurfaceTextureListener() {
@@ -70,13 +79,6 @@ public class CameraActivity extends Activity {
 
         @Override
         public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
-        }
-    };
-    private final View.OnClickListener mOnCilckListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View view) {
-            takePicture();
         }
     };
 
@@ -207,6 +209,7 @@ public class CameraActivity extends Activity {
                 if(jpgSizes != null && 0 < jpgSizes.length){
                     width = jpgSizes[0].getWidth();
                     height = jpgSizes[0].getHeight();
+
                 }
             }
             ImageReader reader = ImageReader.newInstance(width,height,ImageFormat.JPEG,2);
@@ -228,7 +231,7 @@ public class CameraActivity extends Activity {
                         image = reader.acquireLatestImage();
 
                         //System.out.println("KOKO");
-                        Recognition obj = new Recognition(getApplication(),image);
+                        Recognition obj = new Recognition(getApplication(),image,X,Y);
                         image.close();
                         obj.recognize();
                     }catch (Exception e) {
@@ -276,5 +279,16 @@ public class CameraActivity extends Activity {
         }
 
     }
+    public boolean onTouchEvent(MotionEvent event){
+        X = (double)event.getX();
+        Y = (double)event.getY();
+        System.out.println("X:" + X + ",Y:" + Y);
+        if(!flag){
+            flag = true;
+            takePicture();
+        }
+        return true;
+    }
+
 }
 
