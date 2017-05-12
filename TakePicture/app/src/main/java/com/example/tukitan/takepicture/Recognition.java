@@ -14,10 +14,13 @@ import android.widget.Toast;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.ByteBuffer;
 
 import static java.security.AccessController.getContext;
@@ -31,7 +34,7 @@ public class Recognition extends View{
     private Paint mPaint = new Paint();
     double Yup,Ydown,Xright,Xleft;
 
-    static double EXPAND_X = 2620.0/1060.0;
+    static double EXPAND_X = 2620.0/1020.0;
     static double EXPAND_Y = 4656.0/1940.0;
     static int range = 600;
     /*
@@ -60,6 +63,7 @@ public class Recognition extends View{
         Bitmap output = null;
         Bitmap rotatedBitmap = null;
         byte[] rotatedByte;
+        CVprocessing mCVprocessing = new CVprocessing();
         if(bytes != null){
             output = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
             rotatedByte = rotationBitmap(output);
@@ -72,14 +76,18 @@ public class Recognition extends View{
 
         String whiteList = ".0123456789";
 
+        rotatedBitmap = mCVprocessing.grayScale(rotatedBitmap);
+
         TessBaseAPI tessBaseAPI = new TessBaseAPI();
         tessBaseAPI.init(Environment.getExternalStorageDirectory().getPath(),"led");
 
         tessBaseAPI.setImage(rotatedBitmap);
         tessBaseAPI.setVariable(TessBaseAPI.VAR_CHAR_WHITELIST,whiteList);
         String recognized = tessBaseAPI.getUTF8Text();
+        writeFile(recognized);
         System.out.println("END Recognition");
         //Toast.makeText(getContext(),recognized,Toast.LENGTH_SHORT).show();
+
 
         System.out.println(recognized);
         tessBaseAPI.end();
@@ -135,5 +143,21 @@ public class Recognition extends View{
         System.out.println("MAXwidth:" + result.getWidth() + ",MAXheight:" + result.getHeight());
 
         return bytes;
+    }
+
+    private void writeFile(String resultData){
+        String filePath = Environment.getExternalStorageDirectory() + "/ocrResult/ocrByCamera.txt";
+        File file = new File(filePath);
+        file.getParentFile().mkdir();
+        try{
+            FileOutputStream fos = new FileOutputStream(filePath);
+            OutputStreamWriter osw = new OutputStreamWriter(fos,"UTF-8");
+            BufferedWriter bw = new BufferedWriter(osw);
+            bw.write(resultData);
+            bw.flush();
+            bw.close();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }

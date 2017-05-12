@@ -23,9 +23,7 @@ import static org.opencv.android.Utils.matToBitmap;
 
 public class CVprocessing {
 
-    Context context;
-    public CVprocessing(Context context){
-        this.context = context;
+    public CVprocessing(){
 
     }
 

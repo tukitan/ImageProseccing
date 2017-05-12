@@ -37,7 +37,7 @@ public class RecognizeThread extends Thread{
 
         output = output.copy(Bitmap.Config.ARGB_8888,true);
         String whiteList = ".0123456789";
-        CVprocessing mCVprocessing = new CVprocessing(context);
+        CVprocessing mCVprocessing = new CVprocessing();
         output = mCVprocessing.grayScale(output);
 
 
