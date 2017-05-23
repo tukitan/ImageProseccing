@@ -9,13 +9,16 @@ import org.opencv.imgproc.Imgproc;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 
 import static org.opencv.android.Utils.*;
 
 public class CVprocess {
 
     Bitmap myBitmap;
+    ArrayList<ExByte> exBytes;
     int HEADER = 54;
+    int BYTESIZE;
     public CVprocess(Bitmap bitmap){
         myBitmap = bitmap;
     }
@@ -24,8 +27,14 @@ public class CVprocess {
         grayScale();
         binaly();
         byte[] bytes = getByteArray();
-        for(byte elem :bytes) System.out.println(elem);
+        System.out.println("length:" + bytes.length);
+        //for(byte elem :bytes) System.out.println(elem);
         //for(int i)
+
+        exBytes = new ArrayList<>();
+        BYTESIZE = bytes.length/4;
+        for(int i=0;i<bytes.length/4 ;i++){
+        }
     }
     public Bitmap getMyBitmap(){
         return myBitmap;
