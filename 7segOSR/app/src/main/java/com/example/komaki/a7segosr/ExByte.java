@@ -10,11 +10,13 @@ public class ExByte {
     static boolean BLACK = false;
     boolean color;
     int LABEL;
+    public int intDada;
     int pointX,pointY;
-    public ExByte(int x,int y,Byte data){
-        color = (data == 0) ? BLACK : WHITE;
-        pointX = x;
-        pointY = y;
+
+    public ExByte(int data){
+        intDada = data;
+        color = (data == -1) ? WHITE : BLACK;
     }
+
 
 }
