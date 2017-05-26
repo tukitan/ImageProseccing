@@ -9,13 +9,14 @@ public class ExByte {
     static boolean WHITE = true;
     static boolean BLACK = false;
     boolean color;
-    int LABEL;
+    int LABEL=0;
     public int intDada;
     int pointX,pointY;
 
     public ExByte(int data){
         intDada = data;
         color = (data == -1) ? WHITE : BLACK;
+        //System.out.println(color);
     }
 
 

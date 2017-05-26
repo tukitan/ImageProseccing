@@ -3,6 +3,7 @@ package com.example.komaki.a7segosr;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import org.opencv.android.*;
 import org.opencv.core.Mat;
@@ -24,6 +25,7 @@ public class CVprocess {
     double THRESHOLD = 60.0;
     int BYTESIZE;
     int PIXEL;
+    int KSIZE = 31;
     Bitmap newBitmap;
     public CVprocess(Bitmap bitmap){
         myBitmap = bitmap;
@@ -36,12 +38,17 @@ public class CVprocess {
         System.out.println("length:" + bytes.length);
         //for(byte elem :bytes) System.out.println(elem);
         //for(int i)
-        labeling();
 
         Bitmap tmpBitmap = Bitmap.createBitmap(myBitmap);
         newBitmap = tmpBitmap.copy(Bitmap.Config.ARGB_8888,true);
+
+        blurBitmap(KSIZE);
+
+        /*
+        labeling();
         int[] pixels =returnPixels();
         newBitmap.setPixels(pixels,0,BITMAP_X_SIZE,0,0,BITMAP_X_SIZE,BITMAP_Y_SIZE);
+        */
 
     }
     public Bitmap getMyBitmap(){
@@ -88,16 +95,41 @@ public class CVprocess {
         for(int i=0;i<BITMAP_Y_SIZE;i++){
             for(int j=0;j<BITMAP_X_SIZE;j++){
                 exBytes[i][j] = new ExByte(myBitmap.getPixel(j,i));
+                //System.out.println(exBytes[i][j].color);
             }
         }
 
+
         //Labeling Process
+        int label = 1;
         for(int i=1;i<BITMAP_Y_SIZE-1;i++){
             for(int j=1;j<BITMAP_X_SIZE-1;j++){
+                // exBytes.color == BLACK  #false
+                // exBytes.color == WHITE  #true
 
+                if(!exBytes[i][j].color) {
+                    Log.d("LABEL","StartLabeling");
+                    setLabel(j,i,label);
+                    label++;
+                }
+
+            }
+        }
+        for (int i=0;i<BITMAP_Y_SIZE;i++){
+            for(int j=0;j<BITMAP_X_SIZE;j++){
+                //System.out.println(exBytes[i][j].LABEL);
             }
         }
     }
+
+    private int setLabel(int x,int y,int label){
+        if(x < 0 || y < 0 || x >= BITMAP_X_SIZE || y >= BITMAP_Y_SIZE) return 0;
+        if(exBytes[y][x].LABEL == label || exBytes[y][x].color) return 0;
+        exBytes[y][x].LABEL = label;
+        return setLabel(x+1,y,label) + setLabel(x-1,y, label) + setLabel(x,y+1,label);
+    }
+
+
     private int[] returnPixels(){
         int[] res = new int[BITMAP_Y_SIZE*BITMAP_X_SIZE];
         for(int i=0;i<BITMAP_Y_SIZE;i++){
@@ -106,5 +138,12 @@ public class CVprocess {
             }
         }
         return res;
+    }
+    private void blurBitmap(int ksize){
+        Mat src = new Mat();
+        Mat dst = new Mat();
+        bitmapToMat(newBitmap,src);
+        Imgproc.medianBlur(src,dst,ksize);
+        matToBitmap(dst,newBitmap);
     }
 }
