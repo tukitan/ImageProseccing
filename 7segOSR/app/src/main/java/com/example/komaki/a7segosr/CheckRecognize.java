@@ -26,14 +26,14 @@ public class CheckRecognize extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected synchronized void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.check_recognize);
 
         Bitmap bitmap = loadBitmap();
         CVprocess cvObj = new CVprocess(bitmap);
-        cvObj.run();
-        writeBitmap(cvObj.getNewBitmap(),"newBitmap.jpg");
+        cvObj.start();
+        //writeBitmap(cvObj.getNewBitmap(),"newBitmap.jpg");
 
     }
 

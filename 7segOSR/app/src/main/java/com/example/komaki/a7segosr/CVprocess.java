@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 import static org.opencv.android.Utils.*;
 
-public class CVprocess {
+public class CVprocess extends Thread{
 
     Bitmap myBitmap;
     ExByte[][] exBytes;
@@ -31,6 +31,7 @@ public class CVprocess {
         myBitmap = bitmap;
     }
 
+    @Override
     public void run(){
         grayScale();
         binaly();
@@ -54,7 +55,9 @@ public class CVprocess {
     public Bitmap getMyBitmap(){
         return myBitmap;
     }
-    public Bitmap getNewBitmap(){ return newBitmap;}
+    public Bitmap getNewBitmap(){
+        return newBitmap;
+    }
 
 
         private void grayScale(){
@@ -101,7 +104,6 @@ public class CVprocess {
 
 
         //Labeling Process
-        int label = 1;
         for(int i=1;i<BITMAP_Y_SIZE-1;i++){
             for(int j=1;j<BITMAP_X_SIZE-1;j++){
                 // exBytes.color == BLACK  #false
@@ -109,24 +111,45 @@ public class CVprocess {
 
                 if(!exBytes[i][j].color) {
                     Log.d("LABEL","StartLabeling");
-                    setLabel(j,i,label);
-                    label++;
+                    setLabel();
                 }
 
             }
         }
         for (int i=0;i<BITMAP_Y_SIZE;i++){
             for(int j=0;j<BITMAP_X_SIZE;j++){
-                //System.out.println(exBytes[i][j].LABEL);
+                System.out.println(exBytes[i][j].LABEL);
             }
         }
     }
 
-    private int setLabel(int x,int y,int label){
-        if(x < 0 || y < 0 || x >= BITMAP_X_SIZE || y >= BITMAP_Y_SIZE) return 0;
-        if(exBytes[y][x].LABEL == label || exBytes[y][x].color) return 0;
-        exBytes[y][x].LABEL = label;
-        return setLabel(x+1,y,label) + setLabel(x-1,y, label) + setLabel(x,y+1,label);
+    private void setLabel(){
+        boolean updated = true;
+        int tmpLab1,tmpLab2;
+        int label = 1;
+        while(updated){
+            updated = false;
+            for(int i=1;i<BITMAP_Y_SIZE -1;i++){
+                for (int j=1;j<BITMAP_X_SIZE -1;j++){
+                    if(exBytes[i][j].color == ExByte.WHITE) continue;
+                    tmpLab1 = 0;
+                    tmpLab2 = 0;
+                    updated = true;
+                    if(exBytes[i-1][j].color == ExByte.BLACK) tmpLab1 = exBytes[i-1][j].LABEL;
+                    if(exBytes[i][j-1].color == ExByte.BLACK) tmpLab2 = exBytes[i][j-1].LABEL;
+                    if(tmpLab1 == 0 && tmpLab2 ==0) {
+                        exBytes[i][j].LABEL = label;
+                        label++;
+                    }else if(tmpLab1 == 0){
+                        exBytes[i][j].LABEL = tmpLab2;
+                    }else if(tmpLab2 == 0){
+                        exBytes[i][j].LABEL = tmpLab1;
+                    }else {
+                        exBytes[i][j].LABEL = (tmpLab1<tmpLab2) ? tmpLab1 : tmpLab2;
+                    }
+                }
+            }
+        }
     }
 
 
