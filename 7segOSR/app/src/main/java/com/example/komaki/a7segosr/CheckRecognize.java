@@ -26,14 +26,13 @@ public class CheckRecognize extends AppCompatActivity {
     }
 
     @Override
-    protected synchronized void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.check_recognize);
 
         Bitmap bitmap = loadBitmap();
         CVprocess cvObj = new CVprocess(bitmap);
         cvObj.start();
-        //writeBitmap(cvObj.getNewBitmap(),"newBitmap.jpg");
 
     }
 
@@ -41,7 +40,7 @@ public class CheckRecognize extends AppCompatActivity {
         Bitmap bitmap = null;
         BufferedInputStream bis = null;
         try{
-            bis = new BufferedInputStream(new FileInputStream("/" + Environment.getExternalStorageDirectory() + "/Pictures/led2.bmp"));
+            bis = new BufferedInputStream(new FileInputStream("/" + Environment.getExternalStorageDirectory() + "/Pictures/image.bmp"));
             //ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
             bitmap = BitmapFactory.decodeStream(bis);
@@ -69,6 +68,11 @@ public class CheckRecognize extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    static public void processedFunc(Bitmap bitmapData){
+        writeBitmap(bitmapData,"newBitmap.jpg");
 
     }
 

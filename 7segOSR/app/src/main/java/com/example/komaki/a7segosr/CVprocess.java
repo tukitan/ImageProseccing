@@ -12,21 +12,51 @@ import org.opencv.imgproc.Imgproc;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.opencv.android.Utils.*;
 
+/*
+    This class is Processing to Bitmap Image and Recognition thread
+    Called By CheckRecognize.java
+ */
 public class CVprocess extends Thread{
 
+
+    // Primitive bitmap
     Bitmap myBitmap;
+
+    // Expand byte data (Show ExByte.java)
     ExByte[][] exBytes;
-    int HEADER = 54;
-    int BITMAP_X_SIZE;
-    int BITMAP_Y_SIZE;
-    double THRESHOLD = 60.0;
-    int BYTESIZE;
-    int PIXEL;
+
+    // Image Size of X and Y (Pixels)
+    static int BITMAP_X_SIZE;
+    static int BITMAP_Y_SIZE;
+
+    // Threshold value. Used bynaly()
+    double THRESHOLD = 57.0;
+
+    // Blur value. Used blurBitmap()
     int KSIZE = 31;
+
+    // LED Segment Object. (Show Segment.java)
+    Segment[] segments;
+
+    // Mutable Bitmap Object
     Bitmap newBitmap;
+
+    // into Labeling Num
+    ArrayList<Integer> usedLabelNum;
+
+    // Mapping to Label -> Index
+    HashMap<Integer,Integer> labelMap;
+
+    // Jugde two Segments to One Charactor
+    int SEG_RANGE = 10;
+
+    // Charactor List
+    ArrayList<Charactor> numbers;
+
     public CVprocess(Bitmap bitmap){
         myBitmap = bitmap;
     }
@@ -44,6 +74,17 @@ public class CVprocess extends Thread{
         newBitmap = tmpBitmap.copy(Bitmap.Config.ARGB_8888,true);
 
         blurBitmap(KSIZE);
+        labeling();
+        makeSegment();
+        makeCharactor();
+        for(Charactor elem :numbers) {
+
+        }
+
+
+        CheckRecognize.writeBitmap(newBitmap,"newBitmap2.jpg");
+        Log.d("CVprocess","Finish Processed.");
+
 
         /*
         labeling();
@@ -60,7 +101,8 @@ public class CVprocess extends Thread{
     }
 
 
-        private void grayScale(){
+    private void grayScale(){
+
         Mat gray = new Mat();
         Mat origin = new Mat();
         bitmapToMat(myBitmap,origin);
@@ -85,47 +127,28 @@ public class CVprocess extends Thread{
         return buffer.array();
     }
 
-    private void labeling(){
+    private void labeling() {
         Mat src = new Mat();
-        bitmapToMat(myBitmap,src);
+        bitmapToMat(myBitmap, src);
 
         BITMAP_X_SIZE = myBitmap.getWidth();
         BITMAP_Y_SIZE = myBitmap.getHeight();
-        System.out.println("x:"+BITMAP_X_SIZE+",y:"+BITMAP_Y_SIZE+",size:"+BITMAP_X_SIZE*BITMAP_Y_SIZE);
+        System.out.println("x:" + BITMAP_X_SIZE + ",y:" + BITMAP_Y_SIZE + ",size:" + BITMAP_X_SIZE * BITMAP_Y_SIZE);
 
         exBytes = new ExByte[BITMAP_Y_SIZE][BITMAP_X_SIZE];
 
-        for(int i=0;i<BITMAP_Y_SIZE;i++){
-            for(int j=0;j<BITMAP_X_SIZE;j++){
-                exBytes[i][j] = new ExByte(myBitmap.getPixel(j,i));
-                //System.out.println(exBytes[i][j].color);
+        for (int i = 0; i < BITMAP_Y_SIZE; i++) {
+            for (int j = 0; j < BITMAP_X_SIZE; j++) {
+                exBytes[i][j] = new ExByte(myBitmap.getPixel(j, i));
             }
         }
-
-
-        //Labeling Process
-        for(int i=1;i<BITMAP_Y_SIZE-1;i++){
-            for(int j=1;j<BITMAP_X_SIZE-1;j++){
-                // exBytes.color == BLACK  #false
-                // exBytes.color == WHITE  #true
-
-                if(!exBytes[i][j].color) {
-                    Log.d("LABEL","StartLabeling");
-                    setLabel();
-                }
-
-            }
-        }
-        for (int i=0;i<BITMAP_Y_SIZE;i++){
-            for(int j=0;j<BITMAP_X_SIZE;j++){
-                System.out.println(exBytes[i][j].LABEL);
-            }
-        }
+        setLabel();
     }
 
     private void setLabel(){
         boolean updated = true;
         int tmpLab1,tmpLab2;
+        int minimam;
         int label = 1;
         while(updated){
             updated = false;
@@ -134,19 +157,84 @@ public class CVprocess extends Thread{
                     if(exBytes[i][j].color == ExByte.WHITE) continue;
                     tmpLab1 = 0;
                     tmpLab2 = 0;
-                    updated = true;
+                    //updated = true;
                     if(exBytes[i-1][j].color == ExByte.BLACK) tmpLab1 = exBytes[i-1][j].LABEL;
                     if(exBytes[i][j-1].color == ExByte.BLACK) tmpLab2 = exBytes[i][j-1].LABEL;
-                    if(tmpLab1 == 0 && tmpLab2 ==0) {
-                        exBytes[i][j].LABEL = label;
-                        label++;
-                    }else if(tmpLab1 == 0){
-                        exBytes[i][j].LABEL = tmpLab2;
-                    }else if(tmpLab2 == 0){
-                        exBytes[i][j].LABEL = tmpLab1;
-                    }else {
-                        exBytes[i][j].LABEL = (tmpLab1<tmpLab2) ? tmpLab1 : tmpLab2;
+
+                    if(exBytes[i][j].LABEL == 0) {
+                        if (tmpLab1 == 0 && tmpLab2 == 0) {
+                            exBytes[i][j].LABEL = label;
+                            label++;
+                        } else if (tmpLab1 == 0) {
+                            exBytes[i][j].LABEL = tmpLab2;
+                        } else if (tmpLab2 == 0) {
+                            exBytes[i][j].LABEL = tmpLab1;
+                        } else {
+                            exBytes[i][j].LABEL = (tmpLab1 < tmpLab2) ? tmpLab1 : tmpLab2;
+                        }
+                        updated = true;
+                    } else {
+                        if(tmpLab1 != 0 && tmpLab2 != 0) {
+                            minimam = (tmpLab1 < tmpLab2) ? tmpLab1 : tmpLab2;
+                            if (exBytes[i][j].LABEL > minimam) {
+                                exBytes[i][j].LABEL = minimam;
+                                updated = true;
+                            }
+                        } else if(tmpLab1 != 0) {
+                            if(exBytes[i][j].LABEL > tmpLab1){
+                                exBytes[i][j].LABEL = tmpLab1;
+                                updated = true;
+                            }
+                        } else if(tmpLab2 != 0){
+                            if(exBytes[i][j].LABEL > tmpLab2){
+                                exBytes[i][j].LABEL = tmpLab2;
+                                updated = true;
+                            }
+                        }
                     }
+                    //System.out.println("LABELING");
+                }
+            }
+            // Reverse Labeling direction
+            for(int i=BITMAP_Y_SIZE -2 ;i>0 ;i--){
+                for (int j=BITMAP_X_SIZE -2 ;j>0 ;j--){
+                    if(exBytes[i][j].color == ExByte.WHITE) continue;
+                    tmpLab1 = 0;
+                    tmpLab2 = 0;
+                    if(exBytes[i+1][j].color == ExByte.BLACK) tmpLab1 = exBytes[i+1][j].LABEL;
+                    if(exBytes[i][j+1].color == ExByte.BLACK) tmpLab2 = exBytes[i][j+1].LABEL;
+                    if(exBytes[i][j].LABEL == 0) {
+                        if (tmpLab1 == 0 && tmpLab2 == 0) {
+                            exBytes[i][j].LABEL = label;
+                            label++;
+                        } else if (tmpLab1 == 0) {
+                            exBytes[i][j].LABEL = tmpLab2;
+                        } else if (tmpLab2 == 0) {
+                            exBytes[i][j].LABEL = tmpLab1;
+                        } else {
+                            exBytes[i][j].LABEL = (tmpLab1 < tmpLab2) ? tmpLab1 : tmpLab2;
+                        }
+                        updated = true;
+                    }else {
+                        if(tmpLab1 != 0 && tmpLab2 != 0) {
+                            minimam = (tmpLab1 < tmpLab2) ? tmpLab1 : tmpLab2;
+                            if (exBytes[i][j].LABEL > minimam) {
+                                exBytes[i][j].LABEL = minimam;
+                                updated = true;
+                            }
+                        } else if(tmpLab1 != 0) {
+                            if(exBytes[i][j].LABEL > tmpLab1){
+                                exBytes[i][j].LABEL = tmpLab1;
+                                updated = true;
+                            }
+                        } else if(tmpLab2 != 0){
+                            if(exBytes[i][j].LABEL > tmpLab2){
+                                exBytes[i][j].LABEL = tmpLab2;
+                                updated = true;
+                            }
+                        }
+                    }
+                    //System.out.println("LABELING");
                 }
             }
         }
@@ -169,4 +257,53 @@ public class CVprocess extends Thread{
         Imgproc.medianBlur(src,dst,ksize);
         matToBitmap(dst,newBitmap);
     }
+
+    private void makeSegment(){
+        int cnt = 0;
+        usedLabelNum = new ArrayList<>();
+        for (int i = 0; i < BITMAP_Y_SIZE; i++) {
+            for (int j = 0; j < BITMAP_X_SIZE; j++) {
+                System.out.print(exBytes[i][j].LABEL + ",");
+                if(usedLabelNum.indexOf(exBytes[i][j].LABEL) == -1) usedLabelNum.add(exBytes[i][j].LABEL);
+            }
+            System.out.println();
+        }
+        usedLabelNum.remove(0);
+        segments = new Segment[usedLabelNum.size()];
+        labelMap = new HashMap<>();
+
+        for(int i=0;i<segments.length;i++) segments[i] = new Segment();
+        for(int elem :usedLabelNum) {
+            segments[cnt].setLabel(elem);
+            labelMap.put(elem,cnt);
+            System.out.println(elem);
+            cnt ++;
+        }
+        for (int i = 0; i < BITMAP_Y_SIZE; i++) {
+            for (int j = 0; j < BITMAP_X_SIZE; j++) {
+                if(exBytes[i][j].LABEL == 0) continue;
+                segments[labelMap.get(exBytes[i][j].LABEL)].addData(exBytes[i][j]);
+            }
+        }
+        for(Segment elem: segments) {
+            elem.getExtremePoint();
+            elem.setSize();
+        }
+
+    }
+
+
+    private void makeCharactor(){
+        numbers = new ArrayList<>();
+        for(int i=0;i<segments.length-1;i++){
+            for(int j=i+1;j<segments.length;j++){
+                if(Math.abs(segments[i].maxX - segments[j].maxX) < SEG_RANGE) {
+                    numbers.add(new Charactor(segments[i],segments[j]));
+                } else {
+                    numbers.add(new Charactor(segments[i]));
+                }
+            }
+        }
+    }
+
 }
