@@ -78,6 +78,7 @@ public class CVprocess extends Thread{
         makeSegment();
         makeCharactor();
         for(Charactor elem :numbers) {
+            elem.recognition();
 
         }
 
@@ -139,7 +140,7 @@ public class CVprocess extends Thread{
 
         for (int i = 0; i < BITMAP_Y_SIZE; i++) {
             for (int j = 0; j < BITMAP_X_SIZE; j++) {
-                exBytes[i][j] = new ExByte(myBitmap.getPixel(j, i));
+                exBytes[i][j] = new ExByte(myBitmap.getPixel(j, i),j,i);
             }
         }
         setLabel();

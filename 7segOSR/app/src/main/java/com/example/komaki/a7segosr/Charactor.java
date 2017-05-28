@@ -46,12 +46,16 @@ public class Charactor {
         setMid();
         if(Math.abs(ratio) < COMMA_RANGE ) {
             value = ".";
+            System.out.println("value:.");
             return;
         }
         if(ratio > ONE_RANGE_MIN && ratio < ONE_RANGE_MAX){
             value = "1";
+            System.out.println("value:1");
             return;
         }
+        points.display();
+
 
 
     }

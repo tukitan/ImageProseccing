@@ -1,5 +1,7 @@
 package com.example.komaki.a7segosr;
 
+import android.util.Log;
+
 import org.opencv.core.Point;
 
 /**
@@ -8,9 +10,6 @@ import org.opencv.core.Point;
 
 public class Points {
     int maxX, maxY, minX, minY;
-    public Points(){
-
-    }
     public Points(int maxX,int maxY,int minX,int minY){
         this.maxX = maxX;
         this.maxY = maxY;
@@ -36,6 +35,10 @@ public class Points {
         double Xsize = maxX - minX;
         double Ysize = maxY - minY;
         return Ysize/Xsize;
+    }
+
+    public void display(){
+        Log.d("Point","("+minX+","+minY+"),("+maxX+","+maxY+")");
     }
 
 }

@@ -13,10 +13,12 @@ public class ExByte {
     public int intDada;
     int pointX,pointY;
 
-    public ExByte(int data){
+    public ExByte(int data,int x,int y){
         intDada = data;
         color = (data == -1) ? WHITE : BLACK;
         //System.out.println(color);
+        pointX = x;
+        pointY = y;
     }
 
 

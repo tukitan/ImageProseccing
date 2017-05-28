@@ -31,6 +31,7 @@ public class Segment {
             tmpX = elem.pointX;
             tmpY = elem.pointY;
 
+
             maxX = (tmpX > maxX) ? tmpX : maxX;
             maxY = (tmpY > maxY) ? tmpY : maxY;
             minX = (tmpX < minX) ? tmpX : minX;
