@@ -13,6 +13,8 @@ public class Segment {
     int maxX=0,maxY=0,minX=CVprocess.BITMAP_X_SIZE,minY=CVprocess.BITMAP_Y_SIZE;
     int size;
 
+    boolean signedFlag = false;
+
     public Segment(){
         element = new ArrayList<>();
     }

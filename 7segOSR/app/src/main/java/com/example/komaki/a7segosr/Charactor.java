@@ -15,8 +15,7 @@ public class Charactor {
     double ratio;
 
     double COMMA_RANGE = 1.5;
-    double ONE_RANGE_MIN = 2.5;
-    double ONE_RANGE_MAX = 3.5;
+    double ONE_RANGE = 3.0;
 
     public Charactor(Segment seg1){
         data = seg1.element;
@@ -47,14 +46,15 @@ public class Charactor {
         if(Math.abs(ratio) < COMMA_RANGE ) {
             value = ".";
             System.out.println("value:.");
+            points.display();
             return;
         }
-        if(ratio > ONE_RANGE_MIN && ratio < ONE_RANGE_MAX){
+        if(ratio > ONE_RANGE){
             value = "1";
             System.out.println("value:1");
+            points.display();
             return;
         }
-        points.display();
 
 
 

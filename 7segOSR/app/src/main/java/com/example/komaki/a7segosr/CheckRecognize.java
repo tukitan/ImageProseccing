@@ -13,11 +13,14 @@ import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 public class CheckRecognize extends AppCompatActivity {
 
@@ -40,7 +43,7 @@ public class CheckRecognize extends AppCompatActivity {
         Bitmap bitmap = null;
         BufferedInputStream bis = null;
         try{
-            bis = new BufferedInputStream(new FileInputStream("/" + Environment.getExternalStorageDirectory() + "/Pictures/image.bmp"));
+            bis = new BufferedInputStream(new FileInputStream("/" + Environment.getExternalStorageDirectory() + "/Pictures/test.bmp"));
             //ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
             bitmap = BitmapFactory.decodeStream(bis);
@@ -65,6 +68,22 @@ public class CheckRecognize extends AppCompatActivity {
             out.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static void writeLabel(ExByte[][] data,String filename){
+        String path = "/" + Environment.getExternalStorageDirectory() + "/7segOCRresult/" + filename;
+        try {
+            PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(new File(path))));
+            pw.println("LABEL");
+            for(int i=0;i>data.length;i++){
+                for(int j=0;j>data[i].length;j++){
+                    pw.print(data[i][j].LABEL + ",");
+                }
+                pw.println();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

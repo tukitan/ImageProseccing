@@ -34,7 +34,7 @@ public class CVprocess extends Thread{
     static int BITMAP_Y_SIZE;
 
     // Threshold value. Used bynaly()
-    double THRESHOLD = 57.0;
+    double THRESHOLD = 63.0;
 
     // Blur value. Used blurBitmap()
     int KSIZE = 31;
@@ -52,7 +52,7 @@ public class CVprocess extends Thread{
     HashMap<Integer,Integer> labelMap;
 
     // Jugde two Segments to One Charactor
-    int SEG_RANGE = 10;
+    int SEG_RANGE = 30;
 
     // Charactor List
     ArrayList<Charactor> numbers;
@@ -77,6 +77,7 @@ public class CVprocess extends Thread{
         labeling();
         makeSegment();
         makeCharactor();
+        System.out.println("Charactor num :" + numbers.size());
         for(Charactor elem :numbers) {
             elem.recognition();
 
@@ -130,17 +131,17 @@ public class CVprocess extends Thread{
 
     private void labeling() {
         Mat src = new Mat();
-        bitmapToMat(myBitmap, src);
+        bitmapToMat(newBitmap, src);
 
-        BITMAP_X_SIZE = myBitmap.getWidth();
-        BITMAP_Y_SIZE = myBitmap.getHeight();
+        BITMAP_X_SIZE = newBitmap.getWidth();
+        BITMAP_Y_SIZE = newBitmap.getHeight();
         System.out.println("x:" + BITMAP_X_SIZE + ",y:" + BITMAP_Y_SIZE + ",size:" + BITMAP_X_SIZE * BITMAP_Y_SIZE);
 
         exBytes = new ExByte[BITMAP_Y_SIZE][BITMAP_X_SIZE];
 
         for (int i = 0; i < BITMAP_Y_SIZE; i++) {
             for (int j = 0; j < BITMAP_X_SIZE; j++) {
-                exBytes[i][j] = new ExByte(myBitmap.getPixel(j, i),j,i);
+                exBytes[i][j] = new ExByte(newBitmap.getPixel(j, i),j,i);
             }
         }
         setLabel();
@@ -262,9 +263,9 @@ public class CVprocess extends Thread{
     private void makeSegment(){
         int cnt = 0;
         usedLabelNum = new ArrayList<>();
+        CheckRecognize.writeLabel(exBytes,"testLabel.txt");
         for (int i = 0; i < BITMAP_Y_SIZE; i++) {
             for (int j = 0; j < BITMAP_X_SIZE; j++) {
-                System.out.print(exBytes[i][j].LABEL + ",");
                 if(usedLabelNum.indexOf(exBytes[i][j].LABEL) == -1) usedLabelNum.add(exBytes[i][j].LABEL);
             }
             System.out.println();
@@ -277,7 +278,6 @@ public class CVprocess extends Thread{
         for(int elem :usedLabelNum) {
             segments[cnt].setLabel(elem);
             labelMap.put(elem,cnt);
-            System.out.println(elem);
             cnt ++;
         }
         for (int i = 0; i < BITMAP_Y_SIZE; i++) {
@@ -296,15 +296,25 @@ public class CVprocess extends Thread{
 
     private void makeCharactor(){
         numbers = new ArrayList<>();
-        for(int i=0;i<segments.length-1;i++){
+        for(int i=0;i<segments.length;i++){
+            if(i == segments.length -1) {
+                if(segments[i].signedFlag) continue;
+                numbers.add(new Charactor(segments[i]));
+                continue;
+            }
             for(int j=i+1;j<segments.length;j++){
+                if(segments[i].signedFlag) continue;
                 if(Math.abs(segments[i].maxX - segments[j].maxX) < SEG_RANGE) {
-                    numbers.add(new Charactor(segments[i],segments[j]));
-                } else {
-                    numbers.add(new Charactor(segments[i]));
+                    System.out.println("gattai");
+                    numbers.add(new Charactor(segments[i], segments[j]));
+                    segments[i].signedFlag = true;
+                    segments[j].signedFlag = true;
+                    continue;
                 }
+                if(j == segments.length -1 ) numbers.add(new Charactor(segments[i]));
             }
         }
     }
+
 
 }
