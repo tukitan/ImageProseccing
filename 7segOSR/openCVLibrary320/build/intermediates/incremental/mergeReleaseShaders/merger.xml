@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<<<<<<< HEAD
 <merger version="3"><dataSet config="main"><source path="/home/komaki/ImageProseccing/7segOSR/openCVLibrary320/src/main/shaders"/></dataSet><dataSet config="release"><source path="/home/komaki/ImageProseccing/7segOSR/openCVLibrary320/src/release/shaders"/></dataSet></merger>
+=======
+<merger version="3"><dataSet config="main"><source path="C:\Users\MasakiSuzuki\Documents\GitHub\ImageProseccing\7segOSR\openCVLibrary320\src\main\shaders"/></dataSet><dataSet config="release"><source path="C:\Users\MasakiSuzuki\Documents\GitHub\ImageProseccing\7segOSR\openCVLibrary320\src\release\shaders"/></dataSet></merger>
+>>>>>>> 55ac21b71f34c8e87e1a62a83a8e4f1b139cc0bb
