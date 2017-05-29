@@ -44,7 +44,8 @@ public class CameraActivity extends Activity {
     private CameraDevice mCameraDevice;
     private CaptureRequest.Builder mPreviewBuilder;
     private CameraCaptureSession mPreviewSession;
-    private double X,Y;
+    private double MinX, MinY;
+    private double MaxX, MaxY;
     boolean flag = false;
 
     @Override
@@ -231,7 +232,7 @@ public class CameraActivity extends Activity {
                         image = reader.acquireLatestImage();
 
                         //System.out.println("KOKO");
-                        Recognition obj = new Recognition(getApplication(),image,X,Y);
+                        Recognition obj = new Recognition(getApplication(),image,MinX,MinY,MaxX,MaxY);
                         image.close();
                         obj.recognize();
                     }catch (Exception e) {
@@ -280,9 +281,12 @@ public class CameraActivity extends Activity {
 
     }
     public boolean onTouchEvent(MotionEvent event){
-        X = (double)event.getX();
-        Y = (double)event.getY();
-        System.out.println("X:" + X + ",Y:" + Y);
+        MinX = (double)event.getX();
+        MinY = (double)event.getY();
+        MaxX = (double)event.getX();
+        MaxY = (double)event.getY();
+        System.out.println("MinX:" + MinX + ",MinY:" + MinY + ",MaxX:" + MaxX + ",MaxY:" + MaxY);
+        
         if(!flag){
             flag = true;
             takePicture();
