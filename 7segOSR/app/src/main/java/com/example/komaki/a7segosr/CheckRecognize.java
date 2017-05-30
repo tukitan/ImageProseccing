@@ -43,7 +43,7 @@ public class CheckRecognize extends AppCompatActivity {
         Bitmap bitmap = null;
         BufferedInputStream bis = null;
         try{
-            bis = new BufferedInputStream(new FileInputStream("/" + Environment.getExternalStorageDirectory() + "/Pictures/test.bmp"));
+            bis = new BufferedInputStream(new FileInputStream("/" + Environment.getExternalStorageDirectory() + "/Pictures/led4.bmp"));
             //ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
             bitmap = BitmapFactory.decodeStream(bis);

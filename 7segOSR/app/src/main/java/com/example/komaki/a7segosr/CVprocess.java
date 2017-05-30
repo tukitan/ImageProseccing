@@ -12,6 +12,7 @@ import org.opencv.imgproc.Imgproc;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static org.opencv.android.Utils.*;
@@ -34,10 +35,14 @@ public class CVprocess extends Thread{
     static int BITMAP_Y_SIZE;
 
     // Threshold value. Used bynaly()
-    double THRESHOLD = 63.0;
+    double THRESHOLD = 55.0;
 
     // Blur value. Used blurBitmap()
-    int KSIZE = 31;
+    int KSIZE = 43;
+
+    int COMMA_SIZE_MIN = 200;
+    int COMMA_SIZE_MAX = 1000;
+    int SEG_SIZE_MAX = 100000;
 
     // LED Segment Object. (Show Segment.java)
     Segment[] segments;
@@ -52,7 +57,7 @@ public class CVprocess extends Thread{
     HashMap<Integer,Integer> labelMap;
 
     // Jugde two Segments to One Charactor
-    int SEG_RANGE = 30;
+    int SEG_RANGE = 20;
 
     // Charactor List
     ArrayList<Charactor> numbers;
@@ -65,8 +70,6 @@ public class CVprocess extends Thread{
     public void run(){
         grayScale();
         binaly();
-        byte[] bytes = getByteArray();
-        System.out.println("length:" + bytes.length);
         //for(byte elem :bytes) System.out.println(elem);
         //for(int i)
 
@@ -296,6 +299,12 @@ public class CVprocess extends Thread{
 
     private void makeCharactor(){
         numbers = new ArrayList<>();
+
+        ArrayList<Segment> tmpSegArray = new ArrayList<>(Arrays.asList(segments));
+        for(Segment elems :tmpSegArray){
+
+        }
+
         for(int i=0;i<segments.length;i++){
             if(i == segments.length -1) {
                 if(segments[i].signedFlag) continue;

@@ -39,7 +39,6 @@ public class Segment {
             minX = (tmpX < minX) ? tmpX : minX;
             minY = (tmpY < minY) ? tmpY : minY;
         }
-        points = new Points(maxX,maxY,minX,minY);
 
     }
 
