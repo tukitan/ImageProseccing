@@ -43,7 +43,7 @@ public class CheckRecognize extends AppCompatActivity {
         Bitmap bitmap = null;
         BufferedInputStream bis = null;
         try{
-            bis = new BufferedInputStream(new FileInputStream("/" + Environment.getExternalStorageDirectory() + "/Pictures/led4.bmp"));
+            bis = new BufferedInputStream(new FileInputStream("/" + Environment.getExternalStorageDirectory() + "/Pictures/noise.bmp"));
             //ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
             bitmap = BitmapFactory.decodeStream(bis);
@@ -80,18 +80,33 @@ public class CheckRecognize extends AppCompatActivity {
             pw.println("LABEL");
             for(int i=0;i>data.length;i++){
                 for(int j=0;j>data[i].length;j++){
+                    System.out.println("aaa");
                     pw.print(data[i][j].LABEL + ",");
                 }
                 pw.println();
             }
+            pw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    static public void processedFunc(Bitmap bitmapData){
+    static public void processedFunc(Bitmap bitmapData,String number){
         writeBitmap(bitmapData,"newBitmap.jpg");
+        writeNumber(number,"ResultFile.txt");
+    }
+
+    public static void writeNumber(String number, String filename){
+        String path = "/" + Environment.getExternalStorageDirectory() + "/7segOCRresult/" + filename;
+        try {
+            PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(new File(path))));
+            pw.println("Recognition Number : " + number);
+            pw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 

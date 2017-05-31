@@ -38,11 +38,13 @@ public class CVprocess extends Thread{
     double THRESHOLD = 55.0;
 
     // Blur value. Used blurBitmap()
-    int KSIZE = 43;
+    int KSIZE = 33;
 
     int COMMA_SIZE_MIN = 200;
-    int COMMA_SIZE_MAX = 1000;
-    int SEG_SIZE_MAX = 100000;
+    int COMMA_SIZE_MAX = 800;
+    double COMMA_RANGE_MAX = 2.5;
+    double COMMA_RANGE_MIN = 0.5;
+    int SEG_SIZE_MAX = 10000;
 
     // LED Segment Object. (Show Segment.java)
     Segment[] segments;
@@ -58,6 +60,8 @@ public class CVprocess extends Thread{
 
     // Jugde two Segments to One Charactor
     int SEG_RANGE = 20;
+
+    int COMMA_RATIO = 2;
 
     // Charactor List
     ArrayList<Charactor> numbers;
@@ -76,18 +80,18 @@ public class CVprocess extends Thread{
         Bitmap tmpBitmap = Bitmap.createBitmap(myBitmap);
         newBitmap = tmpBitmap.copy(Bitmap.Config.ARGB_8888,true);
 
-        blurBitmap(KSIZE);
+        //blurBitmap(KSIZE);
         labeling();
         makeSegment();
         makeCharactor();
         System.out.println("Charactor num :" + numbers.size());
         for(Charactor elem :numbers) {
-            elem.recognition();
-
+            if(!elem.isComma) elem.recognition();
         }
+        String result = makeString();
+        System.out.println(result);
 
-
-        CheckRecognize.writeBitmap(newBitmap,"newBitmap2.jpg");
+        CheckRecognize.processedFunc(newBitmap,result);
         Log.d("CVprocess","Finish Processed.");
 
 
@@ -291,7 +295,6 @@ public class CVprocess extends Thread{
         }
         for(Segment elem: segments) {
             elem.getExtremePoint();
-            elem.setSize();
         }
 
     }
@@ -300,29 +303,67 @@ public class CVprocess extends Thread{
     private void makeCharactor(){
         numbers = new ArrayList<>();
 
+        int i,cnt=0;
+        int dataSize;
+        ArrayList<Integer> delete = new ArrayList<>();
         ArrayList<Segment> tmpSegArray = new ArrayList<>(Arrays.asList(segments));
-        for(Segment elems :tmpSegArray){
-
+        System.out.println(tmpSegArray.size());
+        for(i=0;i<tmpSegArray.size();i++){
+            dataSize = tmpSegArray.get(i).getSize();
+            System.out.println("size : " + dataSize);
+            if(dataSize < SEG_SIZE_MAX){
+                if(dataSize > COMMA_SIZE_MIN && dataSize < COMMA_SIZE_MAX){
+                    if(COMMA_RANGE_MIN < Math.abs(tmpSegArray.get(i).points.getRatio()) && Math.abs(tmpSegArray.get(i).points.getRatio()) < COMMA_RANGE_MAX ) {
+                        numbers.add(new Charactor(tmpSegArray.get(i),true));
+                        System.out.println("comma");
+                    }
+                }
+                delete.add(i);
+            }
         }
+        for(Integer elem :delete) {
+            tmpSegArray.remove((int)elem - cnt);
+            cnt ++;
+        }
+        tmpSegArray.trimToSize();
 
-        for(int i=0;i<segments.length;i++){
-            if(i == segments.length -1) {
-                if(segments[i].signedFlag) continue;
-                numbers.add(new Charactor(segments[i]));
+        Segment[] newSegment = (Segment[]) tmpSegArray.toArray(new Segment[tmpSegArray.size()]);
+        System.out.println(newSegment.length);
+
+        for(i=0;i<newSegment.length;i++){
+            if(i == newSegment.length -1) {
+                if(newSegment[i].signedFlag) continue;
+                numbers.add(new Charactor(newSegment[i],false));
                 continue;
             }
-            for(int j=i+1;j<segments.length;j++){
-                if(segments[i].signedFlag) continue;
-                if(Math.abs(segments[i].maxX - segments[j].maxX) < SEG_RANGE) {
+            for(int j=i+1;j<newSegment.length;j++){
+                if(newSegment[i].signedFlag) continue;
+                if(Math.abs(newSegment[i].maxX - newSegment[j].maxX) < SEG_RANGE) {
                     System.out.println("gattai");
-                    numbers.add(new Charactor(segments[i], segments[j]));
-                    segments[i].signedFlag = true;
-                    segments[j].signedFlag = true;
+                    numbers.add(new Charactor(newSegment[i], newSegment[j]));
+                    newSegment[i].signedFlag = true;
+                    newSegment[j].signedFlag = true;
                     continue;
                 }
-                if(j == segments.length -1 ) numbers.add(new Charactor(segments[i]));
+                if(j == newSegment.length -1 ) numbers.add(new Charactor(newSegment[i],false));
             }
         }
+    }
+    private String  makeString(){
+        String res = new String();
+        Charactor tmp;
+        int current = 0;
+        for (int i=0;i<numbers.size()-1;i++){
+            for(int j=i+1;j<numbers.size();j++){
+                if(numbers.get(i).minX > numbers.get(j).minX){
+                    tmp = numbers.get(i);
+                    numbers.set(i,numbers.get(j));
+                    numbers.set(j,tmp);
+                }
+            }
+        }
+        for(Charactor elem :numbers) res += elem.value;
+        return res;
     }
 
 

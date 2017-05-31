@@ -23,6 +23,13 @@ public class Points {
         this.mid_down_midY = mid_down_midY;
     }
 
+    public Points(int maxX,int maxY,int minX,int minY){
+        this.maxX = maxX;
+        this.maxY = maxY;
+        this.minX = minX;
+        this.minY = minY;
+    }
+
     public int getPoint(String value){
         switch (value){
             case "maxX":

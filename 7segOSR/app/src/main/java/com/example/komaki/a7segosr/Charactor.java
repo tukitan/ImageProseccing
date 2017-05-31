@@ -1,5 +1,7 @@
 package com.example.komaki.a7segosr;
 
+import org.opencv.core.Mat;
+
 import java.util.ArrayList;
 
 /**
@@ -40,17 +42,23 @@ public class Charactor {
     String value;
     double ratio;
 
-    double COMMA_RANGE = 1.5;
+    boolean isComma = false;
+
     double ONE_RANGE = 3.0;
     int SEG_WIDTH = 5;
     int RANGE = 60;
 
-    public Charactor(Segment seg1){
+    public Charactor(Segment seg1,boolean flag){
         data = seg1.element;
         maxX = seg1.maxX;
         maxY = seg1.maxY;
         minX = seg1.minX;
         minY = seg1.minY;
+        if(flag){
+            isComma = true;
+            value = ".";
+            System.out.println("value :.");
+        }
     }
     public Charactor(Segment seg1,Segment seg2){
         data = new ArrayList<>();
@@ -93,12 +101,6 @@ public class Charactor {
 
         int tmpX,tmpY;
 
-        if(Math.abs(ratio) < COMMA_RANGE ) {
-            value = ".";
-            System.out.println("value:.");
-            points.display();
-            return;
-        }
         if(ratio > ONE_RANGE){
             value = "1";
             System.out.println("value:1");
