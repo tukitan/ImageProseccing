@@ -38,13 +38,15 @@ public class CVprocess extends Thread{
     double THRESHOLD = 55.0;
 
     // Blur value. Used blurBitmap()
-    int KSIZE = 33;
+    int KSIZE = 25;
 
-    int COMMA_SIZE_MIN = 200;
+    int COMMA_SIZE_MIN = 100;
     int COMMA_SIZE_MAX = 800;
     double COMMA_RANGE_MAX = 2.5;
     double COMMA_RANGE_MIN = 0.5;
-    int SEG_SIZE_MAX = 10000;
+    int SEG_SIZE_MAX = 28000;
+    int SEG_SIZE_MIN = 4000;
+
 
     // LED Segment Object. (Show Segment.java)
     Segment[] segments;
@@ -80,7 +82,7 @@ public class CVprocess extends Thread{
         Bitmap tmpBitmap = Bitmap.createBitmap(myBitmap);
         newBitmap = tmpBitmap.copy(Bitmap.Config.ARGB_8888,true);
 
-        //blurBitmap(KSIZE);
+        blurBitmap(KSIZE);
         labeling();
         makeSegment();
         makeCharactor();
@@ -311,7 +313,7 @@ public class CVprocess extends Thread{
         for(i=0;i<tmpSegArray.size();i++){
             dataSize = tmpSegArray.get(i).getSize();
             System.out.println("size : " + dataSize);
-            if(dataSize < SEG_SIZE_MAX){
+            if(dataSize < SEG_SIZE_MIN || dataSize > SEG_SIZE_MAX){
                 if(dataSize > COMMA_SIZE_MIN && dataSize < COMMA_SIZE_MAX){
                     if(COMMA_RANGE_MIN < Math.abs(tmpSegArray.get(i).points.getRatio()) && Math.abs(tmpSegArray.get(i).points.getRatio()) < COMMA_RANGE_MAX ) {
                         numbers.add(new Charactor(tmpSegArray.get(i),true));
@@ -364,6 +366,7 @@ public class CVprocess extends Thread{
         }
         for(Charactor elem :numbers) res += elem.value;
         return res;
+
     }
 
 
