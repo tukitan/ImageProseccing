@@ -33,7 +33,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Button startButton = (Button)findViewById(R.id.start);
+        Button configButton = (Button)findViewById(R.id.config);
         startButton.setOnClickListener(callCheckRecognize);
+        configButton.setOnClickListener(callConfig);
     }
     @Override
     protected void onResume(){
@@ -58,6 +60,14 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             Intent intent = new Intent(MainActivity.this,CheckRecognize.class);
             startActivity(intent);
+        }
+    };
+    private View.OnClickListener callConfig = new View.OnClickListener() {
+        @Override
+        public void onClick(View v){
+            Intent intent = new Intent(MainActivity.this,ConfigActivity.class);
+            startActivity(intent);
+
         }
     };
 }

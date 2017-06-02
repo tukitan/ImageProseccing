@@ -35,18 +35,18 @@ public class CVprocess extends Thread{
     static int BITMAP_Y_SIZE;
 
     // Threshold value. Used bynaly()
-    double THRESHOLD = 55.0;
+    double THRESHOLD = 50.0;
 
     // Blur value. Used blurBitmap()
-    int KSIZE = 25;
+    int KSIZE = 21;
 
     int COMMA_SIZE_MIN = 100;
     int COMMA_SIZE_MAX = 800;
     double COMMA_RANGE_MAX = 2.5;
     double COMMA_RANGE_MIN = 0.5;
-    int SEG_SIZE_MAX = 28000;
     int SEG_SIZE_MIN = 4000;
 
+    double NUMBER_RATIO = 0.9;
 
     // LED Segment Object. (Show Segment.java)
     Segment[] segments;
@@ -313,7 +313,7 @@ public class CVprocess extends Thread{
         for(i=0;i<tmpSegArray.size();i++){
             dataSize = tmpSegArray.get(i).getSize();
             System.out.println("size : " + dataSize);
-            if(dataSize < SEG_SIZE_MIN || dataSize > SEG_SIZE_MAX){
+            if(dataSize < SEG_SIZE_MIN ){
                 if(dataSize > COMMA_SIZE_MIN && dataSize < COMMA_SIZE_MAX){
                     if(COMMA_RANGE_MIN < Math.abs(tmpSegArray.get(i).points.getRatio()) && Math.abs(tmpSegArray.get(i).points.getRatio()) < COMMA_RANGE_MAX ) {
                         numbers.add(new Charactor(tmpSegArray.get(i),true));
@@ -321,6 +321,11 @@ public class CVprocess extends Thread{
                     }
                 }
                 delete.add(i);
+            } else{
+                if(NUMBER_RATIO > Math.abs(tmpSegArray.get(i).points.getRatio())){
+                    System.out.println("noise");
+                    delete.add(i);
+                }
             }
         }
         for(Integer elem :delete) {
@@ -330,7 +335,7 @@ public class CVprocess extends Thread{
         tmpSegArray.trimToSize();
 
         Segment[] newSegment = (Segment[]) tmpSegArray.toArray(new Segment[tmpSegArray.size()]);
-        System.out.println(newSegment.length);
+        for(Segment elem :newSegment) System.out.println(elem.getSize());
 
         for(i=0;i<newSegment.length;i++){
             if(i == newSegment.length -1) {

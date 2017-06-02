@@ -29,21 +29,6 @@ public class Points {
         this.minX = minX;
         this.minY = minY;
     }
-
-    public int getPoint(String value){
-        switch (value){
-            case "maxX":
-                return maxX;
-            case "maxY":
-                return maxY;
-            case "minX":
-                return minY;
-            case "minY":
-                return minY;
-        }
-        return 0;
-    }
-
     public double getRatio(){
         double Xsize = maxX - minX;
         double Ysize = maxY - minY;
