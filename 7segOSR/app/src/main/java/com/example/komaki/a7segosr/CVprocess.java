@@ -35,10 +35,10 @@ public class CVprocess extends Thread{
     static int BITMAP_Y_SIZE;
 
     // Threshold value. Used bynaly()
-    double THRESHOLD = 50.0;
+    static double THRESHOLD = 50.0;
 
     // Blur value. Used blurBitmap()
-    int KSIZE = 21;
+    static int KSIZE = 21;
 
     int COMMA_SIZE_MIN = 100;
     int COMMA_SIZE_MAX = 800;

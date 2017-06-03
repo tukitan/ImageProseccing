@@ -13,6 +13,7 @@ import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,30 +21,31 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 public class CheckRecognize extends AppCompatActivity {
-
-    static {
-        System.loadLibrary("opencv_java3");
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.check_recognize);
 
-        Bitmap bitmap = loadBitmap();
+        Bitmap bitmap = loadBitmap("led2.bmp");
         CVprocess cvObj = new CVprocess(bitmap);
         cvObj.start();
 
     }
 
-    private Bitmap loadBitmap(){
+    private Bitmap loadBitmap(String file){
         Bitmap bitmap = null;
         BufferedInputStream bis = null;
         try{
-            bis = new BufferedInputStream(new FileInputStream("/" + Environment.getExternalStorageDirectory() + "/Pictures/test2.bmp"));
+            bis = new BufferedInputStream(new FileInputStream("/" + Environment.getExternalStorageDirectory() + "/Pictures/" + file));
             //ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
             bitmap = BitmapFactory.decodeStream(bis);
@@ -106,10 +108,5 @@ public class CheckRecognize extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
-
-
-
 }

@@ -12,7 +12,23 @@ import android.widget.Button;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
+
+    static {
+        System.loadLibrary("opencv_java3");
+    }
+
+    ArrayList<String> configValues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         Button configButton = (Button)findViewById(R.id.config);
         startButton.setOnClickListener(callCheckRecognize);
         configButton.setOnClickListener(callConfig);
+        configValues = initConfig();
+        for(String elem :configValues) System.out.println(elem);
     }
     @Override
     protected void onResume(){
@@ -58,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener callCheckRecognize = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            CVprocess.THRESHOLD = Double.parseDouble(configValues.get(0));
+            CVprocess.KSIZE = Integer.parseInt(configValues.get(1));
             Intent intent = new Intent(MainActivity.this,CheckRecognize.class);
             startActivity(intent);
         }
@@ -70,4 +90,37 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+
+    private ArrayList<String> initConfig(){
+        String filename = "initalize.txt";
+        String str;
+        FileInputStream in;
+        ArrayList<String> consts = new ArrayList<>();
+        try{
+            in = openFileInput(filename);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in,"UTF-8"));
+            while((str = br.readLine()) != null){
+                consts.add(str);
+            }
+            br.close();
+        } catch (FileNotFoundException e) {
+            try {
+                OutputStream out = openFileOutput(filename, MODE_PRIVATE);
+                PrintWriter pw = new PrintWriter(new OutputStreamWriter(out));
+                pw.println("60.0");
+                pw.println("31.0");
+                consts.add("60.0");
+                consts.add("31");
+
+                pw.close();
+            }catch (IOException e1){
+                e1.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return consts;
+
+    }
 }
