@@ -79,7 +79,6 @@ public class ConfigActivity extends AppCompatActivity implements CameraBridgeVie
         public void onClick(View v) {
             Intent intent = new Intent(ConfigActivity.this,MainActivity.class);
             startActivity(intent);
-
         }
     };
 

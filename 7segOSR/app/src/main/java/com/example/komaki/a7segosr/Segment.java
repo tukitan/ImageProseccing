@@ -40,7 +40,7 @@ public class Segment {
             minY = (tmpY < minY) ? tmpY : minY;
         }
 
-        points = new Points(maxX,maxY,minX,minY);
+        points = new Points(maxX,maxY,minX,minY,false);
     }
 
     public int getSize(){ return element.size(); }

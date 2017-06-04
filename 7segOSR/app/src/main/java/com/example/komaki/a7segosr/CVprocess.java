@@ -3,25 +3,33 @@ package com.example.komaki.a7segosr;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapRegionDecoder;
+import android.graphics.Matrix;
+import android.graphics.Rect;
+import android.hardware.camera2.CameraAccessException;
+import android.media.Image;
 import android.util.Log;
 
 import org.opencv.android.*;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import static android.R.attr.bitmap;
 import static org.opencv.android.Utils.*;
 
 /*
     This class is Processing to Bitmap Image and Recognition thread
     Called By CheckRecognize.java
  */
-public class CVprocess extends Thread{
+public class CVprocess implements Runnable{
 
 
     // Primitive bitmap
@@ -71,7 +79,35 @@ public class CVprocess extends Thread{
     public CVprocess(Bitmap bitmap){
         myBitmap = bitmap;
     }
+    public CVprocess(Image image, Points points){
+        ByteBuffer buffer = image.getPlanes()[0].getBuffer();
+        byte[] bytes = new byte[buffer.capacity()];
+        buffer.get(bytes);
+        Bitmap tmpBitmap  = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
 
+        // Rotate Input Picture
+        int imageWidth = tmpBitmap.getWidth();
+        int imageHeight = tmpBitmap.getHeight();
+        Matrix matrix = new Matrix();
+        matrix.setRotate(90,imageWidth/2,imageHeight/2);
+
+        Bitmap tmp2Bitmap = Bitmap.createBitmap(tmpBitmap,0,0,imageWidth,imageHeight,matrix,true);
+
+        // Cut Rect Picture
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        tmp2Bitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
+        byte[] tmpbytes = baos.toByteArray();
+
+        try {
+            BitmapRegionDecoder regionDecoder = BitmapRegionDecoder.newInstance(tmpbytes,0,tmpbytes.length,false);
+            Rect rect = new Rect(points.minX,points.minY,points.maxX,points.maxY);
+            myBitmap = regionDecoder.decodeRegion(rect,null);
+            CheckRecognize.writeBitmap(myBitmap,"CuttedImage.bmp");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
     @Override
     public void run(){
         grayScale();
@@ -79,8 +115,7 @@ public class CVprocess extends Thread{
         //for(byte elem :bytes) System.out.println(elem);
         //for(int i)
 
-        Bitmap tmpBitmap = Bitmap.createBitmap(myBitmap);
-        newBitmap = tmpBitmap.copy(Bitmap.Config.ARGB_8888,true);
+        newBitmap = myBitmap.copy(Bitmap.Config.ARGB_8888,true);
 
         blurBitmap(KSIZE);
         labeling();
@@ -93,8 +128,9 @@ public class CVprocess extends Thread{
         String result = makeString();
         System.out.println(result);
 
-        CheckRecognize.processedFunc(newBitmap,result);
+        //CheckRecognize.processedFunc(newBitmap,result);
         Log.d("CVprocess","Finish Processed.");
+        CameraActivity.isProcessed = true;
 
 
         /*
@@ -373,6 +409,7 @@ public class CVprocess extends Thread{
         return res;
 
     }
+
 
 
 }

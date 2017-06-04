@@ -36,8 +36,8 @@ public class CheckRecognize extends AppCompatActivity {
         setContentView(R.layout.check_recognize);
 
         Bitmap bitmap = loadBitmap("led2.bmp");
-        CVprocess cvObj = new CVprocess(bitmap);
-        cvObj.start();
+        Thread thread = new Thread(new CVprocess(bitmap));
+        thread.start();
 
     }
 

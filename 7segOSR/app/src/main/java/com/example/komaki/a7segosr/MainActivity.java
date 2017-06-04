@@ -47,11 +47,20 @@ public class MainActivity extends AppCompatActivity {
             }
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
         }
+        if(checkSelfPermission(android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+            if(shouldShowRequestPermissionRationale(android.Manifest.permission.CAMERA)){
+
+            }
+
+            requestPermissions(new String[]{android.Manifest.permission.CAMERA},2);
+        }
 
         Button startButton = (Button)findViewById(R.id.start);
         Button configButton = (Button)findViewById(R.id.config);
+        Button cameraButton = (Button)findViewById(R.id.cameraTest);
         startButton.setOnClickListener(callCheckRecognize);
         configButton.setOnClickListener(callConfig);
+        cameraButton.setOnClickListener(callCamera);
         configValues = initConfig();
         for(String elem :configValues) System.out.println(elem);
     }
@@ -88,6 +97,14 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this,ConfigActivity.class);
             startActivity(intent);
 
+        }
+    };
+    private View.OnClickListener callCamera = new View.OnClickListener(){
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(MainActivity.this,CameraActivity.class);
+            startActivity(intent);
         }
     };
 

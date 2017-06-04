@@ -12,6 +12,10 @@ public class Points {
     int maxX, maxY, minX, minY;
     int midX,midY;
     int mid_up_midY,mid_down_midY;
+
+    static double EXPAND_X = 2620.0/1020.0;
+    static double EXPAND_Y = 4656.0/1940.0;
+
     public Points(int maxX,int maxY,int minX,int minY,int midX,int midY,int mid_up_midY,int mid_down_midY){
         this.maxX = maxX;
         this.maxY = maxY;
@@ -23,11 +27,19 @@ public class Points {
         this.mid_down_midY = mid_down_midY;
     }
 
-    public Points(int maxX,int maxY,int minX,int minY){
-        this.maxX = maxX;
-        this.maxY = maxY;
-        this.minX = minX;
-        this.minY = minY;
+    public Points(int maxX,int maxY,int minX,int minY,boolean cameraToCV){
+        if(cameraToCV) {
+            this.maxX = (int)((double)maxX * EXPAND_X);
+            this.maxY = (int)((double)maxY * EXPAND_Y);
+            this.minX = (int)((double)minX * EXPAND_X);
+            this.minY = (int)((double)minY * EXPAND_Y);
+        } else{
+            this.maxX = maxX;
+            this.maxY = maxY;
+            this.minX = minX;
+            this.minY = minY;
+        }
+
     }
     public double getRatio(){
         double Xsize = maxX - minX;
