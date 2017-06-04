@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 OutputStream out = openFileOutput(filename, MODE_PRIVATE);
                 PrintWriter pw = new PrintWriter(new OutputStreamWriter(out));
                 pw.println("60.0");
-                pw.println("31.0");
+                pw.println("31");
                 consts.add("60.0");
                 consts.add("31");
 
