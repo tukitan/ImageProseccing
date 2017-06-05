@@ -26,8 +26,8 @@ import java.io.PrintWriter;
 public class ConfigActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener {
 
     SeekBar binalyBar,ksizeBar;
-    double tmpBinalyValue = 60.0;
-    int tmpKSIZE = 31;
+    static double tmpBinalyValue;
+    static int tmpKSIZE;
 
     private CameraBridgeViewBase mCameraView;
     private Mat previewPicture;
@@ -69,6 +69,9 @@ public class ConfigActivity extends AppCompatActivity implements CameraBridgeVie
                 e.printStackTrace();
             }
 
+            CVprocess.THRESHOLD = binalyValue;
+            CVprocess.KSIZE = ksizeValue;
+
             Toast.makeText(ConfigActivity.this,"設定を保存しました",Toast.LENGTH_SHORT).show();
 
         }
@@ -88,13 +91,11 @@ public class ConfigActivity extends AppCompatActivity implements CameraBridgeVie
         synchronized public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if(seekBar.equals(binalyBar)) {
                 tmpBinalyValue = progress;
-                System.out.println("changed binaly");
             }
             if(seekBar.equals(ksizeBar)){
                 progress = progress/2;
                 progress = progress*2 + 1;
                 tmpKSIZE = progress;
-                System.out.println("changed ksize");
             }
         }
 

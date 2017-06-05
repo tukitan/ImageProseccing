@@ -94,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener callConfig = new View.OnClickListener() {
         @Override
         public void onClick(View v){
+            ConfigActivity.tmpBinalyValue = Double.parseDouble(configValues.get(0));
+            ConfigActivity.tmpKSIZE = Integer.parseInt(configValues.get(1));
             Intent intent = new Intent(MainActivity.this,ConfigActivity.class);
             startActivity(intent);
 

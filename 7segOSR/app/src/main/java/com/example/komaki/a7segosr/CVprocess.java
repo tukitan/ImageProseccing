@@ -122,6 +122,7 @@ public class CVprocess implements Runnable{
         newBitmap = myBitmap.copy(Bitmap.Config.ARGB_8888,true);
 
         blurBitmap(KSIZE);
+        writeBitmap(newBitmap,"result.bmp");
         labeling();
         makeSegment();
         makeCharactor();
@@ -132,7 +133,6 @@ public class CVprocess implements Runnable{
         String result = makeString();
         System.out.println(result);
 
-        writeBitmap(newBitmap,result);
         Log.d("CVprocess","Finish Processed.");
         CameraActivity.isProcessed = true;
 
