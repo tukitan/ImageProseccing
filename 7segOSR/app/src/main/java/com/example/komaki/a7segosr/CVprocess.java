@@ -8,6 +8,7 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.hardware.camera2.CameraAccessException;
 import android.media.Image;
+import android.os.Environment;
 import android.util.Log;
 
 import org.opencv.android.*;
@@ -16,6 +17,9 @@ import org.opencv.core.Point;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -102,7 +106,7 @@ public class CVprocess implements Runnable{
             BitmapRegionDecoder regionDecoder = BitmapRegionDecoder.newInstance(tmpbytes,0,tmpbytes.length,false);
             Rect rect = new Rect(points.minX,points.minY,points.maxX,points.maxY);
             myBitmap = regionDecoder.decodeRegion(rect,null);
-            CheckRecognize.writeBitmap(myBitmap,"CuttedImage.bmp");
+            writeBitmap(myBitmap,"CuttedImage.bmp");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -128,7 +132,7 @@ public class CVprocess implements Runnable{
         String result = makeString();
         System.out.println(result);
 
-        //CheckRecognize.processedFunc(newBitmap,result);
+        writeBitmap(newBitmap,result);
         Log.d("CVprocess","Finish Processed.");
         CameraActivity.isProcessed = true;
 
@@ -408,6 +412,22 @@ public class CVprocess implements Runnable{
         for(Charactor elem :numbers) res += elem.value;
         return res;
 
+    }
+    static void writeBitmap(Bitmap bmp,String filename) {
+        String path = "/" + Environment.getExternalStorageDirectory() + "/7segOCRresult/" + filename;
+        File file = new File(path);
+        file.getParentFile().mkdir();
+        FileOutputStream out = null;
+        try{
+            out = new FileOutputStream(path);
+            bmp.compress(Bitmap.CompressFormat.JPEG,100,out);
+            out.flush();
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
