@@ -1,14 +1,18 @@
 package com.example.komaki.a7segosr;
 
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraManager;
 import android.media.Image;
 import android.os.Environment;
+import android.os.Handler;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
 import org.opencv.android.*;
@@ -25,6 +29,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 
 import static android.R.attr.bitmap;
 import static org.opencv.android.Utils.*;
@@ -80,10 +85,15 @@ public class CVprocess implements Runnable{
     // Charactor List
     ArrayList<Charactor> numbers;
 
-    public CVprocess(Bitmap bitmap){
+    Handler handler;
+    boolean isCalledByCheckRecognize = false;
+
+    public CVprocess(Bitmap bitmap,boolean calledCheckRec,Handler handler){
         myBitmap = bitmap;
+        isCalledByCheckRecognize = true;
+        this.handler = handler;
     }
-    public CVprocess(Image image, Points points){
+    public CVprocess(Image image, Points points, Handler handler){
         ByteBuffer buffer = image.getPlanes()[0].getBuffer();
         byte[] bytes = new byte[buffer.capacity()];
         buffer.get(bytes);
@@ -110,6 +120,7 @@ public class CVprocess implements Runnable{
         } catch (IOException e) {
             e.printStackTrace();
         }
+        this.handler = handler;
 
     }
     @Override
@@ -130,12 +141,30 @@ public class CVprocess implements Runnable{
         for(Charactor elem :numbers) {
             if(!elem.isComma) elem.recognition();
         }
-        String result = makeString();
+        final String result = makeString();
+
         System.out.println(result);
 
         Log.d("CVprocess","Finish Processed.");
-        CameraActivity.isProcessed = true;
 
+        if(isCalledByCheckRecognize){
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    CheckRecognize.number = result;
+                }
+            });
+            CheckRecognize.proceccFlag = true;
+
+        } else {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    CameraActivity.number = result;
+                }
+            });
+            CameraActivity.isProcessed = true;
+        }
 
         /*
         labeling();
@@ -429,7 +458,6 @@ public class CVprocess implements Runnable{
             e.printStackTrace();
         }
     }
-
 
 
 }

@@ -13,6 +13,7 @@ import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.*;
+import android.hardware.camera2.CameraManager.TorchCallback;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
@@ -20,6 +21,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -49,11 +51,11 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
-public class CameraActivity extends Activity {
+public class CameraActivity extends Activity implements TextToSpeech.OnInitListener{
 
     private TextureView mTextureView;
-    private Button mButton;
     private Size mPreviewSize;
     private CameraDevice mCameraDevice;
     private CaptureRequest.Builder mPreviewBuilder;
@@ -64,6 +66,13 @@ public class CameraActivity extends Activity {
     boolean threadFlag = true;
     static boolean isProcessed = true;
 
+    String mCameraId = null;
+    boolean isOn = false;
+
+    TextToSpeech tts;
+    static String number = "0.00";
+
+    Handler handler;
     @Override
     protected void onCreate(Bundle SavedInstance) {
         super.onCreate(SavedInstance);
@@ -74,6 +83,18 @@ public class CameraActivity extends Activity {
 
         mTextureView = (TextureView) findViewById(R.id.textureView);
         mTextureView.setSurfaceTextureListener(mCameraViewStatusChanged);
+        CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+        manager.registerTorchCallback(new TorchCallback(){
+            @Override
+            public void onTorchModeChanged(String cameraId,boolean enabled){
+                mCameraId = cameraId;
+                isOn = enabled;
+            }
+
+        },new Handler());
+
+        tts = new TextToSpeech(this,this);
+        handler = new Handler();
 
     }
 
@@ -249,7 +270,7 @@ public class CameraActivity extends Activity {
                     Image image = null;
                     try{
                         image = reader.acquireLatestImage();
-                        Thread process = new Thread(new CVprocess(image,points));
+                        Thread process = new Thread(new CVprocess(image,points,handler));
                         process.start();
                         image.close();
 
@@ -396,6 +417,7 @@ public class CameraActivity extends Activity {
                 Log.d("CameraActivity","isProcessed " + isProcessed);
                 if(isProcessed) {
                     isProcessed = false;
+                    speechText();
                     takePicture(points);
                 }
                 //bitmap = getScreenBitmap(mTextureView);
@@ -410,6 +432,34 @@ public class CameraActivity extends Activity {
 
         }
 
+    }
+    @Override
+    public void onInit(int status) {
+        if(TextToSpeech.SUCCESS == status){
+            Locale locale = Locale.JAPANESE;
+            if(tts.isLanguageAvailable(locale) >= TextToSpeech.LANG_AVAILABLE){
+                tts.setLanguage(locale);
+            } else{
+                Log.d("CVprocess","Error SetLocale");
+            }
+        }
+    }
+
+    public void speechText(){
+        if(0 < number.length()){
+            if(tts.isSpeaking()){
+                tts.stop();
+            }
+            tts.speak(number,TextToSpeech.QUEUE_FLUSH,null,"1");
+        }
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        if(tts != null){
+            tts.shutdown();
+        }
     }
 
 }

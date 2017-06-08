@@ -1,16 +1,14 @@
 package com.example.komaki.a7segosr;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.os.Handler;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import org.opencv.android.BaseLoaderCallback;
-import org.opencv.android.LoaderCallbackInterface;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -21,24 +19,25 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
+import java.util.Locale;
 
-public class CheckRecognize extends AppCompatActivity {
+public class CheckRecognize extends AppCompatActivity implements TextToSpeech.OnInitListener{
+    Handler handler;
+    static String number = "0.00";
+    TextToSpeech tts;
+    Bitmap bitmap;
+    static boolean proceccFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.check_recognize);
 
-        Bitmap bitmap = loadBitmap("led2.bmp");
-        Thread thread = new Thread(new CVprocess(bitmap));
-        thread.start();
-
+        bitmap = loadBitmap("led2.bmp");
+        handler = new Handler();
+        tts = new TextToSpeech(this,this);
+        (new CallCVprocess()).start();
     }
 
     private Bitmap loadBitmap(String file){
@@ -109,4 +108,44 @@ public class CheckRecognize extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void onInit(int status) {
+        if(TextToSpeech.SUCCESS == status){
+            Locale locale = Locale.JAPANESE;
+            if(tts.isLanguageAvailable(locale) >= TextToSpeech.LANG_AVAILABLE){
+                tts.setLanguage(locale);
+            } else{
+                Log.d("CheckRecognize","Error SetLocale");
+            }
+        }
+    }
+    public void speechText(){
+        if(0 < number.length()){
+            if(tts.isSpeaking()){
+                tts.stop();
+            }
+            tts.speak(number,TextToSpeech.QUEUE_FLUSH,null,"1");
+        }
+    }
+    private class CallCVprocess extends Thread{
+        @Override
+        public void run(){
+            while(true) {
+                Thread thread = new Thread(new CVprocess(bitmap, true, handler));
+                thread.start();
+                if(proceccFlag){
+                    proceccFlag = false;
+                    speechText();
+                }
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    }
+
 }
