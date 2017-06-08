@@ -213,6 +213,7 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
     protected void updatePreview(){
         if(mCameraDevice == null) return;
         mPreviewBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+        mPreviewBuilder.set(CaptureRequest.FLASH_MODE,CaptureRequest.FLASH_MODE_TORCH);
 
         HandlerThread thread = new HandlerThread("CameraPreview");
         thread.start();
@@ -261,6 +262,7 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
             final CaptureRequest.Builder captureBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             captureBuilder.addTarget(reader.getSurface());
             captureBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+            mPreviewBuilder.set(CaptureRequest.FLASH_MODE,CaptureRequest.FLASH_MODE_TORCH);
             //captureBuilder.set(CaptureRequest.CONTROL_AE_MODE,CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
 
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener(){

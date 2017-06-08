@@ -1,9 +1,17 @@
 package com.example.komaki.a7segosr;
 
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Camera;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraManager;
+import android.hardware.camera2.CaptureRequest;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
@@ -23,7 +31,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
-public class ConfigActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener {
+public class ConfigActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener, View.OnTouchListener {
 
     SeekBar binalyBar,ksizeBar;
     static double tmpBinalyValue;
@@ -32,10 +40,20 @@ public class ConfigActivity extends AppCompatActivity implements CameraBridgeVie
     private CameraBridgeViewBase mCameraView;
     private Mat previewPicture;
 
+    private CameraManager mCameraManager;
+    String mCameraId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
+        mCameraManager = (CameraManager)getSystemService(Context.CAMERA_SERVICE);
+        mCameraManager.registerTorchCallback(new CameraManager.TorchCallback() {
+            @Override
+            public void onTorchModeChanged(@NonNull String cameraId, boolean enabled) {
+                mCameraId = cameraId;
+            }
+        },new Handler());
         Button save = (Button)findViewById(R.id.saveButton);
         Button back = (Button)findViewById(R.id.backButton);
         binalyBar = (SeekBar)findViewById(R.id.binalyVal);
@@ -47,6 +65,8 @@ public class ConfigActivity extends AppCompatActivity implements CameraBridgeVie
 
         binalyBar.setOnSeekBarChangeListener(calledBar);
         ksizeBar.setOnSeekBarChangeListener(calledBar);
+        //(new RequestFlash()).start();
+
         mCameraView.setCvCameraViewListener(this);
         mCameraView.enableView();
     }
@@ -128,5 +148,28 @@ public class ConfigActivity extends AppCompatActivity implements CameraBridgeVie
         Imgproc.threshold(previewPicture,previewPicture,tmpBinalyValue,255, Imgproc.THRESH_BINARY);
         Imgproc.medianBlur(previewPicture,previewPicture,tmpKSIZE);
         return previewPicture;
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return false;
+    }
+
+    private class RequestFlash extends Thread{
+        boolean flag = true;
+        @Override
+        public void run(){
+            while(flag){
+                if(mCameraId == null) continue;
+                try {
+                    mCameraManager.setTorchMode(mCameraId,true);
+                    flag = false;
+                } catch (CameraAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
     }
 }

@@ -1,7 +1,11 @@
 package com.example.komaki.speaktest;
 
+import android.content.Context;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraManager;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +24,8 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     Handler handler;
 
     static boolean flag = false;
+    CameraManager mCameraManager;
+    String mCameraId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +35,13 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         text = (TextView)findViewById(R.id.editText);
         tts = new TextToSpeech(this,this);
         speak.setOnClickListener(this);
+        mCameraManager = (CameraManager)getSystemService(Context.CAMERA_SERVICE);
+        mCameraManager.registerTorchCallback(new CameraManager.TorchCallback() {
+            @Override
+            public void onTorchModeChanged(@NonNull String cameraId, boolean enabled) {
+                mCameraId = cameraId;
+            }
+        },new Handler());
     }
 
     @Override
@@ -48,9 +61,19 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     @Override
     public void onClick(View v) {
         if(speak == v){
+            /*
             InnerThread thread = new InnerThread();
             handler = new Handler();
             thread.start();
+            */
+            if(mCameraId != null){
+                try {
+                    mCameraManager.setTorchMode(mCameraId,true);
+                } catch (CameraAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
     }
 
