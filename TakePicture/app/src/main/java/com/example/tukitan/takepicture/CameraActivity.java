@@ -95,7 +95,7 @@ public class CameraActivity extends Activity {
                 System.err.println("BackCamera");
 
                 StreamConfigurationMap map = charactor.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-                mPreviewSize = map.getOutputSizes(SurfaceTexture.class)[0];
+                mPreviewSize = map.getOutputSizes(SurfaceTexture.class)[3];
 
                 // Rotation and Resize Preview
                 // this.configureTranceform();
@@ -232,7 +232,7 @@ public class CameraActivity extends Activity {
                         image = reader.acquireLatestImage();
 
                         //System.out.println("KOKO");
-                        Recognition obj = new Recognition(getApplication(),image,MinX,MinY,MaxX,MaxY);
+                        Recognition obj = new Recognition(getApplication(),image,MinX,MinY);
                         image.close();
                         obj.recognize();
                     }catch (Exception e) {

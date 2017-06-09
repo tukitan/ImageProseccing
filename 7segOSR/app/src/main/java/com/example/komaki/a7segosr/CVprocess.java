@@ -57,11 +57,11 @@ public class CVprocess implements Runnable{
     // Blur value. Used blurBitmap()
     static int KSIZE = 21;
 
-    int COMMA_SIZE_MIN = 100;
-    int COMMA_SIZE_MAX = 800;
+    int COMMA_SIZE_MIN = 40;
+    int COMMA_SIZE_MAX = 300;
     double COMMA_RANGE_MAX = 2.5;
     double COMMA_RANGE_MIN = 0.5;
-    int SEG_SIZE_MIN = 4000;
+    int SEG_SIZE_MIN = 500;
 
     double NUMBER_RATIO = 0.9;
 
@@ -78,7 +78,7 @@ public class CVprocess implements Runnable{
     HashMap<Integer,Integer> labelMap;
 
     // Jugde two Segments to One Charactor
-    int SEG_RANGE = 20;
+    int SEG_RANGE = 10;
 
     int COMMA_RATIO = 2;
 
@@ -210,18 +210,35 @@ public class CVprocess implements Runnable{
     private void labeling() {
         Mat src = new Mat();
         bitmapToMat(newBitmap, src);
+        int k=0,l=0;
 
         BITMAP_X_SIZE = newBitmap.getWidth();
         BITMAP_Y_SIZE = newBitmap.getHeight();
-        System.out.println("x:" + BITMAP_X_SIZE + ",y:" + BITMAP_Y_SIZE + ",size:" + BITMAP_X_SIZE * BITMAP_Y_SIZE);
+        System.out.println("x:" + BITMAP_X_SIZE/2 + ",y:" + BITMAP_Y_SIZE/2 + ",size:" + BITMAP_X_SIZE/2 * BITMAP_Y_SIZE/2);
+
+        exBytes = new ExByte[BITMAP_Y_SIZE/2 + 1][BITMAP_X_SIZE/2 +1];
+
+        for (int i = 0; i < BITMAP_Y_SIZE ; i+=2) {
+            for (int j = 0; j < BITMAP_X_SIZE ;j+=2) {
+                exBytes[k][l] = new ExByte(newBitmap.getPixel(j, i),l,k);
+                l++;
+            }
+            l=0;
+            k++;
+        }
+        BITMAP_X_SIZE /= 2;
+        BITMAP_Y_SIZE /= 2;
+        /*
+
 
         exBytes = new ExByte[BITMAP_Y_SIZE][BITMAP_X_SIZE];
 
-        for (int i = 0; i < BITMAP_Y_SIZE; i++) {
-            for (int j = 0; j < BITMAP_X_SIZE; j++) {
+        for (int i = 0; i < BITMAP_Y_SIZE; i+=2) {
+            for (int j = 0; j < BITMAP_X_SIZE; j+=2) {
                 exBytes[i][j] = new ExByte(newBitmap.getPixel(j, i),j,i);
             }
         }
+         */
         setLabel();
     }
 
@@ -383,7 +400,7 @@ public class CVprocess implements Runnable{
             dataSize = tmpSegArray.get(i).getSize();
             System.out.println("size : " + dataSize);
             if(dataSize < SEG_SIZE_MIN ){
-                if(dataSize > COMMA_SIZE_MIN && dataSize < COMMA_SIZE_MAX){
+                if(dataSize < COMMA_SIZE_MAX){
                     if(COMMA_RANGE_MIN < Math.abs(tmpSegArray.get(i).points.getRatio()) && Math.abs(tmpSegArray.get(i).points.getRatio()) < COMMA_RANGE_MAX ) {
                         numbers.add(new Charactor(tmpSegArray.get(i),true));
                         System.out.println("comma");

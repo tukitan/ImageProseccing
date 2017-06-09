@@ -65,6 +65,8 @@ public class ConfigActivity extends AppCompatActivity implements CameraBridgeVie
 
         binalyBar.setOnSeekBarChangeListener(calledBar);
         ksizeBar.setOnSeekBarChangeListener(calledBar);
+        binalyBar.setProgress((int) tmpBinalyValue);
+        ksizeBar.setProgress(tmpKSIZE);
         //(new RequestFlash()).start();
 
         mCameraView.setCvCameraViewListener(this);
