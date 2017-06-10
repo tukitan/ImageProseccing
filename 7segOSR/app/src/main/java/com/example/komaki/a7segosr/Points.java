@@ -41,6 +41,11 @@ public class Points {
         }
 
     }
+
+    public Points() {
+
+    }
+
     public double getRatio(){
         double Xsize = maxX - minX;
         double Ysize = maxY - minY;

@@ -73,6 +73,10 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
     static String number = null;
 
     Handler handler;
+
+    static Points CHAR_POINTS;
+    boolean isFrist = true;
+
     @Override
     protected void onCreate(Bundle SavedInstance) {
         super.onCreate(SavedInstance);
@@ -273,7 +277,15 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
                     Image image = null;
                     try{
                         image = reader.acquireLatestImage();
-                        Thread process = new Thread(new CVprocess(image,points,handler));
+                        Thread process;
+                        if(isFrist) {
+                            isFrist = false;
+                            CHAR_POINTS = new Points();
+                            process = new Thread(new CVprocess(image, points, handler));
+                        } else{
+                            if (CHAR_POINTS == null)System.out.println("NULL!");
+                            process = new Thread(new CVprocess(image,CHAR_POINTS, handler));
+                        }
                         process.start();
                         image.close();
 
@@ -419,14 +431,14 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
 
                 Log.d("CameraActivity","isProcessed " + isProcessed);
                 if(isProcessed) {
+                    speechText();
                     isProcessed = false;
                     takePicture(points);
-                    speechText();
                 }
                 //bitmap = getScreenBitmap(mTextureView);
                 //CheckRecognize.writeBitmap(bitmap,"tmpImage.jpg");
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(6000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

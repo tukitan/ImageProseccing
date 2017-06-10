@@ -84,9 +84,12 @@ public class CVprocess implements Runnable{
 
     // Charactor List
     ArrayList<Charactor> numbers;
+    ArrayList<Charactor> commaList;
 
     Handler handler;
     boolean isCalledByCheckRecognize = false;
+
+    int TMP_MIN_X,TMP_MIN_Y,TMP_MAX_X,TMP_MAX_Y;
 
     public CVprocess(Bitmap bitmap,boolean calledCheckRec,Handler handler){
         myBitmap = bitmap;
@@ -114,6 +117,7 @@ public class CVprocess implements Runnable{
 
         try {
             BitmapRegionDecoder regionDecoder = BitmapRegionDecoder.newInstance(tmpbytes,0,tmpbytes.length,false);
+            System.out.println("x:" + points.minX + " y:" + points.minY + " x:" + points.maxX + " y:" + points.maxY);
             Rect rect = new Rect(points.minX,points.minY,points.maxX,points.maxY);
             myBitmap = regionDecoder.decodeRegion(rect,null);
             writeBitmap(myBitmap,"CuttedImage.bmp");
@@ -121,6 +125,12 @@ public class CVprocess implements Runnable{
             e.printStackTrace();
         }
         this.handler = handler;
+
+        // use to the last function to invoke "new Point()"
+        TMP_MIN_X = points.minX;
+        TMP_MIN_Y = points.minY;
+        TMP_MAX_X = points.maxX;
+        TMP_MAX_Y = points.maxY;
 
     }
     @Override
@@ -158,9 +168,14 @@ public class CVprocess implements Runnable{
 
         } else {
             handler.post(new Runnable() {
+                int minx = TMP_MIN_X;
+                int miny = TMP_MIN_Y + numbers.get(0).minY * 2;
+                int maxx = TMP_MIN_X + (numbers.get(numbers.size() -1).maxX * 2);
+                int maxy = TMP_MIN_Y + (numbers.get(numbers.size() -1).maxY * 2);
                 @Override
                 public void run() {
                     CameraActivity.number = result;
+                    CameraActivity.CHAR_POINTS = new Points(maxx +5 ,maxy +5 , minx, miny -5,false);
                 }
             });
             CameraActivity.isProcessed = true;
@@ -390,6 +405,7 @@ public class CVprocess implements Runnable{
 
     private void makeCharactor(){
         numbers = new ArrayList<>();
+        commaList = new ArrayList<>();
 
         int i,cnt=0;
         int dataSize;
@@ -400,12 +416,7 @@ public class CVprocess implements Runnable{
             dataSize = tmpSegArray.get(i).getSize();
             System.out.println("size : " + dataSize);
             if(dataSize < SEG_SIZE_MIN ){
-                if(dataSize < COMMA_SIZE_MAX){
-                    if(COMMA_RANGE_MIN < Math.abs(tmpSegArray.get(i).points.getRatio()) && Math.abs(tmpSegArray.get(i).points.getRatio()) < COMMA_RANGE_MAX ) {
-                        numbers.add(new Charactor(tmpSegArray.get(i),true));
-                        System.out.println("comma");
-                    }
-                }
+                commaList.add(new Charactor(tmpSegArray.get(i),false));
                 delete.add(i);
             } else{
                 if(NUMBER_RATIO > Math.abs(tmpSegArray.get(i).points.getRatio())){
@@ -442,8 +453,17 @@ public class CVprocess implements Runnable{
             }
         }
     }
+
+    private void judgeComma(){
+        int maxX = 0;
+        for (int i=0;i<numbers.size();i++){
+            maxX = maxX < numbers.get(i).maxX ? numbers.get(i).maxX : maxX;
+        }
+
+    }
     private String  makeString(){
         String res = new String();
+        int minx,miny,maxx,maxy;
         Charactor tmp;
         int current = 0;
         for (int i=0;i<numbers.size()-1;i++){
@@ -456,6 +476,7 @@ public class CVprocess implements Runnable{
             }
         }
         for(Charactor elem :numbers) res += elem.value;
+
         return res;
 
     }

@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             InnerThread thread = new InnerThread();
             handler = new Handler();
             thread.start();
-            */
+
             if(mCameraId != null){
                 try {
                     mCameraManager.setTorchMode(mCameraId,true);
@@ -73,17 +73,25 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                     e.printStackTrace();
                 }
             }
+            */
+            speechText();
 
         }
     }
 
     private void speechText(){
-        CharSequence str = result;
+        CharSequence str = text.getText();
+        if(String.valueOf(str).equals("おせち")){
+            str = "おせちんこ";
+        }
+        if(String.valueOf(str).equals("ねねっち")){
+            str = "ガイジ";
+        }
         if(0 < str.length()){
             if(tts.isSpeaking()){
                 tts.stop();
             }
-            tts.speak(result,TextToSpeech.QUEUE_FLUSH,null,"1");
+            tts.speak(str,TextToSpeech.QUEUE_FLUSH,null,"1");
         }
     }
 
