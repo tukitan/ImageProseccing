@@ -438,7 +438,7 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
                 //bitmap = getScreenBitmap(mTextureView);
                 //CheckRecognize.writeBitmap(bitmap,"tmpImage.jpg");
                 try {
-                    Thread.sleep(6000);
+                    Thread.sleep(4000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

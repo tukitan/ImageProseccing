@@ -151,6 +151,7 @@ public class CVprocess implements Runnable{
         for(Charactor elem :numbers) {
             if(!elem.isComma) elem.recognition();
         }
+        judgeComma();
         final String result = makeString();
 
         System.out.println(result);
@@ -456,9 +457,24 @@ public class CVprocess implements Runnable{
 
     private void judgeComma(){
         int maxX = 0;
+        int cnt = 0;
+        ArrayList<Integer> deleteList = new ArrayList<>();
         for (int i=0;i<numbers.size();i++){
-            maxX = maxX < numbers.get(i).maxX ? numbers.get(i).maxX : maxX;
+            maxX = (maxX < numbers.get(i).minX) ? numbers.get(i).minX : maxX;
         }
+        for(int i=0;i<commaList.size();i++){
+            if(commaList.get(i).minX > maxX) {
+                deleteList.add(i);
+            }
+        }
+
+        for(Integer elem :deleteList) {
+            commaList.remove((int)elem - cnt);
+            cnt ++;
+        }
+        commaList.trimToSize();
+        System.out.println("COMMALIST SIZE:" + commaList.size());
+
 
     }
     private String  makeString(){
@@ -466,6 +482,11 @@ public class CVprocess implements Runnable{
         int minx,miny,maxx,maxy;
         Charactor tmp;
         int current = 0;
+        if(commaList.size() != 0 ) {
+            commaList.get(0).value = ".";
+            numbers.add(commaList.get(0));
+        }
+        if(commaList.size() > 1) System.out.println("Too many Comma!");
         for (int i=0;i<numbers.size()-1;i++){
             for(int j=i+1;j<numbers.size();j++){
                 if(numbers.get(i).minX > numbers.get(j).minX){
@@ -475,7 +496,9 @@ public class CVprocess implements Runnable{
                 }
             }
         }
-        for(Charactor elem :numbers) res += elem.value;
+        for(Charactor elem :numbers) {
+            res += elem.value;
+        }
 
         return res;
 
