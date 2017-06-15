@@ -431,7 +431,7 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
 
                 Log.d("CameraActivity","isProcessed " + isProcessed);
                 if(isProcessed) {
-                    speechText();
+                    //speechText();
                     isProcessed = false;
                     takePicture(points);
                 }
