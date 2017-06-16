@@ -87,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             CVprocess.THRESHOLD = Double.parseDouble(configValues.get(0));
             CVprocess.KSIZE = Integer.parseInt(configValues.get(1));
+            System.out.println(CVprocess.KSIZE);
+            System.out.println(CVprocess.THRESHOLD);
             Intent intent = new Intent(MainActivity.this,CheckRecognize.class);
             startActivity(intent);
         }
@@ -105,6 +107,10 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
+            CVprocess.THRESHOLD = Double.parseDouble(configValues.get(0));
+            CVprocess.KSIZE = Integer.parseInt(configValues.get(1));
+            System.out.println(CVprocess.KSIZE);
+            System.out.println(CVprocess.THRESHOLD);
             Intent intent = new Intent(MainActivity.this,CameraActivity.class);
             startActivity(intent);
         }
