@@ -8,9 +8,6 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
-import android.graphics.Matrix;
-import android.graphics.Point;
-import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.*;
 import android.hardware.camera2.CameraManager.TorchCallback;
@@ -35,9 +32,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.komaki.a7segosr.R;
-
-import org.opencv.core.Mat;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
@@ -236,8 +230,6 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
         super.onResume();
         //createCameraPreviewSettion();
     }
-    // DON'T USE THIS FUNCTION.
-    // takePicture() is UNKO
 
     protected void takePicture(final Points points){
         //Toast.makeText(CameraActivity.this,"それは無理＾＾；",Toast.LENGTH_LONG).show();
@@ -289,12 +281,6 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
                         process.start();
                         image.close();
 
-                        //System.out.println("KOKO");
-                        /*
-                        Recognition obj = new Recognition(getApplication(),image,MinX,MinY,MaxX,MaxY);
-                        image.close();
-                        obj.recognize();
-                        */
                     }catch (Exception e) {
                         e.printStackTrace();
                     }

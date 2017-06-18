@@ -52,10 +52,10 @@ public class CVprocess implements Runnable{
     static int BITMAP_Y_SIZE;
 
     // Threshold value. Used bynaly()
-    static double THRESHOLD = 50.0;
+    static double THRESHOLD;
 
     // Blur value. Used blurBitmap()
-    static int KSIZE = 21;
+    static int KSIZE;
 
     int COMMA_SIZE_MIN = 40;
     int COMMA_SIZE_MAX = 300;
@@ -63,7 +63,8 @@ public class CVprocess implements Runnable{
     double COMMA_RANGE_MIN = 0.5;
     int SEG_SIZE_MIN = 500;
 
-    double NUMBER_RATIO = 0.9;
+    double NUMBER_RATIO_MIN = 0.9;
+    double NUMBER_RATIO_MAX = 5.5;
 
     // LED Segment Object. (Show Segment.java)
     Segment[] segments;
@@ -78,7 +79,7 @@ public class CVprocess implements Runnable{
     HashMap<Integer,Integer> labelMap;
 
     // Jugde two Segments to One Charactor
-    int SEG_RANGE = 10;
+    int SEG_RANGE = 15;
 
     int COMMA_RATIO = 2;
 
@@ -420,7 +421,8 @@ public class CVprocess implements Runnable{
                 commaList.add(new Charactor(tmpSegArray.get(i),false));
                 delete.add(i);
             } else{
-                if(NUMBER_RATIO > Math.abs(tmpSegArray.get(i).points.getRatio())){
+                double tmp = tmpSegArray.get(i).points.getRatio();
+                if(NUMBER_RATIO_MIN > tmp || NUMBER_RATIO_MAX < tmp){
                     System.out.println("noise");
                     delete.add(i);
                 }
