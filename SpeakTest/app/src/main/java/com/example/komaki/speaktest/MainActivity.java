@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         text = (TextView)findViewById(R.id.editText);
         tts = new TextToSpeech(this,this);
         speak.setOnClickListener(this);
+        /*
         mCameraManager = (CameraManager)getSystemService(Context.CAMERA_SERVICE);
         mCameraManager.registerTorchCallback(new CameraManager.TorchCallback() {
             @Override
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 mCameraId = cameraId;
             }
         },new Handler());
+        */
     }
 
     @Override
