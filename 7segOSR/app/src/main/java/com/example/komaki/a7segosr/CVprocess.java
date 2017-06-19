@@ -212,18 +212,12 @@ public class CVprocess implements Runnable{
         Mat bin = new Mat();
         Mat origin = new Mat();
         bitmapToMat(myBitmap,origin);
-        Imgproc.threshold(origin,bin,THRESHOLD,255, Imgproc.THRESH_BINARY);
+        //Imgproc.threshold(origin,bin,THRESHOLD,255, Imgproc.THRESH_BINARY);
+        // Auto deside THRESHOLD mode
+        Imgproc.threshold(origin,bin,0.0,255, Imgproc.THRESH_BINARY | Imgproc.THRESH_OTSU);
         matToBitmap(bin,myBitmap);
 
     }
-
-    private byte[] getByteArray(){
-        int bytesize = myBitmap.getByteCount();
-        ByteBuffer buffer = ByteBuffer.allocate(bytesize);
-        myBitmap.copyPixelsToBuffer(buffer);
-        return buffer.array();
-    }
-
     private void labeling() {
         Mat src = new Mat();
         bitmapToMat(newBitmap, src);

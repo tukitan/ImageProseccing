@@ -17,11 +17,12 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener, View.OnClickListener{
 
-    Button speak;
+    Button speak,change;
     TextView text;
     TextToSpeech tts;
     static String result = "0.00";
     Handler handler;
+    boolean lang = true;
 
     static boolean flag = false;
     CameraManager mCameraManager;
@@ -32,9 +33,11 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         speak = (Button)findViewById(R.id.button);
+        change = (Button)findViewById(R.id.change);
         text = (TextView)findViewById(R.id.editText);
         tts = new TextToSpeech(this,this);
         speak.setOnClickListener(this);
+        change.setOnClickListener(this);
         /*
         mCameraManager = (CameraManager)getSystemService(Context.CAMERA_SERVICE);
         mCameraManager.registerTorchCallback(new CameraManager.TorchCallback() {
@@ -77,7 +80,16 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             }
             */
             speechText();
-
+        } else if(v == change){
+            if(lang) {
+                lang = !lang;
+                Locale locale = Locale.ENGLISH;
+                tts.setLanguage(locale);
+            } else{
+                lang = !lang;
+                Locale locale = Locale.JAPANESE;
+                tts.setLanguage(locale);
+            }
         }
     }
 
