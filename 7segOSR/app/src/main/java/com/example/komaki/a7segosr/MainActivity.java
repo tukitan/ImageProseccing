@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Button startButton = (Button)findViewById(R.id.start);
-        Button configButton = (Button)findViewById(R.id.config);
+        ImageButton configButton = (ImageButton)findViewById(R.id.config);
         Button cameraButton = (Button)findViewById(R.id.cameraTest);
         startButton.setOnClickListener(callCheckRecognize);
         configButton.setOnClickListener(callConfig);

@@ -9,7 +9,7 @@
         android:id="@+id/button"
         android:layout_width="315dp"
         android:layout_height="104dp"
-        android:text="Pagetest"
+        android:text="How to Use"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"
