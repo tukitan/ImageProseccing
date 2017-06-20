@@ -136,7 +136,6 @@ public class CVprocess implements Runnable{
     }
     @Override
     public void run(){
-        grayScale();
         binaly();
         //for(byte elem :bytes) System.out.println(elem);
         //for(int i)
@@ -210,11 +209,13 @@ public class CVprocess implements Runnable{
 
     private void binaly(){
         Mat bin = new Mat();
+        Mat gray = new Mat();
         Mat origin = new Mat();
         bitmapToMat(myBitmap,origin);
+        Imgproc.cvtColor(origin,gray,Imgproc.COLOR_RGB2GRAY);
         //Imgproc.threshold(origin,bin,THRESHOLD,255, Imgproc.THRESH_BINARY);
         // Auto deside THRESHOLD mode
-        Imgproc.threshold(origin,bin,0.0,255, Imgproc.THRESH_BINARY | Imgproc.THRESH_OTSU);
+        Imgproc.threshold(gray,bin,0.0,255, Imgproc.THRESH_BINARY | Imgproc.THRESH_OTSU);
         matToBitmap(bin,myBitmap);
 
     }

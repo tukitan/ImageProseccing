@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button startButton = (Button)findViewById(R.id.start);
         ImageButton configButton = (ImageButton)findViewById(R.id.config);
+        ImageButton howtoButton = (ImageButton) findViewById(R.id.howto);
         Button cameraButton = (Button)findViewById(R.id.cameraTest);
         startButton.setOnClickListener(callCheckRecognize);
         configButton.setOnClickListener(callConfig);
@@ -114,6 +115,12 @@ public class MainActivity extends AppCompatActivity {
             System.out.println(CVprocess.THRESHOLD);
             Intent intent = new Intent(MainActivity.this,CameraActivity.class);
             startActivity(intent);
+        }
+    };
+    private View.OnClickListener callHowto = new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+
         }
     };
 
