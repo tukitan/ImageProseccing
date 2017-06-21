@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         startButton.setOnClickListener(callCheckRecognize);
         configButton.setOnClickListener(callConfig);
         cameraButton.setOnClickListener(callCamera);
+        howtoButton.setOnClickListener(callHowto);
         configValues = initConfig();
         for(String elem :configValues) System.out.println(elem);
     }
@@ -120,7 +121,8 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener callHowto = new View.OnClickListener(){
         @Override
         public void onClick(View v) {
-
+            Intent intent = new Intent(MainActivity.this,HowtoUse.class);
+            startActivity(intent);
         }
     };
 
