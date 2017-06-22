@@ -14,6 +14,7 @@ import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -99,9 +100,11 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener callConfig = new View.OnClickListener() {
         @Override
         public void onClick(View v){
+            /*
             ConfigActivity.tmpBinalyValue = Double.parseDouble(configValues.get(0));
             ConfigActivity.tmpKSIZE = Integer.parseInt(configValues.get(1));
-            Intent intent = new Intent(MainActivity.this,ConfigActivity.class);
+            */
+            Intent intent = new Intent(MainActivity.this,ConfigActivity2.class);
             startActivity(intent);
 
         }
@@ -140,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
             br.close();
         } catch (FileNotFoundException e) {
             try {
+                (new File(filename)).createNewFile();
                 OutputStream out = openFileOutput(filename, MODE_PRIVATE);
                 PrintWriter pw = new PrintWriter(new OutputStreamWriter(out));
                 pw.println("60.0");
