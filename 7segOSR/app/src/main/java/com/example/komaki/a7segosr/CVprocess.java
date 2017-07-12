@@ -136,6 +136,7 @@ public class CVprocess implements Runnable{
     }
     @Override
     public void run(){
+        KSIZE = 11;
         binaly();
         //for(byte elem :bytes) System.out.println(elem);
         //for(int i)

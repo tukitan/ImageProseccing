@@ -417,10 +417,11 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
 
                 Log.d("CameraActivity","isProcessed " + isProcessed);
                 if(isProcessed) {
+                    speechText();
                     isProcessed = false;
+                    writeNumber(number,"resultfile.txt");
                     takePicture(points);
                 }
-                speechText();
                 //bitmap = getScreenBitmap(mTextureView);
                 //CheckRecognize.writeBitmap(bitmap,"tmpImage.jpg");
                 try {
