@@ -14,9 +14,13 @@ import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -30,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("opencv_java3");
     }
 
-    ArrayList<String> configValues;
+    ArrayList<Double> configValues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         cameraButton.setOnClickListener(callCamera);
         howtoButton.setOnClickListener(callHowto);
         configValues = initConfig();
-        for(String elem :configValues) System.out.println(elem);
+        for(Double elem :configValues) System.out.println(elem);
     }
     @Override
     protected void onResume(){
@@ -89,10 +93,9 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener callCheckRecognize = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            CVprocess.THRESHOLD = Double.parseDouble(configValues.get(0));
-            CVprocess.KSIZE = Integer.parseInt(configValues.get(1));
+            double tmp = configValues.get(0);
+            CVprocess.KSIZE = (int)tmp;
             System.out.println(CVprocess.KSIZE);
-            System.out.println(CVprocess.THRESHOLD);
             Intent intent = new Intent(MainActivity.this,CheckRecognize.class);
             startActivity(intent);
         }
@@ -100,10 +103,9 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener callConfig = new View.OnClickListener() {
         @Override
         public void onClick(View v){
-            /*
-            ConfigActivity.tmpBinalyValue = Double.parseDouble(configValues.get(0));
-            ConfigActivity.tmpKSIZE = Integer.parseInt(configValues.get(1));
-            */
+
+            ConfigActivity.tmpKSIZE = Integer.parseInt(String.valueOf(configValues.get(0)));
+
             Intent intent = new Intent(MainActivity.this,ConfigActivity2.class);
             startActivity(intent);
 
@@ -113,10 +115,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            CVprocess.THRESHOLD = Double.parseDouble(configValues.get(0));
-            CVprocess.KSIZE = Integer.parseInt(configValues.get(1));
+            double tmp = configValues.get(0);
+            CVprocess.KSIZE = (int)tmp;
             System.out.println(CVprocess.KSIZE);
-            System.out.println(CVprocess.THRESHOLD);
             Intent intent = new Intent(MainActivity.this,CameraActivity.class);
             startActivity(intent);
         }
@@ -129,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    /*
     private ArrayList<String> initConfig(){
         String filename = "initalize.txt";
         String str;
@@ -160,6 +162,38 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return consts;
+    }
+    */
 
+    private ArrayList<Double> initConfig(){
+        ArrayList<Double> res = new ArrayList<>();
+        String filename = "initalize.txt";
+        double[] datas = new double[]{9};
+        File file = new File(filename);
+        PrintWriter pw;
+
+        if(!file.exists()){
+            try {
+                FileOutputStream fos = openFileOutput(filename,MODE_PRIVATE);
+                for(double elem: datas){
+                    res.add(elem);
+                    fos.write(String.valueOf(elem).getBytes());
+                }
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                String tmp;
+                while((tmp = br.readLine())!= null) res.add(Double.parseDouble(tmp));
+                br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return res;
     }
 }

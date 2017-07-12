@@ -136,7 +136,6 @@ public class CVprocess implements Runnable{
     }
     @Override
     public void run(){
-        KSIZE = 9;
         binaly();
         //for(byte elem :bytes) System.out.println(elem);
         //for(int i)
@@ -155,7 +154,7 @@ public class CVprocess implements Runnable{
         judgeComma();
         final String result = makeString();
 
-        System.out.println("THRESHOLD:" + THRESHOLD + ", KSIZE:" + KSIZE);
+        System.out.println("KSIZE:" + KSIZE);
         System.out.println(result);
 
         Log.d("CVprocess","Finish Processed.");

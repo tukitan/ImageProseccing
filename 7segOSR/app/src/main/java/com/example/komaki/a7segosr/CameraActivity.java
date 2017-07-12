@@ -420,6 +420,7 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
                     isProcessed = false;
                     takePicture(points);
                 }
+                speechText();
                 //bitmap = getScreenBitmap(mTextureView);
                 //CheckRecognize.writeBitmap(bitmap,"tmpImage.jpg");
                 try {
