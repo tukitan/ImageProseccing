@@ -103,8 +103,9 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener callConfig = new View.OnClickListener() {
         @Override
         public void onClick(View v){
+            double tmp = configValues.get(0);
 
-            ConfigActivity.tmpKSIZE = Integer.parseInt(String.valueOf(configValues.get(0)));
+            ConfigActivity.tmpKSIZE = (int)tmp;
 
             Intent intent = new Intent(MainActivity.this,ConfigActivity2.class);
             startActivity(intent);
@@ -170,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
         String filename = "initalize.txt";
         double[] datas = new double[]{9};
         File file = new File(filename);
-        PrintWriter pw;
 
         if(!file.exists()){
             try {
