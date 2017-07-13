@@ -351,16 +351,6 @@ public class CVprocess implements Runnable{
         }
     }
 
-
-    private int[] returnPixels(){
-        int[] res = new int[BITMAP_Y_SIZE*BITMAP_X_SIZE];
-        for(int i=0;i<BITMAP_Y_SIZE;i++){
-            for(int j=0;j<BITMAP_X_SIZE;j++){
-                res[i*BITMAP_Y_SIZE + j] = exBytes[i][j].intDada;
-            }
-        }
-        return res;
-    }
     private void blurBitmap(int ksize){
         Mat src = new Mat();
         Mat dst = new Mat();

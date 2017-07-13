@@ -3,6 +3,7 @@ package com.example.komaki.a7segosr;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -374,18 +375,21 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
         }
     }
     public boolean onTouchEvent(MotionEvent event){
-        if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
-            MinX = (int)event.getX();
-            MinY = (int)event.getY();
-        }
-        if(event.getActionMasked() == MotionEvent.ACTION_UP){
-            MaxX = (int)event.getX();
-            MaxY = (int)event.getY();
-            Points point = new Points(MaxX,MaxY,MinX,MinY,true);
-            if(!flag) {
-                flag = true;
-                (new TakeThread(point)).start();
+        if(!flag) {
+            if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
+                MinX = (int)event.getX();
+                MinY = (int)event.getY();
             }
+            if(event.getActionMasked() == MotionEvent.ACTION_UP){
+                MaxX = (int)event.getX();
+                MaxY = (int)event.getY();
+                Points point = new Points(MaxX,MaxY,MinX,MinY,true);
+                (new TakeThread(point)).start();
+                flag = true;
+            }
+        } else {
+            threadFlag = false;
+            System.out.println("threadFlag : false");
         }
 
         return true;
@@ -407,23 +411,21 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
 
     private class TakeThread extends Thread{
         Points points;
-        Bitmap bitmap;
         private TakeThread(Points points){
             this.points = points;
         }
+
         @Override
         public void run(){
             while (threadFlag){
 
                 Log.d("CameraActivity","isProcessed " + isProcessed);
                 if(isProcessed) {
-                    speechText();
                     isProcessed = false;
                     writeNumber(number,"resultfile.txt");
                     takePicture(points);
                 }
-                //bitmap = getScreenBitmap(mTextureView);
-                //CheckRecognize.writeBitmap(bitmap,"tmpImage.jpg");
+                speechText();
                 try {
                     Thread.sleep(4000);
                 } catch (InterruptedException e) {
@@ -431,7 +433,7 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
                 }
 
             }
-
+            startActivity(new Intent(CameraActivity.this, MainActivity.class));
         }
 
     }
@@ -448,6 +450,7 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
     }
 
     public void speechText(){
+        System.out.println(number);
         if(number != null){
             if(tts.isSpeaking()){
                 tts.stop();

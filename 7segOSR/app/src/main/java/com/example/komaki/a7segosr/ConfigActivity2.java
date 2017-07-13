@@ -62,6 +62,7 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
         if(v == kettei){
             writeConfigFile();
             Intent intent = new Intent(ConfigActivity2.this,MainActivity.class);
+
             startActivity(intent);
 
         }
