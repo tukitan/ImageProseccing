@@ -44,9 +44,10 @@ public class MainActivity extends AppCompatActivity {
             if(shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)){
 
             }
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},0);
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,android.Manifest.permission.CAMERA},0);
 
         }
+        /*
         if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             if(shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
 
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             requestPermissions(new String[]{android.Manifest.permission.CAMERA},2);
-        }
+        }*/
 
         Button startButton = (Button)findViewById(R.id.start);
         ImageButton configButton = (ImageButton)findViewById(R.id.config);

@@ -72,6 +72,8 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
     static Points CHAR_POINTS;
     boolean isFrist = true;
 
+    Thread process;
+
     @Override
     protected void onCreate(Bundle SavedInstance) {
         super.onCreate(SavedInstance);
@@ -235,6 +237,7 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
     protected void takePicture(final Points points){
         //Toast.makeText(CameraActivity.this,"それは無理＾＾；",Toast.LENGTH_LONG).show();
         //return;
+        System.out.println("called Thread");
         if(mCameraDevice == null) return;
         CameraManager manager = (CameraManager)getSystemService(Context.CAMERA_SERVICE);
 
@@ -270,7 +273,6 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
                     Image image = null;
                     try{
                         image = reader.acquireLatestImage();
-                        Thread process;
                         if(isFrist) {
                             isFrist = false;
                             CHAR_POINTS = new Points();
@@ -465,6 +467,20 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
         if(tts != null){
             tts.shutdown();
         }
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        if (mCameraDevice != null){
+            mCameraDevice.close();
+            mCameraDevice =null;
+        }
+        flag = false;
+        if(process != null){
+            process.stop();
+        }
+
     }
 
 }
