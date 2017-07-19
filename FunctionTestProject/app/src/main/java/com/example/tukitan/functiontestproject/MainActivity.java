@@ -47,7 +47,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             builder.setChooserTitle("hoge");
             builder.startChooser();
             */
-            File file = new File(context.getFilesDir().getPath() + "/document/testfile.txt");
+            File textPath = new File(getFilesDir(),"document");
+            File file = new File(textPath, "testfile.txt");
             System.out.println(file.exists());
             Uri uri = FileProvider.getUriForFile(context,BuildConfig.APPLICATION_ID + ".fileprovider",file);
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -61,9 +62,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void writeFile(String file){
         File parent = new File(context.getFilesDir().getPath() + "/document");
         parent.mkdir();
+        File textFile = new File(file);
         FileOutputStream fos;
         try{
-            fos = new FileOutputStream(file);
+            fos = new FileOutputStream(context.getFilesDir().getPath() + "/document/" + file);
             fos.write("this is test".getBytes());
 
             fos.close();
