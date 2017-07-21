@@ -12,9 +12,10 @@
         android:layout_height="wrap_content"
         android:text="小さい"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="57dp"
+        android:layout_marginTop="48dp"
         android:layout_marginLeft="83dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="83dp" />
 
     <CheckBox
         android:id="@+id/big"
@@ -22,9 +23,10 @@
         android:layout_height="wrap_content"
         android:text="大きい"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="57dp"
+        android:layout_marginTop="48dp"
         android:layout_marginRight="89dp"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="89dp" />
 
     <TextView
         android:id="@+id/textView3"
@@ -37,7 +39,9 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintHorizontal_bias="0.478" />
+        app:layout_constraintHorizontal_bias="0.478"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <Button
         android:id="@+id/kettei"
@@ -50,6 +54,156 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="小数点の位置"
+        android:layout_marginTop="74dp"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/led_expand"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/miniarrow"
+        android:layout_marginEnd="105dp"
+        android:layout_marginRight="105dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="1dp"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:srcCompat="@drawable/miniarrow"
+        android:layout_marginStart="41dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="41dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.418" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/miniarrow"
+        android:layout_marginTop="1dp"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        android:layout_marginLeft="88dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="88dp" />
+
+    <RadioGroup
+        android:layout_width="242dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        app:layout_constraintHorizontal_bias="0.617"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView4"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:id="@+id/radioGroup">
+            <RadioButton
+                android:id="@+id/radioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:text="ここ"
+                app:layout_constraintHorizontal_bias="0.864"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/radioButton2"
+                tools:layout_editor_absoluteY="277dp" />
+
+            <RadioButton
+                android:id="@+id/radioButton2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ここ"
+                tools:layout_editor_absoluteX="150dp"
+                tools:layout_editor_absoluteY="277dp" />
+
+            <RadioButton
+                android:id="@+id/radioButton4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:text="ここ"
+                app:layout_constraintHorizontal_bias="0.148"
+                app:layout_constraintLeft_toRightOf="@+id/radioButton2"
+                app:layout_constraintRight_toRightOf="parent"
+                tools:layout_editor_absoluteY="277dp" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:layout_width="344dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+        android:layout_marginLeft="61dp"
+        app:layout_constraintLeft_toLeftOf="parent">
+
+        <RadioButton
+            android:id="@+id/position0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:text="小数点なし"
+            app:layout_constraintHorizontal_bias="0.148"
+            app:layout_constraintLeft_toRightOf="@+id/radioButton2"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:layout_editor_absoluteY="277dp" />
+
+        <RadioButton
+            android:id="@+id/nonPosition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:text="指定しない"
+            app:layout_constraintHorizontal_bias="0.148"
+            app:layout_constraintLeft_toRightOf="@+id/radioButton2"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:layout_editor_absoluteY="277dp" />
+
+    </RadioGroup>
 
 </android.support.constraint.ConstraintLayout>
