@@ -136,7 +136,6 @@ public class CVprocess implements Runnable{
     }
     @Override
     public void run(){
-        KSIZE = 11;
         binaly();
         //for(byte elem :bytes) System.out.println(elem);
         //for(int i)
@@ -168,6 +167,7 @@ public class CVprocess implements Runnable{
                 }
             });
             CheckRecognize.proceccFlag = true;
+            CheckRecognize.processedFunc(newBitmap,result);
 
         } else {
             handler.post(new Runnable() {
@@ -216,8 +216,15 @@ public class CVprocess implements Runnable{
         bitmapToMat(myBitmap,origin);
         Imgproc.cvtColor(origin,gray,Imgproc.COLOR_RGB2GRAY);
         //Imgproc.threshold(origin,bin,THRESHOLD,255, Imgproc.THRESH_BINARY);
-        // Auto deside THRESHOLD mode
-        Imgproc.threshold(gray,bin,0.0,255, Imgproc.THRESH_BINARY | Imgproc.THRESH_OTSU);
+
+        if(isCalledByCheckRecognize){
+            //Imgproc.threshold(gray,bin,THRESHOLD,255, Imgproc.THRESH_BINARY);
+            Imgproc.threshold(gray,bin,0.0,255, Imgproc.THRESH_BINARY | Imgproc.THRESH_OTSU);
+        } else {
+            // Auto deside THRESHOLD mode
+            Imgproc.threshold(gray,bin,0.0,255, Imgproc.THRESH_BINARY | Imgproc.THRESH_OTSU);
+        }
+
         matToBitmap(bin,myBitmap);
 
     }

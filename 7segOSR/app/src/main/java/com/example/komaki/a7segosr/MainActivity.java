@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             double tmp = configValues.get(0);
+            CVprocess.THRESHOLD = 75.0;
             CVprocess.KSIZE = (int)tmp;
             System.out.println(CVprocess.KSIZE);
             Intent intent = new Intent(MainActivity.this,CheckRecognize.class);
@@ -170,9 +171,10 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Double> initConfig(){
         ArrayList<Double> res = new ArrayList<>();
         String filename = "initalize.txt";
-        double[] datas = new double[]{9};
-        File file = new File(filename);
+        double[] datas = new double[]{11};
+        File file = new File(getFilesDir().getPath() +"/"+ filename);
 
+        System.out.println("PATH:" + this.getFilesDir().getPath() + "/" + filename + " "+ file.exists());
         if(!file.exists()){
             try {
                 FileOutputStream fos = openFileOutput(filename,MODE_PRIVATE);

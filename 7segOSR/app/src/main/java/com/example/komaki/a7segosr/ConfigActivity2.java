@@ -16,7 +16,7 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
     CheckBox smallBox,bigBox;
     Button kettei;
     static boolean bigFlag,smallFlag;
-    static String BIGSIZE = "25";
+    static String BIGSIZE = "23";
     static String SMALLSIZE = "11";
 
     @Override

@@ -34,7 +34,7 @@ public class CheckRecognize extends AppCompatActivity implements TextToSpeech.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.check_recognize);
 
-        bitmap = loadBitmap("led2.bmp");
+        bitmap = loadBitmap("test1.bmp");
         handler = new Handler();
         tts = new TextToSpeech(this,this);
         (new CallCVprocess()).start();
