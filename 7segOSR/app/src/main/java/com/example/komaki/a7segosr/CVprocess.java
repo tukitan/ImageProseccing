@@ -102,6 +102,8 @@ public class CVprocess implements Runnable{
         byte[] bytes = new byte[buffer.capacity()];
         buffer.get(bytes);
         Bitmap tmpBitmap  = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+        buffer = null;
+        bytes = null;
 
         // Rotate Input Picture
         int imageWidth = tmpBitmap.getWidth();
@@ -110,6 +112,7 @@ public class CVprocess implements Runnable{
         matrix.setRotate(90,imageWidth/2,imageHeight/2);
 
         Bitmap tmp2Bitmap = Bitmap.createBitmap(tmpBitmap,0,0,imageWidth,imageHeight,matrix,true);
+        matrix = null;
 
         // Cut Rect Picture
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -118,6 +121,7 @@ public class CVprocess implements Runnable{
 
         try {
             BitmapRegionDecoder regionDecoder = BitmapRegionDecoder.newInstance(tmpbytes,0,tmpbytes.length,false);
+            tmpbytes = null;
             System.out.println("x:" + points.minX + " y:" + points.minY + " x:" + points.maxX + " y:" + points.maxY);
             Rect rect = new Rect(points.minX,points.minY,points.maxX,points.maxY);
             myBitmap = regionDecoder.decodeRegion(rect,null);
@@ -156,6 +160,9 @@ public class CVprocess implements Runnable{
 
         System.out.println("KSIZE:" + KSIZE);
         System.out.println(result);
+        numbers = null;
+        commaList = null;
+        labelMap = null;
 
         Log.d("CVprocess","Finish Processed.");
 

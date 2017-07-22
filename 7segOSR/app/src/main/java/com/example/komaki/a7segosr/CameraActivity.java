@@ -2,10 +2,10 @@ package com.example.komaki.a7segosr;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
@@ -24,13 +24,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.util.Size;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.Toast;
 
 
@@ -74,6 +71,8 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
 
     Thread process;
 
+    private static ArrayList<String> recognitionNumbers;
+
     @Override
     protected void onCreate(Bundle SavedInstance) {
         super.onCreate(SavedInstance);
@@ -96,6 +95,7 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
 
         tts = new TextToSpeech(this,this);
         handler = new Handler();
+        recognitionNumbers = new ArrayList<>();
 
     }
 
@@ -330,19 +330,6 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
         }
 
     }
-    private Bitmap loadBitmap(String file){
-        Bitmap bitmap = null;
-        BufferedInputStream bis = null;
-        try{
-            bis = new BufferedInputStream(new FileInputStream("/" + Environment.getExternalStorageDirectory() + "/Pictures/" + file));
-            bitmap = BitmapFactory.decodeStream(bis);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return bitmap;
-    }
 
     static void writeBitmap(Bitmap bmp,String filename) {
         String path = "/" + Environment.getExternalStorageDirectory() + "/7segOCRresult/" + filename;
@@ -361,16 +348,15 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
         }
     }
 
-    static public void processedFunc(Bitmap bitmapData,String number){
-        writeBitmap(bitmapData,"newBitmap.jpg");
-        writeNumber(number,"ResultFile.txt");
-    }
-
-    public static void writeNumber(String number, String filename){
+    public static void writeNumber(ArrayList<String> number, String filename){
         String path = "/" + Environment.getExternalStorageDirectory() + "/7segOCRresult/" + filename;
+        int count = 0;
         try {
             PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(new File(path))));
-            pw.println("Recognition Number : " + number);
+            for(String elem :number){
+                pw.println("No."+count+" Number : " + elem);
+                count++;
+            }
             pw.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -391,24 +377,15 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
             }
         } else {
             threadFlag = false;
+            ProgressDialog dialog = new ProgressDialog(this);
+            dialog.setIndeterminate(true);
+            dialog.setMessage("終了処理中です...");
+            dialog.show();
+
             System.out.println("threadFlag : false");
         }
 
         return true;
-    }
-    public Bitmap getViewBitmap(View view){
-        view.setDrawingCacheEnabled(true);
-        Bitmap cache = view.getDrawingCache();
-        if(cache == null){
-            return null;
-        }
-        Bitmap bitmap = Bitmap.createBitmap(cache);
-        view.setDrawingCacheEnabled(false);
-        System.out.println("Taked picture.");
-        return bitmap;
-    }
-    public Bitmap getScreenBitmap(View view){
-        return getViewBitmap(view.getRootView());
     }
 
     private class TakeThread extends Thread{
@@ -424,10 +401,11 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
                 Log.d("CameraActivity","isProcessed " + isProcessed);
                 if(isProcessed) {
                     isProcessed = false;
-                    writeNumber(number,"resultfile.txt");
+                    recognitionNumbers.add(number);
                     takePicture(points);
                 }
                 speechText();
+                System.gc();
                 try {
                     Thread.sleep(4000);
                 } catch (InterruptedException e) {
@@ -472,15 +450,12 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
     @Override
     protected void onStop(){
         super.onStop();
+        writeNumber(recognitionNumbers,"result.txt");
         if (mCameraDevice != null){
             mCameraDevice.close();
             mCameraDevice =null;
         }
         flag = false;
-        if(process != null){
-            process.stop();
-        }
-
     }
 
 }
