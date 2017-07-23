@@ -62,11 +62,9 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(new String[]{android.Manifest.permission.CAMERA},2);
         }*/
 
-        Button startButton = (Button)findViewById(R.id.start);
         ImageButton configButton = (ImageButton)findViewById(R.id.config);
         ImageButton howtoButton = (ImageButton) findViewById(R.id.howto);
-        Button cameraButton = (Button)findViewById(R.id.cameraTest);
-        startButton.setOnClickListener(callCheckRecognize);
+        ImageButton cameraButton = (ImageButton)findViewById(R.id.cameraTest);
         configButton.setOnClickListener(callConfig);
         cameraButton.setOnClickListener(callCamera);
         howtoButton.setOnClickListener(callHowto);
@@ -171,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Double> initConfig(){
         ArrayList<Double> res = new ArrayList<>();
         String filename = "initalize.txt";
-        double[] datas = new double[]{11};
+        double[] datas = new double[]{13};
         File file = new File(getFilesDir().getPath() +"/"+ filename);
 
         System.out.println("PATH:" + this.getFilesDir().getPath() + "/" + filename + " "+ file.exists());

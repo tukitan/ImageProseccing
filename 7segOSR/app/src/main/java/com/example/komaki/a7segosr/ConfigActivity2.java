@@ -17,7 +17,7 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
     Button kettei;
     static boolean bigFlag,smallFlag;
     static String BIGSIZE = "23";
-    static String SMALLSIZE = "11";
+    static String SMALLSIZE = "13";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

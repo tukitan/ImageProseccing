@@ -117,11 +117,9 @@ public class CVprocess implements Runnable{
         // Cut Rect Picture
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         tmp2Bitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
-        byte[] tmpbytes = baos.toByteArray();
 
         try {
-            BitmapRegionDecoder regionDecoder = BitmapRegionDecoder.newInstance(tmpbytes,0,tmpbytes.length,false);
-            tmpbytes = null;
+            BitmapRegionDecoder regionDecoder = BitmapRegionDecoder.newInstance(baos.toByteArray(),0,baos.toByteArray().length,false);
             System.out.println("x:" + points.minX + " y:" + points.minY + " x:" + points.maxX + " y:" + points.maxY);
             Rect rect = new Rect(points.minX,points.minY,points.maxX,points.maxY);
             myBitmap = regionDecoder.decodeRegion(rect,null);
@@ -160,7 +158,6 @@ public class CVprocess implements Runnable{
 
         System.out.println("KSIZE:" + KSIZE);
         System.out.println(result);
-        numbers = null;
         commaList = null;
         labelMap = null;
 
@@ -174,7 +171,6 @@ public class CVprocess implements Runnable{
                 }
             });
             CheckRecognize.proceccFlag = true;
-            CheckRecognize.processedFunc(newBitmap,result);
 
         } else {
             handler.post(new Runnable() {

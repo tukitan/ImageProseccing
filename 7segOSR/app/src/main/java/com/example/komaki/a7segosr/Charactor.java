@@ -46,7 +46,7 @@ public class Charactor {
 
     double ONE_RANGE = 3.0;
     int SEG_WIDTH = 5;
-    int RANGE = 7;
+    int RANGE = 5;
 
     public Charactor(Segment seg1,boolean flag){
         data = seg1.element;
