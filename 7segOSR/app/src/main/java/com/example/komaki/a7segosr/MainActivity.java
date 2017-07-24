@@ -63,11 +63,11 @@ public class MainActivity extends AppCompatActivity {
         }*/
 
         ImageButton configButton = (ImageButton)findViewById(R.id.config);
-        ImageButton howtoButton = (ImageButton) findViewById(R.id.howto);
+        //ImageButton howtoButton = (ImageButton) findViewById(R.id.howto);
         ImageButton cameraButton = (ImageButton)findViewById(R.id.cameraTest);
         configButton.setOnClickListener(callConfig);
         cameraButton.setOnClickListener(callCamera);
-        howtoButton.setOnClickListener(callHowto);
+        //howtoButton.setOnClickListener(callHowto);
         configValues = initConfig();
         for(Double elem :configValues) System.out.println(elem);
     }
