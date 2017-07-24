@@ -160,6 +160,8 @@ public class CVprocess implements Runnable{
         System.out.println(result);
         commaList = null;
         labelMap = null;
+        exBytes = null;
+        segments = null;
 
         Log.d("CVprocess","Finish Processed.");
 

@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
             CVprocess.KSIZE = (int)tmp;
             System.out.println(CVprocess.KSIZE);
             Intent intent = new Intent(MainActivity.this,CameraActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
     };

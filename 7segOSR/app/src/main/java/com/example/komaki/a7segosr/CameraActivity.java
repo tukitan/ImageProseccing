@@ -376,13 +376,16 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
                 flag = true;
             }
         } else {
-            threadFlag = false;
             ProgressDialog dialog = new ProgressDialog(this);
             dialog.setIndeterminate(true);
             dialog.setMessage("終了処理中です...");
             dialog.show();
+            threadFlag = false;
+            isFrist = true;
+            CHAR_POINTS = null;
+            number = null;
 
-            System.out.println("threadFlag : false");
+            finish();
         }
 
         return true;
@@ -397,6 +400,7 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
         @Override
         public void run(){
             while (threadFlag){
+                speechText();
 
                 Log.d("CameraActivity","isProcessed " + isProcessed);
                 if(isProcessed) {
@@ -404,8 +408,6 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
                     recognitionNumbers.add(number);
                     takePicture(points);
                 }
-                speechText();
-                System.gc();
                 try {
                     Thread.sleep(4000);
                 } catch (InterruptedException e) {
