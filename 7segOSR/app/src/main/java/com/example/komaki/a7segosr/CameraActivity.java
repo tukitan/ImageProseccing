@@ -385,7 +385,6 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
             CHAR_POINTS = null;
             number = null;
 
-            finish();
         }
 
         return true;
