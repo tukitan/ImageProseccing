@@ -4,14 +4,17 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.Spinner;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickListener{
+public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickListener,AdapterView.OnItemSelectedListener{
 
     CheckBox smallBox,bigBox;
     Button kettei;
@@ -26,6 +29,7 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
         smallBox = (CheckBox)findViewById(R.id.small);
         bigBox = (CheckBox)findViewById(R.id.big);
         kettei = (Button)findViewById(R.id.kettei);
+        Spinner langs = (Spinner)findViewById(R.id.lang);
         smallBox.setOnClickListener(this);
         bigBox.setOnClickListener(this);
         kettei.setOnClickListener(this);
@@ -34,6 +38,10 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
         smallBox.setChecked(smallFlag);
         bigBox.setChecked(bigFlag);
 
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.langList,android.R.layout.select_dialog_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        langs.setAdapter(adapter);
+        langs.setOnItemSelectedListener(this);
     }
     @Override
     public void onClick(View v) {
@@ -82,4 +90,14 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
 
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        System.out.println("selected Item position:" + position);
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }

@@ -73,6 +73,10 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
 
     private static ArrayList<String> recognitionNumbers;
 
+    // TTS locale
+    // Changed by CongigActivity2
+    static Locale LOCALE;
+
     @Override
     protected void onCreate(Bundle SavedInstance) {
         super.onCreate(SavedInstance);
@@ -414,14 +418,18 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
                 }
 
             }
-            startActivity(new Intent(CameraActivity.this, MainActivity.class));
+            Intent intent = new Intent(CameraActivity.this,MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+
         }
 
     }
     @Override
     public void onInit(int status) {
         if(TextToSpeech.SUCCESS == status){
-            Locale locale = Locale.JAPANESE;
+            if(LOCALE == null) LOCALE = Locale.JAPANESE;
+            Locale locale = LOCALE;
             if(tts.isLanguageAvailable(locale) >= TextToSpeech.LANG_AVAILABLE){
                 tts.setLanguage(locale);
             } else{

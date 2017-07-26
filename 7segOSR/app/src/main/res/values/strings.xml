@@ -3,4 +3,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="langList">
+        <item>日本語</item>
+        <item>English</item>
+    </string-array>
 </resources>
