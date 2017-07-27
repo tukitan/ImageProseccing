@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 
 public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickListener,AdapterView.OnItemSelectedListener{
 
@@ -22,6 +23,11 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
     static String BIGSIZE = "37";
     static String SMALLSIZE = "13";
 
+    String LANG="JAPANESE";
+    String UNIT="ミリメートル";
+    HashMap<String,String> lang_value;
+    HashMap<String,String> unit_value;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +36,7 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
         bigBox = (CheckBox)findViewById(R.id.big);
         kettei = (Button)findViewById(R.id.kettei);
         Spinner langs = (Spinner)findViewById(R.id.lang);
+        Spinner units = (Spinner)findViewById(R.id.unit);
         smallBox.setOnClickListener(this);
         bigBox.setOnClickListener(this);
         kettei.setOnClickListener(this);
@@ -39,9 +46,23 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
         bigBox.setChecked(bigFlag);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.langList,android.R.layout.select_dialog_item);
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,R.array.unitList,android.R.layout.select_dialog_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         langs.setAdapter(adapter);
+        units.setAdapter(adapter2);
+
         langs.setOnItemSelectedListener(this);
+        units.setOnItemSelectedListener(this);
+        lang_value = new HashMap<>();
+        lang_value.put("JAPANESE","0");
+        lang_value.put("ENGLISH","1");
+
+        unit_value = new HashMap<>();
+        unit_value.put("ミリメートル","0");
+        unit_value.put("センチメートル","1");
+        unit_value.put("メートル","2");
+        unit_value.put("℃","3");
     }
     @Override
     public void onClick(View v) {
@@ -82,6 +103,10 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
             FileOutputStream fos = openFileOutput(filename,MODE_PRIVATE);
             if(bigFlag) fos.write(BIGSIZE.getBytes());
             else if (smallFlag) fos.write(SMALLSIZE.getBytes());
+            fos.write("\n".getBytes());
+            fos.write(lang_value.get(LANG).getBytes());
+            fos.write("\n".getBytes());
+            fos.write(unit_value.get(UNIT).getBytes());
             fos.close();
 
         } catch (IOException e) {
@@ -92,7 +117,11 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        System.out.println("selected Item position:" + position);
+        System.out.println("selected Item :" + parent.getItemAtPosition(position));
+        if(parent.getItemAtPosition(position).equals("日本語")) LANG = "JAPANESE";
+        else if(parent.getItemAtPosition(position).equals("ENGLISH")) LANG = "ENGLISH";
+        else UNIT = (String)parent.getItemAtPosition(position);
+        System.out.println(unit_value.get(parent.getItemAtPosition(position)));
 
     }
 

@@ -47,20 +47,6 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,android.Manifest.permission.CAMERA},0);
 
         }
-        /*
-        if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            if(shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-
-            }
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
-        }
-        if(checkSelfPermission(android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-            if(shouldShowRequestPermissionRationale(android.Manifest.permission.CAMERA)){
-
-            }
-
-            requestPermissions(new String[]{android.Manifest.permission.CAMERA},2);
-        }*/
 
         Button debug = (Button)findViewById(R.id.debugButton);
         ImageButton configButton = (ImageButton)findViewById(R.id.config);
