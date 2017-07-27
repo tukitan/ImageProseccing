@@ -53,6 +53,18 @@
             android:spinnerMode="dialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+        <TextView
+            android:textSize="10pt"
+            android:text="単位"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <Spinner
+            android:id="@+id/unit"
+            android:spinnerMode="dialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
 
         <Button

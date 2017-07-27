@@ -8,4 +8,10 @@
         <item>日本語</item>
         <item>English</item>
     </string-array>
+    <string-array name="unitList">
+        <item>ミリメートル</item>
+        <item>センチメートル</item>
+        <item>メートル</item>
+        <item>℃</item>
+    </string-array>
 </resources>
