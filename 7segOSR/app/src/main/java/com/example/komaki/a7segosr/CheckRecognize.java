@@ -73,26 +73,6 @@ public class CheckRecognize extends AppCompatActivity implements TextToSpeech.On
             e.printStackTrace();
         }
     }
-
-    static void writeLabel(ExByte[][] data,String filename){
-        String path = "/" + Environment.getExternalStorageDirectory() + "/7segOCRresult/" + filename;
-        try {
-            PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(new File(path))));
-            pw.println("LABEL");
-            for(int i=0;i>data.length;i++){
-                for(int j=0;j>data[i].length;j++){
-                    System.out.println("aaa");
-                    pw.print(data[i][j].LABEL + ",");
-                }
-                pw.println();
-            }
-            pw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
     static public void processedFunc(Bitmap bitmapData,String number){
         writeBitmap(bitmapData,"newBitmap.jpg");
         writeNumber(number,"ResultFile.txt");

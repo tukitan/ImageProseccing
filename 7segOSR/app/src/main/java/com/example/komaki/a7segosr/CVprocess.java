@@ -374,7 +374,6 @@ public class CVprocess implements Runnable{
     private void makeSegment(){
         int cnt = 0;
         usedLabelNum = new ArrayList<>();
-        CheckRecognize.writeLabel(exBytes,"testLabel.txt");
         for (int i = 0; i < BITMAP_Y_SIZE; i++) {
             for (int j = 0; j < BITMAP_X_SIZE; j++) {
                 if(usedLabelNum.indexOf(exBytes[i][j].LABEL) == -1) usedLabelNum.add(exBytes[i][j].LABEL);
@@ -415,14 +414,15 @@ public class CVprocess implements Runnable{
         System.out.println(tmpSegArray.size());
         for(i=0;i<tmpSegArray.size();i++){
             dataSize = tmpSegArray.get(i).getSize();
-            System.out.println("size : " + dataSize);
+            //System.out.println("size : " + dataSize);
+
             if(dataSize < SEG_SIZE_MIN ){
                 commaList.add(new Charactor(tmpSegArray.get(i),false));
                 delete.add(i);
             } else{
                 double tmp = tmpSegArray.get(i).points.getRatio();
                 if(NUMBER_RATIO_MIN > tmp || NUMBER_RATIO_MAX < tmp){
-                    System.out.println("noise");
+                    //System.out.println("noise");
                     delete.add(i);
                 }
             }
@@ -487,7 +487,6 @@ public class CVprocess implements Runnable{
             commaList.get(0).value = ".";
             numbers.add(commaList.get(0));
         }
-        if(commaList.size() > 1) System.out.println("Too many Comma!");
         for (int i=0;i<numbers.size()-1;i++){
             for(int j=i+1;j<numbers.size();j++){
                 if(numbers.get(i).minX > numbers.get(j).minX){

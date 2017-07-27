@@ -62,9 +62,11 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(new String[]{android.Manifest.permission.CAMERA},2);
         }*/
 
+        Button debug = (Button)findViewById(R.id.debugButton);
         ImageButton configButton = (ImageButton)findViewById(R.id.config);
         //ImageButton howtoButton = (ImageButton) findViewById(R.id.howto);
         ImageButton cameraButton = (ImageButton)findViewById(R.id.cameraTest);
+        debug.setOnClickListener(callCheckRecognize);
         configButton.setOnClickListener(callConfig);
         cameraButton.setOnClickListener(callCamera);
         //howtoButton.setOnClickListener(callHowto);
@@ -93,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             double tmp = configValues.get(0);
-            CVprocess.THRESHOLD = 75.0;
             CVprocess.KSIZE = (int)tmp;
             System.out.println(CVprocess.KSIZE);
             Intent intent = new Intent(MainActivity.this,CheckRecognize.class);
@@ -103,9 +104,6 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener callConfig = new View.OnClickListener() {
         @Override
         public void onClick(View v){
-            double tmp = configValues.get(0);
-
-            ConfigActivity.tmpKSIZE = (int)tmp;
 
             Intent intent = new Intent(MainActivity.this,ConfigActivity2.class);
             startActivity(intent);
@@ -116,9 +114,14 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            double tmp = configValues.get(0);
-            CVprocess.KSIZE = (int)tmp;
-            System.out.println(CVprocess.KSIZE);
+            double tmpKsize = configValues.get(0);
+            double tmpOffset = configValues.get(1);
+            double tmpLang = configValues.get(2);
+            double tmpUnit = configValues.get(3);
+
+            CVprocess.KSIZE = (int)tmpKsize;
+            Charactor.OFFSET = (int)tmpOffset;
+            //System.out.println(CVprocess.KSIZE);
             Intent intent = new Intent(MainActivity.this,CameraActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
@@ -132,45 +135,10 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    /*
-    private ArrayList<String> initConfig(){
-        String filename = "initalize.txt";
-        String str;
-        FileInputStream in;
-        ArrayList<String> consts = new ArrayList<>();
-        try{
-            in = openFileInput(filename);
-            BufferedReader br = new BufferedReader(new InputStreamReader(in,"UTF-8"));
-            while((str = br.readLine()) != null){
-                consts.add(str);
-            }
-            br.close();
-        } catch (FileNotFoundException e) {
-            try {
-                (new File(filename)).createNewFile();
-                OutputStream out = openFileOutput(filename, MODE_PRIVATE);
-                PrintWriter pw = new PrintWriter(new OutputStreamWriter(out));
-                pw.println("60.0");
-                pw.println("31");
-                consts.add("60.0");
-                consts.add("31");
-
-                pw.close();
-            }catch (IOException e1){
-                e1.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return consts;
-    }
-    */
-
     private ArrayList<Double> initConfig(){
         ArrayList<Double> res = new ArrayList<>();
         String filename = "initalize.txt";
-        double[] datas = new double[]{13};
+        double[] datas = new double[]{13,0,0,0};
         File file = new File(getFilesDir().getPath() +"/"+ filename);
 
         System.out.println("PATH:" + this.getFilesDir().getPath() + "/" + filename + " "+ file.exists());

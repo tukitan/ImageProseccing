@@ -48,6 +48,8 @@ public class Charactor {
     int SEG_WIDTH = 5;
     int RANGE = 8;
 
+    static int OFFSET;
+
     public Charactor(Segment seg1,boolean flag){
         data = seg1.element;
         maxX = seg1.maxX;
