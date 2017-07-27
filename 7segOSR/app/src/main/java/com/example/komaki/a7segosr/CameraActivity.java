@@ -421,7 +421,7 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
     @Override
     public void onInit(int status) {
         if(TextToSpeech.SUCCESS == status){
-            Locale locale = Locale.JAPANESE;
+            Locale locale = Locale.ENGLISH;
             if(tts.isLanguageAvailable(locale) >= TextToSpeech.LANG_AVAILABLE){
                 tts.setLanguage(locale);
             } else{
