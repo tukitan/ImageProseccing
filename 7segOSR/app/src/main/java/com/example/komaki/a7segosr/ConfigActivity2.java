@@ -104,6 +104,8 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
             if(bigFlag) fos.write(BIGSIZE.getBytes());
             else if (smallFlag) fos.write(SMALLSIZE.getBytes());
             fos.write("\n".getBytes());
+            fos.write("4".getBytes());
+            fos.write("\n".getBytes());
             fos.write(lang_value.get(LANG).getBytes());
             fos.write("\n".getBytes());
             fos.write(unit_value.get(UNIT).getBytes());
@@ -119,9 +121,10 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         System.out.println("selected Item :" + parent.getItemAtPosition(position));
         if(parent.getItemAtPosition(position).equals("日本語")) LANG = "JAPANESE";
-        else if(parent.getItemAtPosition(position).equals("ENGLISH")) LANG = "ENGLISH";
+        else if(parent.getItemAtPosition(position).equals("English")) LANG = "ENGLISH";
         else UNIT = (String)parent.getItemAtPosition(position);
         System.out.println(unit_value.get(parent.getItemAtPosition(position)));
+        System.out.println(LANG);
 
     }
 

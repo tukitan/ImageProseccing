@@ -108,6 +108,8 @@ public class MainActivity extends AppCompatActivity {
 
             CVprocess.KSIZE = (int)tmpKsize;
             Charactor.OFFSET = (int)tmpOffset;
+            if(tmpLang == 0) CameraActivity.LOCALE = Locale.JAPANESE;
+            else if(tmpLang == 1) CameraActivity.LOCALE = Locale.ENGLISH;
             //System.out.println(CVprocess.KSIZE);
             Intent intent = new Intent(MainActivity.this,CameraActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
