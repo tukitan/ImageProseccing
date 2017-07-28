@@ -75,8 +75,24 @@
         <EditText
             android:inputType="number"
             android:id="@+id/period"
+            android:focusable="false"
             android:layout_gravity="center"
             android:layout_width="100dp"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="文字の傾き"
+            android:textSize="10pt"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <SeekBar
+            android:id="@+id/offset"
+            android:layout_gravity="center"
+            android:max="20"
+            android:progress="10"
+            android:layout_width="300dp"
             android:layout_height="wrap_content" />
 
 

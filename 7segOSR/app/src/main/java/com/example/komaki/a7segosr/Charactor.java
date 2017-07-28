@@ -46,7 +46,8 @@ public class Charactor {
 
     double ONE_RANGE = 3.0;
     int SEG_WIDTH = 5;
-    int RANGE = 8;
+    int RANGE = 4;
+    int sizeX,sizeY;
 
     static int OFFSET;
 
@@ -91,6 +92,9 @@ public class Charactor {
         points = new Points(maxX,maxY,minX,minY,midX,midY,mid_up_midY,mid_down_midY);
         setRatio();
 
+        sizeX = Math.abs(maxX-minX);
+        sizeY = Math.abs(maxY-minY);
+
         // Use Recognition Flags
         boolean leftdown = false;
         boolean rightup = false;
@@ -112,65 +116,15 @@ public class Charactor {
         for(ExByte elem :data){
             tmpX = elem.pointX;
             tmpY = elem.pointY;
-            /*
-            if(tmpX == (maxX -SEG_WIDTH) && tmpY == (minY +SEG_WIDTH)) rightup = true;
-            else if(tmpX == (minX +SEG_WIDTH) && tmpY == (maxY -SEG_WIDTH)) leftdown = true;
-            else if(tmpX == midX && tmpY == midY) mid = true;
-            else if(tmpX == midX && tmpY == (minY +SEG_WIDTH)) midup = true;
-            else if(tmpX == midX && tmpY == (maxY -SEG_WIDTH)) middown = true;
-            else if(tmpX == (minX +SEG_WIDTH) && tmpY == mid_up_midY) left_up_mid = true;
-            else if(tmpX == (minX +SEG_WIDTH) && tmpY == mid_down_midY) left_down_mid = true;
-            */
-            if(isEqual(tmpX,midX) && isEqual(tmpY,midY)) mid = true;
-            else if(isEqual(tmpX,midX) && isEqual(tmpY,minY)) midup = true;
-            else if(isEqual(tmpX,midX) && isEqual(tmpY,maxY)) middown = true;
-            else if(isEqual(tmpX,minX) && isEqual(tmpY,mid_up_midY)) left_up_mid = true;
-            else if(isEqual(tmpX,minX) && isEqual(tmpY,mid_down_midY)) left_down_mid = true;
-            else if(isEqual(tmpX,maxX) && isEqual(tmpY,mid_up_midY)) right_up_mid = true;
+
+            if(isEqual(tmpX,midX,tmpY,midY,0)) mid = true;
+            else if(isEqual(tmpX,midX,tmpY,minY,2)) midup = true;
+            else if(isEqual(tmpX,midX,tmpY,maxY,-2)) middown = true;
+            else if(isEqual(tmpX,minX,tmpY,mid_up_midY,1)) left_up_mid = true;
+            else if(isEqual(tmpX,minX,tmpY,mid_down_midY,-1)) left_down_mid = true;
+            else if(isEqual(tmpX,maxX,tmpY,mid_up_midY,1)) right_up_mid = true;
         }
 
-        /*
-
-        if (!rightup){
-            value = "6";
-            System.out.println("value:6");
-            points.display();
-            return;
-        }
-
-        if(!leftdown){
-            //Candidate  ; 4 , 7 , 9
-            if(!mid) {
-                value = "7";
-                System.out.println("value:7");
-                points.display();
-                return;
-            }
-            if(!midup){
-                value = "4";
-                System.out.println("value:4");
-                points.display();
-                return;
-            }
-            if(!middown){
-                value = "9";
-                System.out.println("value:9");
-                points.display();
-                return;
-            }
-            System.out.println("Can't resolve Character");
-            value = "-1";
-            return;
-        }
-
-        // Candidate ; 0 , 2 , 3 , 5 , 8
-        if(!mid){
-            value = "0";
-            System.out.println("value:0");
-            points.display();
-            return;
-        }
-        */
 
         if(!mid){
             if(!middown){
@@ -235,8 +189,14 @@ public class Charactor {
 
     }
 
-    private boolean isEqual(int src,int target){
-        return(src < (target + RANGE) && src > (target - RANGE)) ? true : false;
+    private boolean isEqual(int srcX,int targetX,int srcY,int targetY,int position){
+        double offsetLength=0;
+        if(position == 2 || position == -2){
+            offsetLength = OFFSET * 0.1 * sizeX * 0.5 * position*0.5;
+        }
+        boolean xFrag = (srcX < (targetX + RANGE + (int)offsetLength) && srcX > (targetX - RANGE + (int)offsetLength)) ? true : false;
+        boolean yFrag = (srcY < (targetY + RANGE) && srcY > (targetY - RANGE)) ? true : false;
+        return xFrag && yFrag;
     }
 
 

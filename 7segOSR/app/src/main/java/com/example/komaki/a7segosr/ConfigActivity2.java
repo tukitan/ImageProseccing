@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -19,7 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickListener,AdapterView.OnItemSelectedListener{
+public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickListener,AdapterView.OnItemSelectedListener,SeekBar.OnSeekBarChangeListener{
 
     CheckBox smallBox,bigBox;
     Button kettei;
@@ -33,6 +34,9 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
     HashMap<String,String> lang_value;
     HashMap<String,String> unit_value;
     EditText period;
+    SeekBar offset;
+
+    int OFFSET = 12;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +77,9 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
 
         period =(EditText)findViewById(R.id.period);
         period.setText(PERIOD);
+
+        offset = (SeekBar)findViewById(R.id.offset);
+        offset.setOnSeekBarChangeListener(this);
     }
     @Override
     public void onClick(View v) {
@@ -127,6 +134,8 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
             fos.write(lang_value.get(LANG).getBytes());
             fos.write("\n".getBytes());
             fos.write(unit_value.get(UNIT).getBytes());
+            fos.write("\n".getBytes());
+            fos.write(String.valueOf(OFFSET -10).getBytes());
             fos.close();
 
         } catch (IOException e) {
@@ -148,6 +157,22 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if(seekBar == offset) OFFSET = progress;
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
 
     }
 }

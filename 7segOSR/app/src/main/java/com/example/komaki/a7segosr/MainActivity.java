@@ -83,7 +83,8 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             double tmp = configValues.get(0);
             CVprocess.KSIZE = (int)tmp;
-            System.out.println(CVprocess.KSIZE);
+            double tmpOffset = configValues.get(4);
+            Charactor.OFFSET = (int) tmpOffset;
             Intent intent = new Intent(MainActivity.this,CheckRecognize.class);
             startActivity(intent);
         }
@@ -106,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
             double tmpPeriod = configValues.get(1);
             double tmpLang = configValues.get(2);
             double tmpUnit = configValues.get(3);
+            double tmpOffset = configValues.get(4);
 
             CVprocess.KSIZE = (int)tmpKsize;
             if(tmpLang == 0) CameraActivity.LOCALE = Locale.JAPANESE;
@@ -113,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
             //System.out.println(CVprocess.KSIZE);
             CameraActivity.PERIOD = tmpPeriod;
             CameraActivity.UNIT = tmpUnit;
+            Charactor.OFFSET = (int) tmpOffset;
             Intent intent = new Intent(MainActivity.this,CameraActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
@@ -129,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Double> initConfig(){
         ArrayList<Double> res = new ArrayList<>();
         String filename = "initalize.txt";
-        double[] datas = new double[]{13,4,0,0};
+        double[] datas = new double[]{13,4,0,0,2};
         File file = new File(getFilesDir().getPath() +"/"+ filename);
 
         System.out.println("PATH:" + this.getFilesDir().getPath() + "/" + filename + " "+ file.exists());
