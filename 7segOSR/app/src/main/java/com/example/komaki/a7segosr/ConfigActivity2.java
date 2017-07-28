@@ -3,12 +3,16 @@ package com.example.komaki.a7segosr;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -25,8 +29,10 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
 
     String LANG="JAPANESE";
     String UNIT="ミリメートル";
+    static String PERIOD;
     HashMap<String,String> lang_value;
     HashMap<String,String> unit_value;
+    EditText period;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,7 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,R.array.unitList,android.R.layout.select_dialog_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         langs.setAdapter(adapter);
         units.setAdapter(adapter2);
 
@@ -63,6 +70,9 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
         unit_value.put("センチメートル","1");
         unit_value.put("メートル","2");
         unit_value.put("℃","3");
+
+        period =(EditText)findViewById(R.id.period);
+        period.setText(PERIOD);
     }
     @Override
     public void onClick(View v) {
@@ -89,6 +99,14 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
             }
         }
         if(v == kettei){
+            String getPeriod = period.getText().toString();
+            if(getPeriod.equals("")) {
+                Toast.makeText(this,"周期を入力して下さい",Toast.LENGTH_SHORT).show();
+                return;
+            } else if(Double.parseDouble(getPeriod) < 4) {
+                Toast.makeText(this,"4秒以上を設定して下さい",Toast.LENGTH_SHORT).show();
+                return;
+            } else PERIOD = getPeriod;
             writeConfigFile();
             Intent intent = new Intent(ConfigActivity2.this,MainActivity.class);
 
@@ -104,7 +122,7 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
             if(bigFlag) fos.write(BIGSIZE.getBytes());
             else if (smallFlag) fos.write(SMALLSIZE.getBytes());
             fos.write("\n".getBytes());
-            fos.write("4".getBytes());
+            fos.write(PERIOD.getBytes());
             fos.write("\n".getBytes());
             fos.write(lang_value.get(LANG).getBytes());
             fos.write("\n".getBytes());

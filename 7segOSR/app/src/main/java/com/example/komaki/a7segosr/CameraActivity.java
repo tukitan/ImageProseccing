@@ -74,8 +74,12 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
     private static ArrayList<String> recognitionNumbers;
 
     // TTS locale
-    // Changed by CongigActivity2
     static Locale LOCALE;
+
+    static double PERIOD;
+    static double UNIT;
+
+    int periodTime;
 
     @Override
     protected void onCreate(Bundle SavedInstance) {
@@ -100,6 +104,7 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
         tts = new TextToSpeech(this,this);
         handler = new Handler();
         recognitionNumbers = new ArrayList<>();
+        periodTime = (int)PERIOD*1000;
 
     }
 
@@ -412,7 +417,7 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
                     takePicture(points);
                 }
                 try {
-                    Thread.sleep(4000);
+                    Thread.sleep(periodTime);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
