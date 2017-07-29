@@ -203,17 +203,6 @@ public class CVprocess implements Runnable{
         return newBitmap;
     }
 
-
-    private void grayScale(){
-
-        Mat gray = new Mat();
-        Mat origin = new Mat();
-        bitmapToMat(myBitmap,origin);
-        Imgproc.cvtColor(origin,gray,Imgproc.COLOR_RGB2GRAY);
-        matToBitmap(gray,myBitmap);
-    }
-
-
     private void binaly(){
         Mat bin = new Mat();
         Mat gray = new Mat();
