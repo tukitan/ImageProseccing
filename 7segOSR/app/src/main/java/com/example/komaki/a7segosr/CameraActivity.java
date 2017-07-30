@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -81,6 +82,8 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
 
     int periodTime;
 
+    HashMap LOCATE_MAP;
+
     @Override
     protected void onCreate(Bundle SavedInstance) {
         super.onCreate(SavedInstance);
@@ -105,6 +108,10 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
         handler = new Handler();
         recognitionNumbers = new ArrayList<>();
         periodTime = (int)PERIOD*1000;
+
+        LOCATE_MAP = new HashMap();
+        LOCATE_MAP.put(Locale.JAPANESE,0);
+        LOCATE_MAP.put(Locale.ENGLISH,1);
 
     }
 
@@ -357,13 +364,14 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
         }
     }
 
-    public static void writeNumber(ArrayList<String> number, String filename){
+    public void writeNumber(ArrayList<String> number, String filename){
         String path = "/" + Environment.getExternalStorageDirectory() + "/7segOCRresult/" + filename;
         int count = 0;
         try {
             PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(new File(path))));
+            pw.println((int)UNIT + "," + PERIOD + "," + LOCATE_MAP.get(LOCALE));
             for(String elem :number){
-                pw.println("No."+count+" Number : " + elem);
+                if(count != 0 ) pw.println("No." + count + " Number : " + elem);
                 count++;
             }
             pw.close();

@@ -37,11 +37,11 @@ public class FirstRecognition implements Runnable{
         matrix.setRotate(90,imageWidth/2,imageHeight/2);
 
         Bitmap myBitmap = Bitmap.createBitmap(tmpBitmap,0,0,imageWidth,imageHeight,matrix,true);
-        target = myBitmap.copy(Bitmap.Config.ARGB_4444,true);
+        target = myBitmap.copy(Bitmap.Config.ARGB_8888,true);
     }
 
     public FirstRecognition(Bitmap bitmap){
-        target = bitmap.copy(Bitmap.Config.ARGB_4444,true);
+        target = bitmap.copy(Bitmap.Config.ARGB_8888,true);
     }
 
     @Override
@@ -51,6 +51,7 @@ public class FirstRecognition implements Runnable{
 
 
 
+        System.out.println("Finish FirstRecognition Thread process.");
         writeBitmap(target,"TestFirstRecog.bmp");
     }
 
@@ -76,6 +77,7 @@ public class FirstRecognition implements Runnable{
         bitmapToMat(target,origin);
         Imgproc.cvtColor(origin,gray,Imgproc.COLOR_RGB2GRAY);
         Imgproc.threshold(gray,bin,0.0,255, Imgproc.THRESH_BINARY | Imgproc.THRESH_OTSU);
+        matToBitmap(bin,target);
     }
 
     private void blurBitmap(int ksize){

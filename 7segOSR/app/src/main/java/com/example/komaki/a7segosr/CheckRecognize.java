@@ -8,6 +8,7 @@ import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 
 import java.io.BufferedInputStream;
@@ -111,6 +112,7 @@ public class CheckRecognize extends AppCompatActivity implements TextToSpeech.On
     private class CallCVprocess extends Thread{
         @Override
         public void run(){
+            /*
             while(true) {
                 Thread thread = new Thread(new CVprocess(bitmap, true, handler));
                 thread.start();
@@ -124,6 +126,9 @@ public class CheckRecognize extends AppCompatActivity implements TextToSpeech.On
                     e.printStackTrace();
                 }
             }
+            */
+            (new FirstRecognition(bitmap)).run();
+
         }
 
     }
