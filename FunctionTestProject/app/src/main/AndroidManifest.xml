@@ -9,7 +9,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -17,7 +16,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepath"/>
+                android:resource="@xml/filepath" />
         </provider>
 
         <activity android:name=".MainActivity">
@@ -27,7 +26,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PageTest"></activity>
+        <activity android:name=".PageTest" />
+        <activity android:name=".PrintActivity"></activity>
     </application>
 
 </manifest>

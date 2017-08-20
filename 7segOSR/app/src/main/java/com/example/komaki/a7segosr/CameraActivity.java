@@ -404,6 +404,7 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
 
         }
 
+
         return true;
     }
 
@@ -457,7 +458,7 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
             if(tts.isSpeaking()){
                 tts.stop();
             }
-            tts.speak("114514",TextToSpeech.QUEUE_FLUSH,null,"1");
+            tts.speak(number,TextToSpeech.QUEUE_FLUSH,null,"1");
         }
     }
 

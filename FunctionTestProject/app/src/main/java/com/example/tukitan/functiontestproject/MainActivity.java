@@ -20,7 +20,7 @@ import java.io.PrintWriter;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    Button page,share;
+    Button page,share,print;
     Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +30,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         page.setOnClickListener(this);
         share = (Button)findViewById(R.id.button2);
         share.setOnClickListener(this);
+        print = (Button)findViewById(R.id.printButton);
+        print.setOnClickListener(this);
+
         context = getApplicationContext();
         writeFile("document/testfile.txt");
 
@@ -55,6 +58,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             shareIntent.setData(uri);
             shareIntent.setType("*/*");
             startActivity(shareIntent);
+        }
+        if(v == print){
+            Intent intent = new Intent(MainActivity.this,PrintActivity.class);
+            startActivity(intent);
         }
 
     }
