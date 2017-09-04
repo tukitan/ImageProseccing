@@ -20,7 +20,7 @@ import java.io.PrintWriter;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    Button page,share,print;
+    Button page,share,print,cloud;
     Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         share.setOnClickListener(this);
         print = (Button)findViewById(R.id.printButton);
         print.setOnClickListener(this);
+        cloud = (Button)findViewById(R.id.callCloud);
+        cloud.setOnClickListener(this);
 
         context = getApplicationContext();
         writeFile("document/testfile.txt");
@@ -61,6 +63,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if(v == print){
             Intent intent = new Intent(MainActivity.this,PrintActivity.class);
+            startActivity(intent);
+        }
+        if(v == cloud){
+            Intent intent = new Intent(MainActivity.this,CloudActivity.class);
             startActivity(intent);
         }
 
