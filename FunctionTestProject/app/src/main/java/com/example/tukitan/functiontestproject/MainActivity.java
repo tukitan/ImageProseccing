@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         cloud.setOnClickListener(this);
 
         context = getApplicationContext();
-        writeFile("document/testfile.txt");
+        //writeFile("document/testfile.txt");
 
     }
 

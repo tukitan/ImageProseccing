@@ -12,6 +12,19 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         tools:context="com.example.komaki.a7segosr.ConfigActivity2">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="利用者名"
+            android:textSize="10pt"
+            android:gravity="center"/>
+        <EditText
+            android:id="@+id/name"
+            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="山田太朗"/>
 
         <TextView
             android:id="@+id/textView3"

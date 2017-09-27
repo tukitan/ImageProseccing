@@ -27,6 +27,7 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
     static boolean bigFlag,smallFlag;
     static String BIGSIZE = "37";
     static String SMALLSIZE = "13";
+    static String user = "山田太朗";
 
     String LANG="JAPANESE";
     String UNIT="ミリメートル";
@@ -35,6 +36,8 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
     HashMap<String,String> unit_value;
     EditText period;
     SeekBar offset;
+    EditText name;
+
 
     int OFFSET = 12;
 
@@ -47,6 +50,7 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
         kettei = (Button)findViewById(R.id.kettei);
         Spinner langs = (Spinner)findViewById(R.id.lang);
         Spinner units = (Spinner)findViewById(R.id.unit);
+        name = (EditText)findViewById(R.id.name);
         smallBox.setOnClickListener(this);
         bigBox.setOnClickListener(this);
         kettei.setOnClickListener(this);
@@ -124,6 +128,7 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
 
     private void writeConfigFile(){
         String filename = "initalize.txt";
+        user = name.getText().toString();
         try {
             FileOutputStream fos = openFileOutput(filename,MODE_PRIVATE);
             if(bigFlag) fos.write(BIGSIZE.getBytes());
