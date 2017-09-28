@@ -73,11 +73,15 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener callCheckRecognize = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            /*
             double tmp = configValues.get(0);
             CVprocess.KSIZE = (int)tmp;
             double tmpOffset = configValues.get(4);
             Charactor.OFFSET = (int) tmpOffset;
             Intent intent = new Intent(MainActivity.this,CheckRecognize.class);
+            startActivity(intent);
+            */
+            Intent intent = new Intent(MainActivity.this,ListPrintActivity.class);
             startActivity(intent);
         }
     };
@@ -134,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 for(double elem: datas){
                     res.add(elem);
                     fos.write(String.valueOf(elem).getBytes());
+                    fos.write("\n".getBytes());
                 }
 
 
@@ -144,7 +149,9 @@ public class MainActivity extends AppCompatActivity {
             try {
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 String tmp;
-                while((tmp = br.readLine())!= null) res.add(Double.parseDouble(tmp));
+                while((tmp = br.readLine())!= null) {
+                    res.add(Double.parseDouble(tmp));
+                }
                 br.close();
             } catch (IOException e) {
                 e.printStackTrace();
