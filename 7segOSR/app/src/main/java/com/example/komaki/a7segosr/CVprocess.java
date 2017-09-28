@@ -175,17 +175,34 @@ public class CVprocess implements Runnable{
             CheckRecognize.proceccFlag = true;
 
         } else {
-            handler.post(new Runnable() {
-                int minx = TMP_MIN_X;
-                int miny = TMP_MIN_Y + numbers.get(0).minY * 2;
-                int maxx = TMP_MIN_X + (numbers.get(numbers.size() -1).maxX * 2);
-                int maxy = TMP_MIN_Y + (numbers.get(numbers.size() -1).maxY * 2);
-                @Override
-                public void run() {
-                    CameraActivity.number = result;
-                    CameraActivity.CHAR_POINTS = new Points(maxx +5 ,maxy +5 , minx, miny -5,false);
-                }
-            });
+            if(numbers.size() != 0) {
+                handler.post(new Runnable() {
+                    int minx = TMP_MIN_X;
+                    int miny = TMP_MIN_Y + numbers.get(0).minY * 2;
+                    int maxx = TMP_MIN_X + (numbers.get(numbers.size() - 1).maxX * 2);
+                    int maxy = TMP_MIN_Y + (numbers.get(numbers.size() - 1).maxY * 2);
+
+                    @Override
+                    public void run() {
+                        CameraActivity.number = result;
+                        CameraActivity.CHAR_POINTS = new Points(maxx + 5, maxy + 5, minx, miny - 5, false);
+                    }
+                });
+            } else {
+                handler.post(new Runnable() {
+                    int minx = TMP_MIN_X;
+                    int miny = TMP_MIN_Y;
+                    int maxx = TMP_MIN_X;
+                    int maxy = TMP_MIN_Y;
+
+                    @Override
+                    public void run() {
+                        CameraActivity.number = "null";
+                        CameraActivity.CHAR_POINTS = new Points(maxx, maxy, minx, miny, false);
+                    }
+                });
+
+            }
             CameraActivity.isProcessed = true;
         }
 

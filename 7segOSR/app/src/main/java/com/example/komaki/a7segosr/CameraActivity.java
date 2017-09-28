@@ -40,8 +40,11 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -268,6 +271,7 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
                 if(jpgSizes != null && 0 < jpgSizes.length){
                     width = jpgSizes[0].getWidth();
                     height = jpgSizes[0].getHeight();
+                    Log.i("CameraActivity","width:"+ width +",height:" + height);
 
                 }
             }
@@ -347,31 +351,22 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
 
     }
 
-    static void writeBitmap(Bitmap bmp,String filename) {
-        String path = "/" + Environment.getExternalStorageDirectory() + "/7segOCRresult/" + filename;
-        File file = new File(path);
-        file.getParentFile().mkdir();
-        FileOutputStream out = null;
-        try{
-            out = new FileOutputStream(path);
-            bmp.compress(Bitmap.CompressFormat.JPEG,100,out);
-            out.flush();
-            out.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void writeNumber(ArrayList<String> number, String filename){
-        String path = "/" + Environment.getExternalStorageDirectory() + "/7segOCRresult/" + filename;
+        DateFormat df = new SimpleDateFormat("yyyyMMdd_HH_mm");
+        Date date = new Date(System.currentTimeMillis());
+        String path = "/" + Environment.getExternalStorageDirectory() + "/7segOCRresult/RESULT/" + df.format(date) + ConfigActivity2.user +".txt";
+        File file = new File(path);
+        if(!file.exists()){
+            file.getParentFile().mkdir();
+        }
         int count = 0;
         try {
-            PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(new File(path))));
+            PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+
             pw.println((int)UNIT + "," + PERIOD + "," + LOCATE_MAP.get(LOCALE));
             for(String elem :number){
-                if(count != 0 ) pw.println("No." + count + " Number : " + elem);
+                if(count != 0 ) pw.println(count + "," + elem);
                 count++;
             }
             pw.close();
@@ -392,17 +387,21 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
                 (new TakeThread(point)).start();
                 flag = true;
             }
+
+            //Log.i("CameraAcitivy","(X,Y):" +event.getX() + "," + event.getY());
         } else {
             ProgressDialog dialog = new ProgressDialog(this);
             dialog.setIndeterminate(true);
             dialog.setMessage("終了処理中です...");
             dialog.show();
+            writeNumber(recognitionNumbers,"result.txt");
             threadFlag = false;
             isFrist = true;
             CHAR_POINTS = null;
             number = null;
 
         }
+
 
         return true;
     }
@@ -472,7 +471,6 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
     @Override
     protected void onStop(){
         super.onStop();
-        writeNumber(recognitionNumbers,"result.txt");
         if (mCameraDevice != null){
             mCameraDevice.close();
             mCameraDevice =null;

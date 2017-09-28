@@ -112,7 +112,6 @@ public class CheckRecognize extends AppCompatActivity implements TextToSpeech.On
     private class CallCVprocess extends Thread{
         @Override
         public void run(){
-            /*
             while(true) {
                 Thread thread = new Thread(new CVprocess(bitmap, true, handler));
                 thread.start();
@@ -126,8 +125,6 @@ public class CheckRecognize extends AppCompatActivity implements TextToSpeech.On
                     e.printStackTrace();
                 }
             }
-            */
-            (new FirstRecognition(bitmap)).run();
 
         }
 
