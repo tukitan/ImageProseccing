@@ -6,6 +6,7 @@ import android.os.Environment;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.exception.DropboxException;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,15 +35,22 @@ public class MyAsync extends AsyncTask<String ,Void ,String> {
                 case 0:
                     //upload file
                     String filename = params[0];
-                    InputStream in = new FileInputStream(new File(filename));
+                    File file = new File(filename);
+                    BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+                    System.out.println("filepath :" + filename + ", fileSize :" + file.length());
 
-                    DropboxAPI.Entry entry = mApi.putFile(filename, in, Long.parseLong(params[1]), null, null);
+                    String hoge = "unti";
+                    InputStream in2 = new ByteArrayInputStream(hoge.getBytes());
+
+                    //DropboxAPI.Entry entry = mApi.putFile(params[1], in, file.length(), null, null);
+                    DropboxAPI.Entry entry = mApi.putFile("hoge.txt", in2, hoge.getBytes().length, null, null);
                     in.close();
 
 
                     break;
                 case 1:
                     //download file
+                    /*
                     String downloadFilename = "NowTime.txt";
                     File file = new File(Environment.getExternalStorageDirectory().getPath() +"/"+
                             downloadFilename);
@@ -51,6 +59,7 @@ public class MyAsync extends AsyncTask<String ,Void ,String> {
 
 
                     break;
+                    */
             }
         } catch (DropboxException e){
             e.printStackTrace();

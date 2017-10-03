@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.session.AppKeyPair;
+import com.dropbox.client2.session.Session;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,12 +58,9 @@ public class ListPrintActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ListView listview = (ListView) parent;
                 String item = (String) listview.getItemAtPosition(position);
-                item = sdPath + "/7segOCRresult/RESULT/" + item;
-                long tmp = (new File(item)).length();
-                String fileSize = Long.toString(tmp);
-                System.out.println(fileSize);
+                String filepath = sdPath + "/7segOCRresult/RESULT/" + item;
 
-                (new MyAsync(0,mDBAPI)).execute(item, String.valueOf(tmp));
+                (new MyAsync(0,mDBAPI)).execute(filepath,item);
             }
 
         });
@@ -71,7 +69,7 @@ public class ListPrintActivity extends AppCompatActivity {
 
         if(!dropboxUtils.hasLoadAndroidAuthSession()){
             AppKeyPair pair = new AppKeyPair(DropboxUtils.APPKEY,DropboxUtils.APPSECRET);
-            AndroidAuthSession session = new AndroidAuthSession(pair);
+            AndroidAuthSession session = new AndroidAuthSession(pair, Session.AccessType.DROPBOX);
             mDBAPI = new DropboxAPI<>(session);
             mDBAPI.getSession().startOAuth2Authentication(this);
         } else{
