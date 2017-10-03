@@ -40,7 +40,23 @@
         <activity android:name=".HowtoUse" />
         <activity android:name=".ConfigActivity2" />
         <activity android:name=".SynchronizeCloud" />
-        <activity android:name=".ListPrintActivity"></activity>
+        <activity android:name=".ListPrintActivity">
+        </activity>
+        <activity
+            android:name="com.dropbox.client2.android.AuthActivity"
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask">
+            <intent-filter>
+
+                <data android:scheme="db-b60d39boydv24cy" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

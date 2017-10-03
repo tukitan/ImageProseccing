@@ -10,7 +10,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.dropbox.client2.DropboxAPI;
+import com.dropbox.client2.android.AndroidAuthSession;
+import com.dropbox.client2.session.AppKeyPair;
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +28,9 @@ public class ListPrintActivity extends AppCompatActivity {
     File[] files;
     ListView lv;
     List<String> filelist;
+
+    private DropboxAPI<AndroidAuthSession> mDBAPI;
+    private DropboxUtils dropboxUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +57,44 @@ public class ListPrintActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ListView listview = (ListView) parent;
                 String item = (String) listview.getItemAtPosition(position);
-                showItem(item);
+                item = sdPath + "/7segOCRresult/RESULT/" + item;
+                long tmp = (new File(item)).length();
+                String fileSize = Long.toString(tmp);
+                System.out.println(fileSize);
+
+                (new MyAsync(0,mDBAPI)).execute(item, String.valueOf(tmp));
             }
 
         });
+
+        dropboxUtils = new DropboxUtils(this);
+
+        if(!dropboxUtils.hasLoadAndroidAuthSession()){
+            AppKeyPair pair = new AppKeyPair(DropboxUtils.APPKEY,DropboxUtils.APPSECRET);
+            AndroidAuthSession session = new AndroidAuthSession(pair);
+            mDBAPI = new DropboxAPI<>(session);
+            mDBAPI.getSession().startOAuth2Authentication(this);
+        } else{
+            mDBAPI = new DropboxAPI<>(dropboxUtils.loadAndroidAuthSession());
+        }
 
     }
 
     public void showItem(String str){
         Toast.makeText(this,"file:" +str,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(mDBAPI.getSession().authenticationSuccessful()){
+            try{
+                mDBAPI.getSession().finishAuthentication();
+                dropboxUtils.storeOauth2AccessToken(mDBAPI.getSession().getOAuth2AccessToken());
+                Toast.makeText(this,"認証しました",Toast.LENGTH_SHORT).show();
+            }catch (IllegalStateException e){
+                e.printStackTrace();
+            }
+        }
     }
 }
