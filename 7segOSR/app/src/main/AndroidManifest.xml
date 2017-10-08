@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <uses-feature
         android:name="android.hardware.camera2"
@@ -32,9 +33,6 @@
             android:name=".CheckRecognize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ConfigActivity"
-            android:screenOrientation="landscape" />
-        <activity
             android:name=".CameraActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".HowtoUse" />
@@ -48,7 +46,7 @@
             android:launchMode="singleTask">
             <intent-filter>
 
-                <data android:scheme="db-b60d39boydv24cy" />
+                <data android:scheme="db-y8w3i2f4ok163zw" />
 
                 <action android:name="android.intent.action.VIEW" />
 

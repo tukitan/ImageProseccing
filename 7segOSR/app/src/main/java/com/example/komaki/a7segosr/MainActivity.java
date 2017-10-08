@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        Button debug = (Button)findViewById(R.id.debugButton);
+        ImageButton debug = (ImageButton)findViewById(R.id.debugButton);
         ImageButton configButton = (ImageButton)findViewById(R.id.config);
         //ImageButton howtoButton = (ImageButton) findViewById(R.id.howto);
         ImageButton cameraButton = (ImageButton)findViewById(R.id.cameraTest);
@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
             double tmpOffset = configValues.get(4);
 
             CVprocess.KSIZE = (int)tmpKsize;
+            CameraActivity.CHAR_SIZE = (int)tmpKsize;
             if(tmpLang == 0) CameraActivity.LOCALE = Locale.JAPANESE;
             else if(tmpLang == 1) CameraActivity.LOCALE = Locale.ENGLISH;
             //System.out.println(CVprocess.KSIZE);

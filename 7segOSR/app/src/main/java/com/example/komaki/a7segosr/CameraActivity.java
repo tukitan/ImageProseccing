@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.*;
@@ -52,6 +53,7 @@ import java.util.Locale;
 public class CameraActivity extends Activity implements TextToSpeech.OnInitListener{
 
     private TextureView mTextureView;
+    private TextureView drawView;
     private Size mPreviewSize;
     private CameraDevice mCameraDevice;
     private CaptureRequest.Builder mPreviewBuilder;
@@ -86,7 +88,9 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
     int periodTime;
 
     HashMap LOCATE_MAP;
+    HashMap CHAR_SIZE_MAP;
 
+    static int CHAR_SIZE;
     @Override
     protected void onCreate(Bundle SavedInstance) {
         super.onCreate(SavedInstance);
@@ -96,7 +100,10 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
         setContentView(R.layout.activity_camera);
 
         mTextureView = (TextureView) findViewById(R.id.textureView);
+        drawView = (TextureView) findViewById(R.id.drawView);
         mTextureView.setSurfaceTextureListener(mCameraViewStatusChanged);
+
+
         CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         manager.registerTorchCallback(new TorchCallback(){
             @Override
@@ -115,6 +122,10 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
         LOCATE_MAP = new HashMap();
         LOCATE_MAP.put(Locale.JAPANESE,0);
         LOCATE_MAP.put(Locale.ENGLISH,1);
+
+        CHAR_SIZE_MAP = new HashMap();
+        CHAR_SIZE_MAP.put(13,100);
+        CHAR_SIZE_MAP.put(37,150);
 
     }
 
@@ -376,6 +387,8 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
     }
     public boolean onTouchEvent(MotionEvent event){
         if(!flag) {
+            // Drag Rect type
+            /*
             if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
                 MinX = (int)event.getX();
                 MinY = (int)event.getY();
@@ -387,6 +400,18 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
                 (new TakeThread(point)).start();
                 flag = true;
             }
+            */
+
+            // touch type
+            if(event.getActionMasked() == MotionEvent.ACTION_UP) {
+                int pointX = (int) event.getX();
+                int pointY = (int) event.getY();
+                int range = (int) CHAR_SIZE_MAP.get(CHAR_SIZE);
+                Points point = new Points(pointX + range * 3, pointY + range*2, pointX - range * 3, pointY - range*2, true);
+                (new TakeThread(point)).start();
+                flag = true;
+            }
+
 
             //Log.i("CameraAcitivy","(X,Y):" +event.getX() + "," + event.getY());
         } else {

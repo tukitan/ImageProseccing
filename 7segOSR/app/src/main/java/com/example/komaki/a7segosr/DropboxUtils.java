@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.session.AppKeyPair;
+import com.dropbox.core.DbxRequestConfig;
+import com.dropbox.core.v2.DbxClientV2;
 
 /**
  * Created by tukitan on 17/10/01.
@@ -12,9 +14,9 @@ import com.dropbox.client2.session.AppKeyPair;
 
 public class DropboxUtils {
 
-    public final static String APPKEY = "b60d39boydv24cy";
-    public final static String APPSECRET = "igghhnxnxej5tv4";
-    private final static String TOKEN = "y3Mzqinj1oQAAAAAAAADegJMDlA4Z1-jZXPxvOae-g8BT_1qigWZAFMQwL5F6KnX";
+    public final static String APPKEY = "y8w3i2f4ok163zw";
+    public final static String APPSECRET = "41vn52lv1hir3gn";
+    public final static String TOKEN = "w7IZzK4a54AAAAAAAAAAF0dYh1PMhUxF_G_v19QDPOBZyPckznxk1np6ylsnOJwk";
     String PREF_NAME = "dropbox";
 
     private Context context;
@@ -45,5 +47,11 @@ public class DropboxUtils {
 
     public boolean hasLoadAndroidAuthSession(){
         return loadAndroidAuthSession() != null;
+    }
+
+    public static DbxClientV2 getClient(String ACCESS_TOKEN){
+        DbxRequestConfig config = new DbxRequestConfig("dropbox/example","en_JP");
+        DbxClientV2 client = new DbxClientV2(config,ACCESS_TOKEN);
+        return client;
     }
 }

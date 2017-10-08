@@ -1,10 +1,16 @@
 package com.example.komaki.a7segosr;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.exception.DropboxException;
+import com.dropbox.core.DbxException;
+import com.dropbox.core.v2.DbxClientV2;
+import com.dropbox.core.v2.files.WriteMode;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -21,29 +27,33 @@ import java.util.Date;
  * Created by tukitan on 17/09/08.
  */
 
-public class MyAsync extends AsyncTask<String ,Void ,String> {
+public class MyAsync extends AsyncTask {
     int type;
-    DropboxAPI mApi;
-    public MyAsync(int type,DropboxAPI mApi) {
+    DbxClientV2 dbxClient;
+    Context context;
+
+    public MyAsync(int type, DbxClientV2 dbxClient, Context context) {
         this.type = type;
-        this.mApi = mApi;
+        this.dbxClient = dbxClient;
+        this.context = context;
+
     }
     @Override
-    protected String doInBackground(String... params) {
+    protected Object doInBackground(Object[] params) {
         try {
             switch (type) {
                 case 0:
                     //upload file
-                    String filename = params[0];
+                    String filename = String.valueOf(params[0]);
                     File file = new File(filename);
-                    BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+                    InputStream in = new FileInputStream(file);
                     System.out.println("filepath :" + filename + ", fileSize :" + file.length());
+                        dbxClient.files().uploadBuilder("/" + params[1])
+                                .withMode(WriteMode.OVERWRITE)
+                                .uploadAndFinish(in,1000);
+                    Log.d("Upload File","Upload Success");
 
-                    String hoge = "unti";
-                    InputStream in2 = new ByteArrayInputStream(hoge.getBytes());
 
-                    //DropboxAPI.Entry entry = mApi.putFile(params[1], in, file.length(), null, null);
-                    DropboxAPI.Entry entry = mApi.putFile("hoge.txt", in2, hoge.getBytes().length, null, null);
                     in.close();
 
 
@@ -61,13 +71,21 @@ public class MyAsync extends AsyncTask<String ,Void ,String> {
                     break;
                     */
             }
-        } catch (DropboxException e){
-            e.printStackTrace();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (DbxException e) {
+            e.printStackTrace();
         }
         return null;
+    }
+
+
+    @Override
+    protected void onPostExecute(Object o){
+        super.onPostExecute(o);
+        Toast.makeText(context,"upload!",Toast.LENGTH_SHORT).show();
+
     }
 }

@@ -14,6 +14,8 @@ import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.session.AppKeyPair;
 import com.dropbox.client2.session.Session;
+import com.dropbox.core.DbxRequestConfig;
+import com.dropbox.core.v2.DbxClientV2;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,7 +47,7 @@ public class ListPrintActivity extends AppCompatActivity {
                 filelist.add(files[i].getName());
                 System.out.println(files[i].getName());
             }
-        }else {
+        }else {//nene
             Log.i("ListPrintActivity","files is null");
         }
 
@@ -60,7 +62,8 @@ public class ListPrintActivity extends AppCompatActivity {
                 String item = (String) listview.getItemAtPosition(position);
                 String filepath = sdPath + "/7segOCRresult/RESULT/" + item;
 
-                (new MyAsync(0,mDBAPI)).execute(filepath,item);
+                (new MyAsync(0,DropboxUtils.getClient(DropboxUtils.TOKEN),ListPrintActivity.this)).execute(filepath,item);
+
             }
 
         });
@@ -69,7 +72,7 @@ public class ListPrintActivity extends AppCompatActivity {
 
         if(!dropboxUtils.hasLoadAndroidAuthSession()){
             AppKeyPair pair = new AppKeyPair(DropboxUtils.APPKEY,DropboxUtils.APPSECRET);
-            AndroidAuthSession session = new AndroidAuthSession(pair, Session.AccessType.DROPBOX);
+            AndroidAuthSession session = new AndroidAuthSession(pair);
             mDBAPI = new DropboxAPI<>(session);
             mDBAPI.getSession().startOAuth2Authentication(this);
         } else{
@@ -82,6 +85,7 @@ public class ListPrintActivity extends AppCompatActivity {
         Toast.makeText(this,"file:" +str,Toast.LENGTH_SHORT).show();
     }
 
+
     @Override
     protected void onResume(){
         super.onResume();
@@ -89,7 +93,6 @@ public class ListPrintActivity extends AppCompatActivity {
             try{
                 mDBAPI.getSession().finishAuthentication();
                 dropboxUtils.storeOauth2AccessToken(mDBAPI.getSession().getOAuth2AccessToken());
-                Toast.makeText(this,"認証しました",Toast.LENGTH_SHORT).show();
             }catch (IllegalStateException e){
                 e.printStackTrace();
             }
