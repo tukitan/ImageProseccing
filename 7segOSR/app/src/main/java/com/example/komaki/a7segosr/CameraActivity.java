@@ -91,6 +91,8 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
     HashMap CHAR_SIZE_MAP;
 
     static int CHAR_SIZE;
+
+
     @Override
     protected void onCreate(Bundle SavedInstance) {
         super.onCreate(SavedInstance);
@@ -124,8 +126,8 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
         LOCATE_MAP.put(Locale.ENGLISH,1);
 
         CHAR_SIZE_MAP = new HashMap();
-        CHAR_SIZE_MAP.put(13,100);
-        CHAR_SIZE_MAP.put(37,150);
+        CHAR_SIZE_MAP.put(13,50);
+        CHAR_SIZE_MAP.put(37,100);
 
     }
 
@@ -406,8 +408,9 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
             if(event.getActionMasked() == MotionEvent.ACTION_UP) {
                 int pointX = (int) event.getX();
                 int pointY = (int) event.getY();
-                int range = (int) CHAR_SIZE_MAP.get(CHAR_SIZE);
-                Points point = new Points(pointX + range * 3, pointY + range*2, pointX - range * 3, pointY - range*2, true);
+                int range = CHAR_SIZE * 4;
+                // int range = (int) CHAR_SIZE_MAP.get(CHAR_SIZE);
+                Points point = new Points(pointX + range * 2, pointY + range, pointX - range * 2, pointY - range, true);
                 (new TakeThread(point)).start();
                 flag = true;
             }
@@ -476,7 +479,7 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
     }
 
     public void speechText(){
-        System.out.println(number);
+        Log.d("speechText()","number is" + number);
         if(number != null){
             if(tts.isSpeaking()){
                 tts.stop();

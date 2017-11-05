@@ -46,10 +46,11 @@ public class Charactor {
 
     double ONE_RANGE = 3.0;
     int SEG_WIDTH = 5;
-    int RANGE = 4;
+    int RANGE = 7;
     int sizeX,sizeY;
 
     static int OFFSET;
+
 
     public Charactor(Segment seg1,boolean flag){
         data = seg1.element;
@@ -193,6 +194,9 @@ public class Charactor {
         double offsetLength=0;
         if(position == 2 || position == -2){
             offsetLength = OFFSET * 0.1 * sizeX * 0.5 * position*0.5;
+        }
+        if(position == 1 || position == -1){
+            offsetLength = OFFSET * 0.05 * sizeX * 0.5 * position*0.5;
         }
         boolean xFrag = (srcX < (targetX + RANGE + (int)offsetLength) && srcX > (targetX - RANGE + (int)offsetLength)) ? true : false;
         boolean yFrag = (srcY < (targetY + RANGE) && srcY > (targetY - RANGE)) ? true : false;

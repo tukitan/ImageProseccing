@@ -36,7 +36,9 @@
             android:name=".CameraActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".HowtoUse" />
-        <activity android:name=".ConfigActivity2" />
+        <activity android:name=".ConfigActivity2"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            />
         <activity android:name=".SynchronizeCloud" />
         <activity android:name=".ListPrintActivity">
         </activity>

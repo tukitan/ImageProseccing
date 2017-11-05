@@ -1,10 +1,12 @@
 package com.example.komaki.a7segosr;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
@@ -35,29 +38,26 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
     HashMap<String,String> lang_value;
     HashMap<String,String> unit_value;
     EditText period;
-    SeekBar offset;
+    SeekBar offset,sizeBar;
     EditText name;
+    TextView sizeRect;
 
 
     int OFFSET = 12;
+    int SIZE = 15;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config2);
-        smallBox = (CheckBox)findViewById(R.id.small);
-        bigBox = (CheckBox)findViewById(R.id.big);
         kettei = (Button)findViewById(R.id.kettei);
         Spinner langs = (Spinner)findViewById(R.id.lang);
         Spinner units = (Spinner)findViewById(R.id.unit);
         name = (EditText)findViewById(R.id.name);
-        smallBox.setOnClickListener(this);
-        bigBox.setOnClickListener(this);
         kettei.setOnClickListener(this);
+        sizeRect = (TextView)findViewById(R.id.sizeRect);
         bigFlag = false;
         smallFlag = true;
-        smallBox.setChecked(smallFlag);
-        bigBox.setChecked(bigFlag);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.langList,android.R.layout.select_dialog_item);
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,R.array.unitList,android.R.layout.select_dialog_item);
@@ -84,31 +84,17 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
 
         offset = (SeekBar)findViewById(R.id.offset);
         offset.setOnSeekBarChangeListener(this);
+
+        sizeBar = (SeekBar)findViewById(R.id.sizeBar);
+        sizeBar.setOnSeekBarChangeListener(this);
+
+        sizeRect.setHighlightColor(Color.RED);
+        sizeRect.setWidth(SIZE * 2 * 4 * 2 * 2);
+        sizeRect.setHeight(SIZE * 2 * 4 * 2);
+
     }
     @Override
     public void onClick(View v) {
-        if(v == smallBox) {
-            if(smallBox.isChecked()){
-                smallFlag = true;
-                bigFlag = false;
-                bigBox.setChecked(false);
-            } else {
-                smallFlag = false;
-                bigFlag = true;
-                bigBox.setChecked(true);
-            }
-        }
-        if(v == bigBox){
-            if(bigBox.isChecked()){
-                bigFlag = true;
-                smallFlag = false;
-                smallBox.setChecked(false);
-            }else{
-                bigFlag = false;
-                smallFlag = true;
-                smallBox.setChecked(true);
-            }
-        }
         if(v == kettei){
             String getPeriod = period.getText().toString();
             if(getPeriod.equals("")) {
@@ -131,8 +117,7 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
         user = name.getText().toString();
         try {
             FileOutputStream fos = openFileOutput(filename,MODE_PRIVATE);
-            if(bigFlag) fos.write(BIGSIZE.getBytes());
-            else if (smallFlag) fos.write(SMALLSIZE.getBytes());
+            fos.write(String.valueOf(SIZE).getBytes());
             fos.write("\n".getBytes());
             fos.write(PERIOD.getBytes());
             fos.write("\n".getBytes());
@@ -168,6 +153,12 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if(seekBar == offset) OFFSET = progress;
+        if(seekBar == sizeBar) {
+            SIZE = progress+10;
+            Log.d("ConfigActivity2","rect = " +SIZE*32 +"," + SIZE*16);
+            sizeRect.setWidth(SIZE * 2 * 4 * 2 * 2);
+            sizeRect.setHeight(SIZE * 2 * 4 * 2);
+        }
 
     }
 

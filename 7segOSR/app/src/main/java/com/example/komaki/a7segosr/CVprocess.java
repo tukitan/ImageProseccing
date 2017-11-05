@@ -36,7 +36,7 @@ import static org.opencv.android.Utils.*;
 
 /*
     This class is Processing to Bitmap Image and Recognition thread
-    Called By CheckRecognize.java
+    Called By CameraActivity.java
  */
 public class CVprocess implements Runnable{
 

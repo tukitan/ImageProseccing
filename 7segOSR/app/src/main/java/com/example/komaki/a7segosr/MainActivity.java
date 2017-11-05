@@ -105,8 +105,8 @@ public class MainActivity extends AppCompatActivity {
             double tmpUnit = configValues.get(3);
             double tmpOffset = configValues.get(4);
 
-            CVprocess.KSIZE = (int)tmpKsize;
-            CameraActivity.CHAR_SIZE = (int)tmpKsize;
+            CVprocess.KSIZE = ((int)tmpKsize * 2 - 1);
+            CameraActivity.CHAR_SIZE = (int)tmpKsize*2;
             if(tmpLang == 0) CameraActivity.LOCALE = Locale.JAPANESE;
             else if(tmpLang == 1) CameraActivity.LOCALE = Locale.ENGLISH;
             //System.out.println(CVprocess.KSIZE);
