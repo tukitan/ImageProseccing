@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-feature
         android:name="android.hardware.camera2"
@@ -36,18 +36,16 @@
             android:name=".CameraActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".HowtoUse" />
-        <activity android:name=".ConfigActivity2"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            />
+        <activity
+            android:name=".ConfigActivity2"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".SynchronizeCloud" />
-        <activity android:name=".ListPrintActivity">
-        </activity>
+        <activity android:name=".ListPrintActivity"></activity>
         <activity
             android:name="com.dropbox.client2.android.AuthActivity"
             android:configChanges="orientation|keyboard"
             android:launchMode="singleTask">
             <intent-filter>
-
                 <data android:scheme="db-y8w3i2f4ok163zw" />
 
                 <action android:name="android.intent.action.VIEW" />
@@ -56,7 +54,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".DropboxLauncher"></activity>
     </application>
 
 </manifest>

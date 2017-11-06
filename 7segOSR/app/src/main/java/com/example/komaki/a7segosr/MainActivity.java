@@ -3,10 +3,13 @@ package com.example.komaki.a7segosr;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 
@@ -51,6 +54,14 @@ public class MainActivity extends AppCompatActivity {
         //howtoButton.setOnClickListener(callHowto);
         configValues = initConfig();
         for(Double elem :configValues) System.out.println(elem);
+        WindowManager wm = getWindowManager();
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getRealSize(size);
+        CameraActivity.DISP_WIDTH = size.x;
+        CameraActivity.DISP_HEIGHT = size.y;
+        System.out.println("size = " +size.x + "," +size.y);
+
     }
     @Override
     protected void onResume(){
@@ -105,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             double tmpUnit = configValues.get(3);
             double tmpOffset = configValues.get(4);
 
-            CVprocess.KSIZE = ((int)tmpKsize * 2 - 1);
+            CVprocess.KSIZE = ((int)tmpKsize * 2 - 11);
             CameraActivity.CHAR_SIZE = (int)tmpKsize*2;
             if(tmpLang == 0) CameraActivity.LOCALE = Locale.JAPANESE;
             else if(tmpLang == 1) CameraActivity.LOCALE = Locale.ENGLISH;
@@ -129,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Double> initConfig(){
         ArrayList<Double> res = new ArrayList<>();
         String filename = "initalize.txt";
-        double[] datas = new double[]{13,4,0,0,2};
+        double[] datas = new double[]{15,4,0,0,2};
         File file = new File(getFilesDir().getPath() +"/"+ filename);
 
         System.out.println("PATH:" + this.getFilesDir().getPath() + "/" + filename + " "+ file.exists());

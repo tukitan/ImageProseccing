@@ -92,6 +92,10 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
 
     static int CHAR_SIZE;
 
+    static double WIDTH_RATIO;
+    static double HEIGHT_RATIO;
+    static int DISP_WIDTH;
+    static int DISP_HEIGHT;
 
     @Override
     protected void onCreate(Bundle SavedInstance) {
@@ -241,6 +245,29 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
         } catch (CameraAccessException e){
             e.printStackTrace();
         }
+
+        CameraManager manager = (CameraManager)getSystemService(Context.CAMERA_SERVICE);
+
+        try {
+            CameraCharacteristics character = manager.getCameraCharacteristics(mCameraDevice.getId());
+
+            Size[] jpgSizes = null;
+            int width = 640;
+            int height = 480;
+            if (character != null) {
+                jpgSizes = character.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP).getOutputSizes(ImageFormat.JPEG);
+                if (jpgSizes != null && 0 < jpgSizes.length) {
+                    width = jpgSizes[0].getWidth();
+                    height = jpgSizes[0].getHeight();
+                }
+            }
+            WIDTH_RATIO = (double) height / (double) DISP_WIDTH;
+            HEIGHT_RATIO = (double) width / (double) DISP_HEIGHT;
+            Log.i("CameraActivity", "jpgSize = " + width + "," + height);
+
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     protected void updatePreview(){
@@ -284,8 +311,6 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
                 if(jpgSizes != null && 0 < jpgSizes.length){
                     width = jpgSizes[0].getWidth();
                     height = jpgSizes[0].getHeight();
-                    Log.i("CameraActivity","width:"+ width +",height:" + height);
-
                 }
             }
             ImageReader reader = ImageReader.newInstance(width,height,ImageFormat.JPEG,2);
@@ -409,8 +434,9 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
                 int pointX = (int) event.getX();
                 int pointY = (int) event.getY();
                 int range = CHAR_SIZE * 4;
+                //Log.d("CameraActivity","touch point = (" + (pointX + range * 2) + "," + (pointY + range) +"),("+(pointX- range*2)+ ","+(pointY-range)+")");
                 // int range = (int) CHAR_SIZE_MAP.get(CHAR_SIZE);
-                Points point = new Points(pointX + range * 2, pointY + range, pointX - range * 2, pointY - range, true);
+                Points point = new Points(pointX + (range*2), (int) (pointY + (range*1.5)), pointX - (range*2), (int) (pointY - (range*1.5)), true);
                 (new TakeThread(point)).start();
                 flag = true;
             }

@@ -90,7 +90,7 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
 
         sizeRect.setHighlightColor(Color.RED);
         sizeRect.setWidth(SIZE * 2 * 4 * 2 * 2);
-        sizeRect.setHeight(SIZE * 2 * 4 * 2);
+        sizeRect.setHeight((int) (SIZE * 2 * 4 * 2 *1.5));
 
     }
     @Override
@@ -155,9 +155,9 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
         if(seekBar == offset) OFFSET = progress;
         if(seekBar == sizeBar) {
             SIZE = progress+10;
-            Log.d("ConfigActivity2","rect = " +SIZE*32 +"," + SIZE*16);
+            Log.d("ConfigActivity2","rect = " +SIZE*32 +"," + SIZE*24);
             sizeRect.setWidth(SIZE * 2 * 4 * 2 * 2);
-            sizeRect.setHeight(SIZE * 2 * 4 * 2);
+            sizeRect.setHeight((int) (SIZE * 2 * 4 * 2 *1.5));
         }
 
     }

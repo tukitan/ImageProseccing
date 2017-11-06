@@ -120,7 +120,7 @@ public class CVprocess implements Runnable{
 
         try {
             BitmapRegionDecoder regionDecoder = BitmapRegionDecoder.newInstance(baos.toByteArray(),0,baos.toByteArray().length,false);
-            System.out.println("x:" + points.minX + " y:" + points.minY + " x:" + points.maxX + " y:" + points.maxY);
+            Log.d("CVprocess","x:" + points.minX + " y:" + points.minY + " x:" + points.maxX + " y:" + points.maxY);
             Rect rect = new Rect(points.minX,points.minY,points.maxX,points.maxY);
             myBitmap = regionDecoder.decodeRegion(rect,null);
             writeBitmap(myBitmap,"CuttedImage.bmp");

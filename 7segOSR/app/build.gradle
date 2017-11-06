@@ -20,7 +20,7 @@ android {
     }
     productFlavors {
     }
-    packagingOptions{
+    packagingOptions {
         exclude 'META-INF/LICENSE'
     }
 }
@@ -36,6 +36,7 @@ dependencies {
     compile 'com.dropbox.core:dropbox-core-sdk:2.0.1'
     testCompile 'junit:junit:4.12'
 }
+
 
 
 

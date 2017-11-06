@@ -13,8 +13,12 @@ public class Points {
     int midX,midY;
     int mid_up_midY,mid_down_midY;
 
+    /*
     static double EXPAND_X = 2620.0/1020.0;
     static double EXPAND_Y = 4656.0/1940.0;
+    */
+    static double EXPAND_X = CameraActivity.WIDTH_RATIO;
+    static double EXPAND_Y = CameraActivity.HEIGHT_RATIO;
 
     public Points(int maxX,int maxY,int minX,int minY,int midX,int midY,int mid_up_midY,int mid_down_midY){
         this.maxX = maxX;
@@ -29,10 +33,10 @@ public class Points {
 
     public Points(int maxX,int maxY,int minX,int minY,boolean cameraToCV){
         if(cameraToCV) {
-            this.maxX = (int)((double)maxX * EXPAND_X);
-            this.maxY = (int)((double)maxY * EXPAND_Y);
-            this.minX = (int)((double)minX * EXPAND_X);
-            this.minY = (int)((double)minY * EXPAND_Y);
+            this.maxX = (int)((double)maxX * CameraActivity.WIDTH_RATIO);
+            this.maxY = (int)((double)maxY * CameraActivity.HEIGHT_RATIO);
+            this.minX = (int)((double)minX * CameraActivity.WIDTH_RATIO);
+            this.minY = (int)((double)minY * CameraActivity.HEIGHT_RATIO);
         } else{
             this.maxX = maxX;
             this.maxY = maxY;
