@@ -28,8 +28,6 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
     CheckBox smallBox,bigBox;
     Button kettei;
     static boolean bigFlag,smallFlag;
-    static String BIGSIZE = "37";
-    static String SMALLSIZE = "13";
     static String user = "山田太朗";
 
     String LANG="JAPANESE";
@@ -90,7 +88,7 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
 
         sizeRect.setHighlightColor(Color.RED);
         sizeRect.setWidth(SIZE * 2 * 4 * 2 * 2);
-        sizeRect.setHeight((int) (SIZE * 2 * 4 * 2 *1.5));
+        sizeRect.setHeight((int) (SIZE * 2 * 4 * 2 *1.3));
 
     }
     @Override
@@ -155,9 +153,9 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
         if(seekBar == offset) OFFSET = progress;
         if(seekBar == sizeBar) {
             SIZE = progress+10;
-            Log.d("ConfigActivity2","rect = " +SIZE*32 +"," + SIZE*24);
+            //Log.d("ConfigActivity2","rect = " +SIZE*32 +"," + SIZE*20.8);
             sizeRect.setWidth(SIZE * 2 * 4 * 2 * 2);
-            sizeRect.setHeight((int) (SIZE * 2 * 4 * 2 *1.5));
+            sizeRect.setHeight((int) (SIZE * 2 * 4 * 2 *1.3));
         }
 
     }

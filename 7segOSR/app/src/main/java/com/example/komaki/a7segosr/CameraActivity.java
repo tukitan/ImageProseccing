@@ -436,7 +436,7 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
                 int range = CHAR_SIZE * 4;
                 //Log.d("CameraActivity","touch point = (" + (pointX + range * 2) + "," + (pointY + range) +"),("+(pointX- range*2)+ ","+(pointY-range)+")");
                 // int range = (int) CHAR_SIZE_MAP.get(CHAR_SIZE);
-                Points point = new Points(pointX + (range*2), (int) (pointY + (range*1.5)), pointX - (range*2), (int) (pointY - (range*1.5)), true);
+                Points point = new Points(pointX + (range*2), (int) (pointY + (range*1.3)), pointX - (range*2), (int) (pointY - (range*1.3)), true);
                 (new TakeThread(point)).start();
                 flag = true;
             }
