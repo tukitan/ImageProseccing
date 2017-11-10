@@ -85,9 +85,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             /*
-            double tmp = configValues.get(0);
-            CVprocess.KSIZE = (int)tmp;
+            double tmpKsize = configValues.get(0);
+            double tmpPeriod = configValues.get(1);
+            double tmpLang = configValues.get(2);
+            double tmpUnit = configValues.get(3);
             double tmpOffset = configValues.get(4);
+            Charactor.OFFSET = (int) tmpOffset;
+            CVprocess.KSIZE = (int)tmpKsize;
             Charactor.OFFSET = (int) tmpOffset;
             Intent intent = new Intent(MainActivity.this,CheckRecognize.class);
             startActivity(intent);

@@ -9,6 +9,7 @@ public class ExByte {
     static boolean WHITE = true;
     static boolean BLACK = false;
     boolean color;
+    boolean expandFlag = false;
     int LABEL=0;
     public int intDada;
     int pointX,pointY;

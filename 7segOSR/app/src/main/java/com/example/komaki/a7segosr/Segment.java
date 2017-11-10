@@ -1,5 +1,7 @@
 package com.example.komaki.a7segosr;
 
+import android.graphics.Point;
+
 import java.util.ArrayList;
 
 /**
@@ -10,6 +12,7 @@ public class Segment {
     ArrayList<ExByte> element;
     int SEG_LABEL;
     Points points;
+    Point center;
     int maxX=0,maxY=0,minX=CVprocess.BITMAP_X_SIZE,minY=CVprocess.BITMAP_Y_SIZE;
     int size;
 
@@ -41,6 +44,10 @@ public class Segment {
         }
 
         points = new Points(maxX,maxY,minX,minY,false);
+        center = new Point();
+        int center_x = minX + ((maxX-minX)/2);
+        int center_y = minY + ((maxY-minY)/2);
+        center.set(center_x,center_y);
     }
 
     public int getSize(){ return element.size(); }

@@ -92,6 +92,8 @@ public class CVprocess implements Runnable{
 
     int TMP_MIN_X,TMP_MIN_Y,TMP_MAX_X,TMP_MAX_Y;
 
+    Histgram histgram;
+
     public CVprocess(Bitmap bitmap,boolean calledCheckRec,Handler handler){
         myBitmap = bitmap;
         isCalledByCheckRecognize = true;
@@ -145,8 +147,18 @@ public class CVprocess implements Runnable{
         newBitmap = myBitmap.copy(Bitmap.Config.ARGB_8888,true);
 
         blurBitmap(KSIZE);
+        expandLines();
         writeBitmap(newBitmap,"result.bmp");
+
         labeling();
+
+        /*
+        histgram = getHistgram();
+        for(int i=0;i<histgram.startPoint.size();i++){
+            Log.d("CVprocess","startPoint = " + histgram.startPoint.get(i) + ", endPoint = " + histgram.endPoint.get(i));
+        }
+        */
+
         makeSegment();
         makeCharactor();
         System.out.println("Charactor num :" + numbers.size());
@@ -239,6 +251,14 @@ public class CVprocess implements Runnable{
         matToBitmap(bin,myBitmap);
 
     }
+    private void blurBitmap(int ksize){
+        Mat src = new Mat();
+        Mat dst = new Mat();
+        bitmapToMat(newBitmap,src);
+        Imgproc.medianBlur(src,dst,ksize);
+        matToBitmap(dst,newBitmap);
+    }
+
     private void labeling() {
         Mat src = new Mat();
         bitmapToMat(newBitmap, src);
@@ -271,7 +291,26 @@ public class CVprocess implements Runnable{
             }
         }
          */
+        expandLines();
         setLabel();
+    }
+
+    private void expandLines(){
+        for(int i=1;i<BITMAP_Y_SIZE-1;i++){
+            for(int j=1;j<BITMAP_X_SIZE-1;j++){
+                if(!exBytes[i][j].color && exBytes[i][j].expandFlag){
+                    for(int column=i-1;column<i+2;column++){
+                        for(int row=j-1;row<j+2;row++){
+                            if(i==column && j==row) continue;
+                            if(!exBytes[column][row].color) continue;
+                            exBytes[column][row].color = false;
+                            exBytes[column][row].expandFlag = true;
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     private void setLabel(){
@@ -369,13 +408,44 @@ public class CVprocess implements Runnable{
         }
     }
 
-    private void blurBitmap(int ksize){
-        Mat src = new Mat();
-        Mat dst = new Mat();
-        bitmapToMat(newBitmap,src);
-        Imgproc.medianBlur(src,dst,ksize);
-        matToBitmap(dst,newBitmap);
+    private Histgram getHistgram(){
+        Histgram histgram = new Histgram();
+        int[] blackRow = new int[BITMAP_X_SIZE];
+        int average = 0;
+        boolean numRangeFlag = false;
+        for(int i=0;i<blackRow.length;i++){
+            blackRow[i] = getBlackNum(i);
+            average += blackRow[i];
+        }
+        average /= BITMAP_X_SIZE;
+        for(int i=0;i<blackRow.length;i++){
+            if(blackRow[i]>average){
+                if(!numRangeFlag) {
+                    histgram.startPoint.add(i);
+                    numRangeFlag = true;
+                }
+            } else {
+                if(numRangeFlag){
+                    histgram.endPoint.add(i);
+                    numRangeFlag = false;
+                }
+            }
+
+        }
+
+
+        return histgram;
     }
+
+    private int getBlackNum(int row){
+        int count = 0;
+        for(int i=0;i<BITMAP_Y_SIZE;i++){
+            count = exBytes[i][row].color ? 0 : 1;
+        }
+        return count;
+    }
+
+
 
     private void makeSegment(){
         int cnt = 0;
@@ -454,7 +524,6 @@ public class CVprocess implements Runnable{
                     System.out.println("gattai");
                     numbers.add(new Charactor(newSegment[i], newSegment[j]));
                     newSegment[i].signedFlag = true;
-                    newSegment[j].signedFlag = true;
                     continue;
                 }
                 if(j == newSegment.length -1 ) numbers.add(new Charactor(newSegment[i],false));
