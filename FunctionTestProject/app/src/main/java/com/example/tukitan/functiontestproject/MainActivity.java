@@ -2,7 +2,11 @@ package com.example.tukitan.functiontestproject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapRegionDecoder;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
@@ -20,8 +24,9 @@ import java.io.PrintWriter;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    Button page,share,print,cloud;
+    Button page,share,print,cloud,makeBitmap;
     Context context;
+    Bitmap bitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         print.setOnClickListener(this);
         cloud = (Button)findViewById(R.id.callCloud);
         cloud.setOnClickListener(this);
+        makeBitmap = (Button) findViewById(R.id.makeBitmap);
+        makeBitmap.setOnClickListener(this);
 
         context = getApplicationContext();
         //writeFile("document/testfile.txt");
@@ -69,6 +76,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(MainActivity.this,CloudActivity.class);
             startActivity(intent);
         }
+        if(v == makeBitmap){
+            int MAX_X = 10;
+            int MAX_Y = 5;
+            int[] tmpArray = new int[MAX_X*MAX_Y];
+            System.out.println("MAX_X*MAX_Y = " + MAX_X*MAX_Y + ", ");
+            for(int i=0;i<MAX_Y;i++){
+                for(int j=0;j<MAX_X;j++){
+                    tmpArray[i*MAX_X +j] = 0;
+                    System.out.println("no." + (i*MAX_X +j) +" array = " + tmpArray[i*MAX_X+j]);
+                }
+            }
+            Bitmap bitmap = Bitmap.createBitmap(tmpArray,MAX_X,MAX_Y, Bitmap.Config.ARGB_4444);
+            writeBitmap(bitmap,"makedBitmap.bmp");
+        }
 
     }
 
@@ -82,6 +103,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             fos.write("this is test".getBytes());
 
             fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    static void writeBitmap(Bitmap bmp,String filename) {
+        String path = "/" + Environment.getExternalStorageDirectory() + "/FunctionTestResult/" + filename;
+        File file = new File(path);
+        file.getParentFile().mkdir();
+        FileOutputStream out = null;
+        try{
+            out = new FileOutputStream(path);
+            if(bmp == null) System.err.println("bitmap is null");
+            else bmp.compress(Bitmap.CompressFormat.JPEG,100,out);
+            out.flush();
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

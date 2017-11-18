@@ -43,6 +43,7 @@ public class CVprocess implements Runnable{
 
     // Primitive bitmap
     Bitmap myBitmap;
+    Bitmap cuttedBitmap;
 
     // Expand byte data (Show ExByte.java)
     ExByte[][] exBytes;
@@ -147,8 +148,6 @@ public class CVprocess implements Runnable{
         newBitmap = myBitmap.copy(Bitmap.Config.ARGB_8888,true);
 
         blurBitmap(KSIZE);
-        expandLines();
-        writeBitmap(newBitmap,"result.bmp");
 
         labeling();
 
@@ -280,36 +279,45 @@ public class CVprocess implements Runnable{
         }
         BITMAP_X_SIZE /= 2;
         BITMAP_Y_SIZE /= 2;
-        /*
 
-
-        exBytes = new ExByte[BITMAP_Y_SIZE][BITMAP_X_SIZE];
-
-        for (int i = 0; i < BITMAP_Y_SIZE; i+=2) {
-            for (int j = 0; j < BITMAP_X_SIZE; j+=2) {
-                exBytes[i][j] = new ExByte(newBitmap.getPixel(j, i),j,i);
-            }
-        }
-         */
         expandLines();
         setLabel();
     }
 
     private void expandLines(){
-        for(int i=1;i<BITMAP_Y_SIZE-1;i++){
-            for(int j=1;j<BITMAP_X_SIZE-1;j++){
-                if(!exBytes[i][j].color && exBytes[i][j].expandFlag){
-                    for(int column=i-1;column<i+2;column++){
-                        for(int row=j-1;row<j+2;row++){
-                            if(i==column && j==row) continue;
-                            if(!exBytes[column][row].color) continue;
+        for(int i=20;i<BITMAP_Y_SIZE-20;i++){
+            for(int j=20;j<BITMAP_X_SIZE-20;j++){
+                //Log.d("expandLines","color,expandFlag = "+ exBytes[i][j].color + "," + exBytes[i][j].expandFlag);
+                if(!exBytes[i][j].color && !exBytes[i][j].expandFlag){
+                    for(int column=i-20;column<i+21;column++){
+                        for(int row=j-20;row<j+21;row++){
+                            if(!exBytes[column][row].color) {
+                                //Log.d("expandLine","[" + column + "][" + row +"] color = black");
+                                continue;
+                            }
                             exBytes[column][row].color = false;
                             exBytes[column][row].expandFlag = true;
+                            //Log.d("expandLine","expand");
                         }
                     }
                 }
             }
         }
+
+        int[] bitmapArray = new int[BITMAP_X_SIZE*BITMAP_Y_SIZE];
+
+        for(int i=0;i<BITMAP_Y_SIZE;i++){
+            for(int j=0;j<BITMAP_X_SIZE;j++){
+                bitmapArray[i*BITMAP_X_SIZE+j] = exBytes[i][j].color ? -1 : 0;
+            }
+        }
+
+        cuttedBitmap = Bitmap.createBitmap(bitmapArray,BITMAP_X_SIZE,BITMAP_Y_SIZE, Bitmap.Config.ARGB_4444);
+        if(cuttedBitmap == null) {
+            Log.d("CVprocess","cuttedBitmap is null!!");
+            System.exit(-1);
+        }
+        writeBitmap(cuttedBitmap,"result.bmp");
 
     }
 
