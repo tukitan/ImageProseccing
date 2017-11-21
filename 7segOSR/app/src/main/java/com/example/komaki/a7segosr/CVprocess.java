@@ -141,6 +141,7 @@ public class CVprocess implements Runnable{
     }
     @Override
     public void run(){
+        SEG_SIZE_MIN = KSIZE*25;
         binaly();
         //for(byte elem :bytes) System.out.println(elem);
         //for(int i)
@@ -148,6 +149,7 @@ public class CVprocess implements Runnable{
         newBitmap = myBitmap.copy(Bitmap.Config.ARGB_8888,true);
 
         blurBitmap(KSIZE);
+
 
         labeling();
 
@@ -285,12 +287,14 @@ public class CVprocess implements Runnable{
     }
 
     private void expandLines(){
-        for(int i=20;i<BITMAP_Y_SIZE-20;i++){
-            for(int j=20;j<BITMAP_X_SIZE-20;j++){
+        int expandWidth = KSIZE-11;
+        expandWidth /= 2;
+        for(int i=expandWidth;i<BITMAP_Y_SIZE-expandWidth;i++){
+            for(int j=expandWidth;j<BITMAP_X_SIZE-expandWidth;j++){
                 //Log.d("expandLines","color,expandFlag = "+ exBytes[i][j].color + "," + exBytes[i][j].expandFlag);
                 if(!exBytes[i][j].color && !exBytes[i][j].expandFlag){
-                    for(int column=i-20;column<i+21;column++){
-                        for(int row=j-20;row<j+21;row++){
+                    for(int column=i-expandWidth;column<i+expandWidth+1;column++){
+                        for(int row=j-expandWidth;row<j+expandWidth+1;row++){
                             if(!exBytes[column][row].color) {
                                 //Log.d("expandLine","[" + column + "][" + row +"] color = black");
                                 continue;
@@ -440,8 +444,6 @@ public class CVprocess implements Runnable{
             }
 
         }
-
-
         return histgram;
     }
 
