@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -24,7 +25,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListPrintActivity extends AppCompatActivity {
+public class ListPrintActivity extends AppCompatActivity implements View.OnClickListener{
 
     String sdPath = Environment.getExternalStorageDirectory().getPath();
 
@@ -34,6 +35,8 @@ public class ListPrintActivity extends AppCompatActivity {
 
     private DropboxAPI<AndroidAuthSession> mDBAPI;
     private DropboxUtils dropboxUtils;
+
+    Button uploadConf,downloadConf,delete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +82,12 @@ public class ListPrintActivity extends AppCompatActivity {
             mDBAPI = new DropboxAPI<>(dropboxUtils.loadAndroidAuthSession());
         }
 
+        downloadConf = (Button)findViewById(R.id.downloadConfig);
+        downloadConf.setOnClickListener(this);
+        uploadConf = (Button)findViewById(R.id.uploadConfig);
+        delete = (Button)findViewById(R.id.deleteAll);
+
+
     }
 
     public void showItem(String str){
@@ -98,4 +107,23 @@ public class ListPrintActivity extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    public void onClick(View v) {
+
+        if(v == uploadConf){
+            String filename = "initalize.txt";
+            String item = getFilesDir().getPath() +"/"+ filename;
+            (new MyAsync(0,DropboxUtils.getClient(DropboxUtils.TOKEN),ListPrintActivity.this)).execute(filename,item);
+
+        }
+        if(v == downloadConf){
+
+        }
+        if(v == delete){
+
+        }
+
+    }
+
 }
