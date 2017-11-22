@@ -141,7 +141,7 @@ public class CVprocess implements Runnable{
     }
     @Override
     public void run(){
-        SEG_SIZE_MIN = KSIZE*25;
+        //SEG_SIZE_MIN = KSIZE*25;
         binaly();
         //for(byte elem :bytes) System.out.println(elem);
         //for(int i)
@@ -150,8 +150,22 @@ public class CVprocess implements Runnable{
 
         blurBitmap(KSIZE);
 
-
         labeling();
+
+        int[] bitmapArray = new int[BITMAP_X_SIZE*BITMAP_Y_SIZE];
+
+        for(int i=0;i<BITMAP_Y_SIZE;i++){
+            for(int j=0;j<BITMAP_X_SIZE;j++){
+                bitmapArray[i*BITMAP_X_SIZE+j] = exBytes[i][j].color ? -1 : 0;
+            }
+        }
+
+        cuttedBitmap = Bitmap.createBitmap(bitmapArray,BITMAP_X_SIZE,BITMAP_Y_SIZE, Bitmap.Config.ARGB_4444);
+        if(cuttedBitmap == null) {
+            Log.d("CVprocess","cuttedBitmap is null!!");
+            System.exit(-1);
+        }
+        writeBitmap(cuttedBitmap,"result.bmp");
 
         /*
         histgram = getHistgram();
@@ -287,7 +301,7 @@ public class CVprocess implements Runnable{
     }
 
     private void expandLines(){
-        int expandWidth = KSIZE-11;
+        int expandWidth = KSIZE-13;
         expandWidth /= 2;
         for(int i=expandWidth;i<BITMAP_Y_SIZE-expandWidth;i++){
             for(int j=expandWidth;j<BITMAP_X_SIZE-expandWidth;j++){
@@ -307,22 +321,6 @@ public class CVprocess implements Runnable{
                 }
             }
         }
-
-        int[] bitmapArray = new int[BITMAP_X_SIZE*BITMAP_Y_SIZE];
-
-        for(int i=0;i<BITMAP_Y_SIZE;i++){
-            for(int j=0;j<BITMAP_X_SIZE;j++){
-                bitmapArray[i*BITMAP_X_SIZE+j] = exBytes[i][j].color ? -1 : 0;
-            }
-        }
-
-        cuttedBitmap = Bitmap.createBitmap(bitmapArray,BITMAP_X_SIZE,BITMAP_Y_SIZE, Bitmap.Config.ARGB_4444);
-        if(cuttedBitmap == null) {
-            Log.d("CVprocess","cuttedBitmap is null!!");
-            System.exit(-1);
-        }
-        writeBitmap(cuttedBitmap,"result.bmp");
-
     }
 
     private void setLabel(){
@@ -464,7 +462,6 @@ public class CVprocess implements Runnable{
             for (int j = 0; j < BITMAP_X_SIZE; j++) {
                 if(usedLabelNum.indexOf(exBytes[i][j].LABEL) == -1) usedLabelNum.add(exBytes[i][j].LABEL);
             }
-            System.out.println();
         }
         usedLabelNum.remove(0);
         segments = new Segment[usedLabelNum.size()];
@@ -520,7 +517,10 @@ public class CVprocess implements Runnable{
         tmpSegArray.trimToSize();
 
         Segment[] newSegment = (Segment[]) tmpSegArray.toArray(new Segment[tmpSegArray.size()]);
-        for(Segment elem :newSegment) System.out.println(elem.getSize());
+        for(Segment elem :newSegment) {
+            System.out.println(elem.getSize());
+            elem.getExtremePoint();
+        }
 
         for(i=0;i<newSegment.length;i++){
             if(i == newSegment.length -1) {
@@ -534,6 +534,7 @@ public class CVprocess implements Runnable{
                     System.out.println("gattai");
                     numbers.add(new Charactor(newSegment[i], newSegment[j]));
                     newSegment[i].signedFlag = true;
+                    newSegment[j].signedFlag = true;
                     continue;
                 }
                 if(j == newSegment.length -1 ) numbers.add(new Charactor(newSegment[i],false));

@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
             CameraActivity.PERIOD = tmpPeriod;
             CameraActivity.UNIT = tmpUnit;
             Charactor.OFFSET = (int) tmpOffset;
+            Charactor.RANGE = (int)tmpKsize/2;
             Intent intent = new Intent(MainActivity.this,CameraActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);

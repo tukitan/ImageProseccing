@@ -44,9 +44,9 @@ public class Charactor {
 
     boolean isComma = false;
 
-    double ONE_RANGE = 3.0;
+    double ONE_RANGE = 2.8;
     int SEG_WIDTH = 5;
-    int RANGE = 7;
+    static int RANGE = 11;
     int sizeX,sizeY;
 
     static int OFFSET;
