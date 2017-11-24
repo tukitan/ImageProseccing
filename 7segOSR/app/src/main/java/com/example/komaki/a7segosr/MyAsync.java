@@ -52,24 +52,19 @@ public class MyAsync extends AsyncTask {
                                 .withMode(WriteMode.OVERWRITE)
                                 .uploadAndFinish(in,1000);
                     Log.d("Upload File","Upload Success");
-
-
                     in.close();
-
-
                     break;
+
                 case 1:
                     //download file
-                    /*
-                    String downloadFilename = "NowTime.txt";
-                    File file = new File(Environment.getExternalStorageDirectory().getPath() +"/"+
+                    String downloadFilename = "initalize.txt";
+                    File downloadFile = new File(Environment.getExternalStorageDirectory().getPath() +"/"+
                             downloadFilename);
-                    FileOutputStream os = new FileOutputStream(file);
-                    DropboxAPI.DropboxFileInfo dfi = mApi.getFile("/" + downloadFilename,null,os,null);
-
-
+                    FileOutputStream os = new FileOutputStream(downloadFile);
+                    dbxClient.files().download("/" + downloadFilename)
+                            .download(os);
                     break;
-                    */
+
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
