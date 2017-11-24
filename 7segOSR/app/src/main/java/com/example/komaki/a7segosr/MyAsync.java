@@ -38,6 +38,7 @@ public class MyAsync extends AsyncTask {
         this.context = context;
 
     }
+
     @Override
     protected Object doInBackground(Object[] params) {
         try {
@@ -58,7 +59,7 @@ public class MyAsync extends AsyncTask {
                 case 1:
                     //download file
                     String downloadFilename = "initalize.txt";
-                    File downloadFile = new File(Environment.getExternalStorageDirectory().getPath() +"/"+
+                    File downloadFile = new File(context.getFilesDir().getPath() +"/"+
                             downloadFilename);
                     FileOutputStream os = new FileOutputStream(downloadFile);
                     dbxClient.files().download("/" + downloadFilename)
@@ -80,7 +81,7 @@ public class MyAsync extends AsyncTask {
     @Override
     protected void onPostExecute(Object o){
         super.onPostExecute(o);
-        Toast.makeText(context,"upload!",Toast.LENGTH_SHORT).show();
+        Toast.makeText(context,"ACTION FINISHED.",Toast.LENGTH_SHORT).show();
 
     }
 }
