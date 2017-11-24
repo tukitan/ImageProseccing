@@ -92,6 +92,10 @@ public class Charactor {
         setBetweenMaxMid();
         points = new Points(maxX,maxY,minX,minY,midX,midY,mid_up_midY,mid_down_midY);
         setRatio();
+        maxX = maxX - SEG_WIDTH;
+        maxY = maxY - SEG_WIDTH;
+        minX = minX + SEG_WIDTH;
+        minY = minY + SEG_WIDTH;
 
         sizeX = Math.abs(maxX-minX);
         sizeY = Math.abs(maxY-minY);

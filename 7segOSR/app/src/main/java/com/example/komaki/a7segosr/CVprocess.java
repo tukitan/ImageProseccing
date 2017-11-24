@@ -152,21 +152,6 @@ public class CVprocess implements Runnable{
 
         labeling();
 
-        int[] bitmapArray = new int[BITMAP_X_SIZE*BITMAP_Y_SIZE];
-
-        for(int i=0;i<BITMAP_Y_SIZE;i++){
-            for(int j=0;j<BITMAP_X_SIZE;j++){
-                bitmapArray[i*BITMAP_X_SIZE+j] = exBytes[i][j].color ? -1 : 0;
-            }
-        }
-
-        cuttedBitmap = Bitmap.createBitmap(bitmapArray,BITMAP_X_SIZE,BITMAP_Y_SIZE, Bitmap.Config.ARGB_4444);
-        if(cuttedBitmap == null) {
-            Log.d("CVprocess","cuttedBitmap is null!!");
-            System.exit(-1);
-        }
-        writeBitmap(cuttedBitmap,"result.bmp");
-
         /*
         histgram = getHistgram();
         for(int i=0;i<histgram.startPoint.size();i++){
@@ -176,10 +161,35 @@ public class CVprocess implements Runnable{
 
         makeSegment();
         makeCharactor();
-        System.out.println("Charactor num :" + numbers.size());
-        for(Charactor elem :numbers) {
-            if(!elem.isComma) elem.recognition();
+
+        int[] bitmapArray = new int[BITMAP_X_SIZE*BITMAP_Y_SIZE];
+        for(int i=0;i<BITMAP_Y_SIZE;i++){
+            for(int j=0;j<BITMAP_X_SIZE;j++){
+                bitmapArray[i*BITMAP_X_SIZE+j] = exBytes[i][j].color ? -1 : 0;
+            }
         }
+
+        for(Charactor elem :numbers) {
+            if(!elem.isComma) {
+                elem.recognition();
+                bitmapArray[elem.midY*BITMAP_X_SIZE + elem.midX] = -65536; //tekitou colorcode
+                bitmapArray[elem.minY*BITMAP_X_SIZE + elem.midX] = -65536;
+                bitmapArray[elem.maxY*BITMAP_X_SIZE + elem.midX] = -65536;
+                bitmapArray[elem.mid_up_midY*BITMAP_X_SIZE + elem.minX] = -65536;
+                bitmapArray[elem.mid_up_midY*BITMAP_X_SIZE + elem.maxX] = -65536;
+                bitmapArray[elem.mid_down_midY*BITMAP_X_SIZE + elem.minX] = -65536;
+                bitmapArray[elem.mid_down_midY*BITMAP_X_SIZE + elem.maxX] = -65536;
+            }
+        }
+
+        cuttedBitmap = Bitmap.createBitmap(bitmapArray,BITMAP_X_SIZE,BITMAP_Y_SIZE, Bitmap.Config.ARGB_4444);
+        if(cuttedBitmap == null) {
+            Log.d("CVprocess","cuttedBitmap is null!!");
+            System.exit(-1);
+        }
+
+        writeBitmap(cuttedBitmap,"result.bmp");
+
         judgeComma();
         final String result = makeString();
 
