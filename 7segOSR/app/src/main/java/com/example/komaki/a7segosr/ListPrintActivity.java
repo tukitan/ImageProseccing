@@ -126,7 +126,6 @@ public class ListPrintActivity extends AppCompatActivity implements View.OnClick
         }
         if(v == downloadConf){
             (new MyAsync(1,DropboxUtils.getClient(DropboxUtils.TOKEN),ListPrintActivity.this)).execute();
-            System.out.println("DOWNLOAD UNTI");
         }
         if(v == delete){
             new AlertDialog.Builder(this)

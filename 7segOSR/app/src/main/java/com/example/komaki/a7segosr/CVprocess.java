@@ -93,18 +93,19 @@ public class CVprocess implements Runnable{
 
     int TMP_MIN_X,TMP_MIN_Y,TMP_MAX_X,TMP_MAX_Y;
 
-    Histgram histgram;
+    String beforeRes;
 
     public CVprocess(Bitmap bitmap,boolean calledCheckRec,Handler handler){
         myBitmap = bitmap;
         isCalledByCheckRecognize = true;
         this.handler = handler;
     }
-    public CVprocess(Image image, Points points, Handler handler){
+    public CVprocess(Image image, Points points, Handler handler, String result){
         ByteBuffer buffer = image.getPlanes()[0].getBuffer();
         byte[] bytes = new byte[buffer.capacity()];
         buffer.get(bytes);
         Bitmap tmpBitmap  = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+        beforeRes = result;
         buffer = null;
         bytes = null;
 
@@ -212,7 +213,8 @@ public class CVprocess implements Runnable{
             CheckRecognize.proceccFlag = true;
 
         } else {
-            if(numbers.size() != 0) {
+
+            if((beforeRes.length() <= result.length())) {
                 handler.post(new Runnable() {
                     int minx = TMP_MIN_X;
                     int miny = TMP_MIN_Y + numbers.get(0).minY * 2;
@@ -233,8 +235,10 @@ public class CVprocess implements Runnable{
                     int maxy = TMP_MIN_Y;
 
                     @Override
+
                     public void run() {
-                        CameraActivity.number = "null";
+                        if(numbers.size() == 0) CameraActivity.number = "null";
+                        else CameraActivity.number = result;
                         CameraActivity.CHAR_POINTS = new Points(maxx, maxy, minx, miny, false);
                     }
                 });

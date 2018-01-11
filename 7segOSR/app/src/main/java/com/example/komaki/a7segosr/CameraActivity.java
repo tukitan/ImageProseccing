@@ -97,6 +97,8 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
     static int DISP_WIDTH;
     static int DISP_HEIGHT;
 
+
+
     @Override
     protected void onCreate(Bundle SavedInstance) {
         super.onCreate(SavedInstance);
@@ -334,10 +336,10 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
                         if(isFrist) {
                             isFrist = false;
                             CHAR_POINTS = new Points();
-                            process = new Thread(new CVprocess(image, points, handler));
+                            process = new Thread(new CVprocess(image, points, handler,"0"));
                         } else{
                             if (CHAR_POINTS == null)System.out.println("NULL!");
-                            process = new Thread(new CVprocess(image,CHAR_POINTS, handler));
+                            process = new Thread(new CVprocess(image,CHAR_POINTS, handler,number));
                         }
                         process.start();
                         image.close();
