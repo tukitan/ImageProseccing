@@ -336,6 +336,7 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
                         if(isFrist) {
                             isFrist = false;
                             CHAR_POINTS = new Points();
+                            Log.d("CameraActivity","start Recognition process.");
                             process = new Thread(new CVprocess(image, points, handler,"0"));
                         } else{
                             if (CHAR_POINTS == null)System.out.println("NULL!");

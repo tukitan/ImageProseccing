@@ -151,6 +151,7 @@ public class CVprocess implements Runnable{
 
         blurBitmap(KSIZE);
 
+
         labeling();
 
         /*

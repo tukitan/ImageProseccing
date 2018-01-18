@@ -109,6 +109,7 @@ public class Charactor {
         boolean left_up_mid = false;
         boolean left_down_mid = false;
         boolean right_up_mid = false;
+        //boolean right_down_mid = false;
 
         int tmpX,tmpY;
 
@@ -128,8 +129,72 @@ public class Charactor {
             else if(isEqual(tmpX,minX,tmpY,mid_up_midY,1)) left_up_mid = true;
             else if(isEqual(tmpX,minX,tmpY,mid_down_midY,-1)) left_down_mid = true;
             else if(isEqual(tmpX,maxX,tmpY,mid_up_midY,1)) right_up_mid = true;
+            //else if(isEqual(tmpX,maxX,tmpY,mid_down_midY,-1)) right_down_mid = true;
         }
 
+        if(!left_down_mid) {
+            if(!middown) {
+                if (!mid) {
+                    value = "7";
+                    System.out.println("value:7");
+                    points.display();
+                    return;
+                } else {
+                    value = "4";
+                    System.out.println("value:4");
+                    points.display();
+                    return;
+                }
+            } else {
+                if(!left_up_mid){
+                    value = "3";
+                    System.out.println("value:3");
+                    points.display();
+                    return;
+                } else {
+                    if(!right_up_mid){
+                        value = "5";
+                        System.out.println("value:5");
+                        points.display();
+                        return;
+                    } else {
+                        value = "9";
+                        System.out.println("value:9");
+                        points.display();
+                        return;
+
+                    }
+                }
+            }
+        } else {
+            if(!mid){
+                value = "0";
+                System.out.println("value:0");
+                points.display();
+                return;
+            } else {
+                if(!left_up_mid){
+                    value = "2";
+                    System.out.println("value:2");
+                    points.display();
+                    return;
+                } else {
+                    if(!right_up_mid){
+                        value = "6";
+                        System.out.println("value:6");
+                        points.display();
+                        return;
+                    } else {
+                        value = "8";
+                        System.out.println("value:8");
+                        points.display();
+                        return;
+                    }
+                }
+            }
+        }
+
+        /*
 
         if(!mid){
             if(!middown){
@@ -191,6 +256,7 @@ public class Charactor {
         System.out.println("value:8");
         points.display();
         return;
+        */
 
     }
 
