@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
             ConfigActivity2.PERIOD = configValues.get(1).toString();
 
             Intent intent = new Intent(MainActivity.this,ConfigActivity2.class);
+            intent.putExtra("mode","init");
             startActivity(intent);
 
         }
@@ -131,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
             Charactor.RANGE = (int)tmpKsize/2;
             Intent intent = new Intent(MainActivity.this,CameraActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("mode","recognition");
             startActivity(intent);
         }
     };

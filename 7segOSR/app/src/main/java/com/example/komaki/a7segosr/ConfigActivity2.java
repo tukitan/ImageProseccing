@@ -22,11 +22,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickListener,AdapterView.OnItemSelectedListener,SeekBar.OnSeekBarChangeListener{
 
     CheckBox smallBox,bigBox;
     Button kettei;
+    Button autoGet;
     static boolean bigFlag,smallFlag;
     static String user = "山田太朗";
 
@@ -38,6 +40,7 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
     EditText period;
     SeekBar offset,sizeBar;
     EditText name;
+    EditText collectNum;
     TextView sizeRect;
 
 
@@ -49,10 +52,13 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config2);
         kettei = (Button)findViewById(R.id.kettei);
+        autoGet = (Button)findViewById(R.id.autoGetRotate);
+        collectNum = (EditText)findViewById(R.id.collectNumber);
         Spinner langs = (Spinner)findViewById(R.id.lang);
         Spinner units = (Spinner)findViewById(R.id.unit);
         name = (EditText)findViewById(R.id.name);
         kettei.setOnClickListener(this);
+        autoGet.setOnClickListener(this);
         sizeRect = (TextView)findViewById(R.id.sizeRect);
         bigFlag = false;
         smallFlag = true;
@@ -90,6 +96,13 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
         sizeRect.setWidth(SIZE * 2 * 4 * 2 * 2);
         sizeRect.setHeight((int) (SIZE * 2 * 4 * 2 *1.3));
 
+        Intent intent = getIntent();
+        if(intent.getStringExtra("mode").equals("autoGet")){
+            String data = intent.getStringExtra("offset");
+            OFFSET = Integer.parseInt(data);
+            Toast.makeText(this,"offset = " + OFFSET,Toast.LENGTH_SHORT).show();
+        }
+
     }
     @Override
     public void onClick(View v) {
@@ -106,8 +119,24 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
             Intent intent = new Intent(ConfigActivity2.this,MainActivity.class);
 
             startActivity(intent);
-
         }
+        if(v == autoGet){
+            String collect = collectNum.getText().toString();
+
+            CVprocess.KSIZE = (SIZE*2 -11 <13) ? 13 : ((int)SIZE * 2 - 11);
+            CameraActivity.CHAR_SIZE = (int)SIZE*2;
+            CameraActivity.LOCALE = Locale.JAPANESE;
+            //System.out.println(CVprocess.KSIZE);
+            CameraActivity.PERIOD = Double.parseDouble(PERIOD);
+            CameraActivity.UNIT = Double.parseDouble(unit_value.get(UNIT));
+            Charactor.OFFSET = -5;
+            Charactor.RANGE = (int)SIZE/2;
+            Intent intent = new Intent(ConfigActivity2.this,CameraActivity.class);
+            intent.putExtra("mode","autoGet");
+            intent.putExtra("collect",collect);
+            startActivity(intent);
+        }
+
     }
 
     private void writeConfigFile(){

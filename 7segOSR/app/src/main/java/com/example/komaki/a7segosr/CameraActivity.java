@@ -97,11 +97,14 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
     static int DISP_WIDTH;
     static int DISP_HEIGHT;
 
-
+    double collectAnswer;
+    String mode;
 
     @Override
     protected void onCreate(Bundle SavedInstance) {
         super.onCreate(SavedInstance);
+        Intent intent = getIntent();
+        mode = intent.getStringExtra("mode");
 
         //full Screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -134,6 +137,11 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
         CHAR_SIZE_MAP = new HashMap();
         CHAR_SIZE_MAP.put(13,50);
         CHAR_SIZE_MAP.put(37,100);
+        if(mode.equals("autoGet")){
+            String data = intent.getStringExtra("collect");
+            collectAnswer = Double.parseDouble(data);
+        }
+
 
     }
 
@@ -471,25 +479,47 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
 
         @Override
         public void run(){
-            while (threadFlag){
-                speechText();
+            if(mode.equals("recognition")) {
+                while (threadFlag) {
+                    speechText();
 
-                Log.d("CameraActivity","isProcessed " + isProcessed);
-                if(isProcessed) {
-                    isProcessed = false;
-                    recognitionNumbers.add(number);
-                    takePicture(points);
-                }
-                try {
-                    Thread.sleep(periodTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                    Log.d("CameraActivity", "isProcessed " + isProcessed);
+                    if (isProcessed) {
+                        isProcessed = false;
+                        recognitionNumbers.add(number);
+                        takePicture(points);
+                    }
+                    try {
+                        Thread.sleep(periodTime);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
+                }
+                Intent intent = new Intent(CameraActivity.this,MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            } else if(mode.equals("autoGet")){
+                number = "0";
+                do{
+                    Log.d("CameraActivity", "isProcessed " + isProcessed);
+                    Log.d("CameraActivity", "offset = " + Charactor.OFFSET );
+                    if (isProcessed) {
+                        isProcessed = false;
+                        Charactor.OFFSET +=1;
+                        takePicture(points);
+                    }
+                    try {
+                        Thread.sleep(periodTime);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } while (collectAnswer != Double.parseDouble(number));
+                Intent intent = new Intent(CameraActivity.this,ConfigActivity2.class);
+                intent.putExtra("mode","getOffset");
+                intent.putExtra("offset",Charactor.OFFSET);
+                startActivity(intent);
             }
-            Intent intent = new Intent(CameraActivity.this,MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
 
         }
 
