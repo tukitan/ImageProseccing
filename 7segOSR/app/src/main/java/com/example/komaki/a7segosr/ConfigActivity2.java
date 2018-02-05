@@ -120,6 +120,7 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
 
             startActivity(intent);
         }
+
         if(v == autoGet){
             String collect = collectNum.getText().toString();
 
@@ -129,7 +130,7 @@ public class ConfigActivity2 extends AppCompatActivity  implements View.OnClickL
             //System.out.println(CVprocess.KSIZE);
             CameraActivity.PERIOD = Double.parseDouble(PERIOD);
             CameraActivity.UNIT = Double.parseDouble(unit_value.get(UNIT));
-            Charactor.OFFSET = -5;
+            Charactor.OFFSET = 3;
             Charactor.RANGE = (int)SIZE/2;
             Intent intent = new Intent(ConfigActivity2.this,CameraActivity.class);
             intent.putExtra("mode","autoGet");

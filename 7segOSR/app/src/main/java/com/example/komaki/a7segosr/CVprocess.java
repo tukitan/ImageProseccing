@@ -102,7 +102,15 @@ public class CVprocess implements Runnable{
     }
     public CVprocess(Image image, Points points, Handler handler, String result){
         ByteBuffer buffer = image.getPlanes()[0].getBuffer();
+
+        // sample code
         byte[] bytes = new byte[buffer.capacity()];
+
+        // kotti nanodeha ?
+        //byte[] bytes = new byte[buffer.limit()];
+        if(buffer.position() != 0) buffer.flip();
+        Log.d("CVprocess","buffer.capacity() = " + buffer.capacity());
+        Log.d("CVprocess","buffer.position() = " + buffer.position());
         buffer.get(bytes);
         Bitmap tmpBitmap  = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
         beforeRes = result;
