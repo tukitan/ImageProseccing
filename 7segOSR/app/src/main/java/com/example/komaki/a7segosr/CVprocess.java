@@ -157,6 +157,7 @@ public class CVprocess implements Runnable{
 
         newBitmap = myBitmap.copy(Bitmap.Config.ARGB_8888,true);
 
+        KSIZE = 19;
         blurBitmap(KSIZE);
 
 

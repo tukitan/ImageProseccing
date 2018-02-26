@@ -322,6 +322,7 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
             int height = 480;
             if(character != null){
                 jpgSizes = character.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP).getOutputSizes(ImageFormat.JPEG);
+                Log.i("takePicture","width = "+jpgSizes[0].getWidth()+ ", height = "+jpgSizes[0].getHeight());
                 if(jpgSizes != null && 0 < jpgSizes.length){
                     width = jpgSizes[0].getWidth();
                     height = jpgSizes[0].getHeight();
@@ -336,8 +337,8 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
             captureBuilder.addTarget(reader.getSurface());
             captureBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
             //captureBuilder.set(CaptureRequest.FLASH_MODE,CaptureRequest.FLASH_MODE_TORCH);
+            Log.d("takePicture","captureBuilder complete");
             captureBuilder.set(CaptureRequest.CONTROL_AE_MODE,CaptureRequest.CONTROL_AE_MODE_ON);
-
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener(){
 
                 @Override
@@ -376,9 +377,7 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
                     super.onCaptureCompleted(session,request,result);
                     System.out.println("Taking picture is completed");
                     createCameraPreviewSettion();
-
                 }
-
             };
 
             mCameraDevice.createCaptureSession(outputSurface,new CameraCaptureSession.StateCallback(){
@@ -390,7 +389,6 @@ public class CameraActivity extends Activity implements TextToSpeech.OnInitListe
                     } catch (CameraAccessException e) {
                         e.printStackTrace();
                     }
-
                 }
 
                 @Override
